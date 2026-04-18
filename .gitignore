@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pkl
+data/sellout.db
+data/cron.log
+*.egg-info/
+.pytest_cache/
