@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from model.train_prophet import train_prophet_total
 
 LGBM_WEIGHT = 0.7
