@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eXtra FCST Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; }
+  header { background: #1a1d2e; padding: 16px 24px; border-bottom: 2px solid #2d3561; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.3rem; color: #a78bfa; }
+  .back-link { color: #8b92a5; text-decoration: none; font-size: 0.85rem; }
+  .filter-bar { padding: 16px 24px; background: #1a1d2e; border-bottom: 1px solid #2d3561; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .filter-bar label { font-size: 0.75rem; color: #8b92a5; }
+  .filter-bar select { background: #0f1117; border: 1px solid #2d3561; color: #e0e0e0; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; }
+  .chart-section { padding: 24px; }
+  .chart-container { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; height: 320px; }
+  .table-section { padding: 0 24px 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #1a1d2e; border-radius: 12px; overflow: hidden; }
+  thead th { padding: 12px 16px; text-align: left; color: #8b92a5; border-bottom: 1px solid #2d3561; }
+  tbody td { padding: 10px 16px; border-bottom: 1px solid #0f1117; }
+  tbody tr:hover { background: #20233a; }
+  .signal-green { color: #34d399; font-weight: bold; }
+  .signal-yellow { color: #fbbf24; font-weight: bold; }
+  .signal-red { color: #f87171; font-weight: bold; }
+  .promo-section { padding: 0 24px 24px; }
+  .promo-card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
+  .promo-card h2 { font-size: 1rem; color: #a78bfa; margin-bottom: 16px; }
+  .slider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+  .slider-row label { font-size: 0.85rem; min-width: 120px; }
+  input[type=range] { flex: 1; }
+  .slider-value { min-width: 50px; text-align: right; font-weight: bold; color: #a78bfa; }
+  .promo-result { font-size: 1.2rem; font-weight: bold; color: #34d399; margin-top: 12px; }
+  .feedback-section { padding: 0 24px 24px; }
+  .feedback-card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
+  .feedback-card h2 { font-size: 1rem; color: #a78bfa; margin-bottom: 16px; }
+  .form-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group label { font-size: 0.75rem; color: #8b92a5; }
+  .form-group select, .form-group input { background: #0f1117; border: 1px solid #2d3561; color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; }
+  .btn { padding: 8px 16px; border-radius: 8px; background: #2d3561; color: #e0e0e0; font-size: 0.85rem; cursor: pointer; border: none; }
+  .btn-warn { background: #7f1d1d; color: #fca5a5; }
+  .btn-warn:hover { background: #991b1b; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🔮 eXtra FCST Dashboard</h1>
+  <a class="back-link" href="hub.html">← Hub로 돌아가기</a>
+</header>
+
+<div class="filter-bar">
+  <div><label>카테고리</label><br>
+    <select id="filter-category" onchange="applyFilters()">
+      <option value="">전체</option>
+    </select>
+  </div>
+  <div><label>모델</label><br>
+    <select id="filter-model" onchange="applyFilters()">
+      <option value="">전체</option>
+    </select>
+  </div>
+  <div><label>레벨</label><br>
+    <select id="filter-level" onchange="applyFilters()">
+      <option value="">전체</option>
+      <option value="L1_sku">L1 SKU</option>
+      <option value="L2_category">L2 카테고리</option>
+    </select>
+  </div>
+  <div style="margin-left:auto;font-size:0.8rem;color:#8b92a5;" id="generated-at"></div>
+</div>
+
+<div class="chart-section">
+  <div class="chart-container">
+    <canvas id="fcst-chart"></canvas>
+  </div>
+</div>
+
+<div class="table-section">
+  <table>
+    <thead>
+      <tr>
+        <th>모델</th>
+        <th>카테고리</th>
+        <th>레벨</th>
+        <th>예측 (units)</th>
+        <th>80% 신뢰구간</th>
+        <th>MAPE</th>
+        <th>신호등</th>
+      </tr>
+    </thead>
+    <tbody id="fcst-table-body"></tbody>
+  </table>
+</div>
+
+<div class="promo-section">
+  <div class="promo-card">
+    <h2>🎯 프로모션 시뮬레이터</h2>
+    <div class="slider-row">
+      <label>할인율 조정</label>
+      <input type="range" id="discount-slider" min="0" max="40" value="0" oninput="updatePromoSim()">
+      <span class="slider-value" id="discount-value">0%</span>
+    </div>
+    <div class="slider-row">
+      <label>모델 선택</label>
+      <select id="promo-model-select" onchange="updatePromoSim()">
+        <option value="">전체 평균</option>
+      </select>
+    </div>
+    <div class="promo-result" id="promo-result">기본 예측값을 먼저 로드해주세요</div>
+    <p style="font-size:0.75rem;color:#8b92a5;margin-top:8px;">※ 할인 +10% → 수요 +7% 가정 (단순 탄력성 모델). 과거 프로모션 실적 기반 보정 가능.</p>
+  </div>
+</div>
+
+<div class="feedback-section">
+  <div class="feedback-card">
+    <h2>💬 예측 피드백</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>모델</label>
+        <select id="fb-model"></select>
+      </div>
+      <div class="form-group">
+        <label>주차</label>
+        <input type="text" id="fb-week" placeholder="W17">
+      </div>
+      <div class="form-group">
+        <label>예측값</label>
+        <input type="number" id="fb-predicted" placeholder="100">
+      </div>
+      <div class="form-group">
+        <label>실제 판매량</label>
+        <input type="number" id="fb-actual" placeholder="115">
+      </div>
+      <div class="form-group">
+        <label>메모</label>
+        <input type="text" id="fb-note" placeholder="프로모션 주간 등">
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-warn" onclick="submitFeedback()">이 예측이 틀렸습니다</button>
+      </div>
+    </div>
+    <div id="fb-status" style="margin-top:12px;font-size:0.8rem;"></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5050';
+let allForecasts = [];
+let filteredForecasts = [];
+let fcstChart = null;
+
+async function loadData() {
+  try {
+    const resp = await fetch(`${API}/api/fcst`);
+    const data = await resp.json();
+    allForecasts = data.forecasts || [];
+    document.getElementById('generated-at').textContent = '생성: ' + new Date(data.generated_at).toLocaleString('ko-KR');
+
+    const categories = [...new Set(allForecasts.map(f => f.category))].sort();
+    const models = [...new Set(allForecasts.map(f => f.model))].sort();
+
+    const catSel = document.getElementById('filter-category');
+    categories.forEach(c => { const o = document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); });
+
+    const mdlSel = document.getElementById('filter-model');
+    const promoSel = document.getElementById('promo-model-select');
+    const fbSel = document.getElementById('fb-model');
+    models.forEach(m => {
+      [mdlSel, promoSel, fbSel].forEach(sel => {
+        const o = document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o);
+      });
+    });
+
+    applyFilters();
+  } catch(e) {
+    document.getElementById('fcst-table-body').innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:16px;">API 서버에 연결할 수 없습니다. python api/server.py 실행 확인</td></tr>';
+  }
+}
+
+function applyFilters() {
+  const cat = document.getElementById('filter-category').value;
+  const mdl = document.getElementById('filter-model').value;
+  const lvl = document.getElementById('filter-level').value;
+  filteredForecasts = allForecasts.filter(f =>
+    (!cat || f.category === cat) &&
+    (!mdl || f.model === mdl) &&
+    (!lvl || f.level === lvl)
+  );
+  renderTable();
+  renderChart();
+}
+
+function signal(mape) {
+  if (mape === null || mape === undefined) return '<span style="color:#8b92a5">—</span>';
+  if (mape < 0.10) return '<span class="signal-green">🟢</span>';
+  if (mape < 0.20) return '<span class="signal-yellow">🟡</span>';
+  return '<span class="signal-red">🔴</span>';
+}
+
+function renderTable() {
+  const tbody = document.getElementById('fcst-table-body');
+  const sorted = [...filteredForecasts].sort((a,b) => (b.predicted||0) - (a.predicted||0));
+  tbody.innerHTML = sorted.map(f => `
+    <tr>
+      <td><strong>${f.model}</strong></td>
+      <td>${f.category}</td>
+      <td style="color:#8b92a5;font-size:0.75rem">${f.level}</td>
+      <td><strong>${f.predicted?.toFixed(0) ?? '—'}</strong></td>
+      <td style="color:#8b92a5">${f.ci_low?.toFixed(0) ?? '—'} ~ ${f.ci_high?.toFixed(0) ?? '—'}</td>
+      <td>${f.mape != null ? (f.mape*100).toFixed(1)+'%' : '—'}</td>
+      <td>${signal(f.mape)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderChart() {
+  const top10 = [...filteredForecasts].sort((a,b) => (b.predicted||0) - (a.predicted||0)).slice(0, 15);
+  const labels = top10.map(f => f.model);
+  const values = top10.map(f => f.predicted || 0);
+  const lows = top10.map(f => (f.predicted || 0) - (f.ci_low || 0));
+  const highs = top10.map(f => (f.ci_high || 0) - (f.predicted || 0));
+
+  if (fcstChart) fcstChart.destroy();
+  const ctx = document.getElementById('fcst-chart').getContext('2d');
+  fcstChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: '예측 (units)',
+        data: values,
+        backgroundColor: 'rgba(124, 58, 237, 0.7)',
+        borderRadius: 4,
+      }, {
+        label: 'CI Low',
+        data: lows,
+        backgroundColor: 'rgba(167, 139, 250, 0.2)',
+        type: 'bar',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#8b92a5' } } },
+      scales: {
+        x: { ticks: { color: '#8b92a5' }, grid: { color: '#2d3561' } },
+        y: { ticks: { color: '#8b92a5' }, grid: { color: '#2d3561' } }
+      }
+    }
+  });
+}
+
+function updatePromoSim() {
+  const discount = parseInt(document.getElementById('discount-slider').value);
+  document.getElementById('discount-value').textContent = discount + '%';
+  const modelFilter = document.getElementById('promo-model-select').value;
+  const base = filteredForecasts.filter(f => !modelFilter || f.model === modelFilter);
+  const baseTotal = base.reduce((s,f) => s + (f.predicted||0), 0);
+  const elasticity = 0.7;
+  const adjusted = baseTotal * (1 + (discount / 100) * elasticity);
+  document.getElementById('promo-result').textContent =
+    `기본 예측: ${Math.round(baseTotal).toLocaleString()} units → 프로모션 후: ${Math.round(adjusted).toLocaleString()} units (+${Math.round((adjusted-baseTotal)/baseTotal*100)}%)`;
+}
+
+async function submitFeedback() {
+  const model = document.getElementById('fb-model').value;
+  const week = document.getElementById('fb-week').value;
+  const predicted = parseFloat(document.getElementById('fb-predicted').value);
+  const actual = parseFloat(document.getElementById('fb-actual').value);
+  const note = document.getElementById('fb-note').value;
+
+  if (!model || !week || isNaN(actual)) {
+    alert('모델, 주차, 실제 판매량은 필수입니다.');
+    return;
+  }
+
+  try {
+    const resp = await fetch(`${API}/api/feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, week, predicted, actual, note })
+    });
+    const data = await resp.json();
+    const status = document.getElementById('fb-status');
+    if (data.retrain_suggested) {
+      status.innerHTML = '<span style="color:#fbbf24">⚠️ 피드백 저장됨. MAPE 기준 초과 — 다음 cron 실행 시 재학습이 트리거됩니다.</span>';
+    } else {
+      status.innerHTML = '<span style="color:#34d399">✅ 피드백이 저장되었습니다.</span>';
+    }
+  } catch(e) {
+    document.getElementById('fb-status').innerHTML = '<span style="color:#f87171">API 서버에 연결할 수 없습니다.</span>';
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
