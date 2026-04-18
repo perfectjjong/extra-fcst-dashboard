@@ -1,6 +1,7 @@
-import json
 import os
 import pickle
+import sys
+from pathlib import Path
 from typing import Dict, List
 
 import lightgbm as lgb
@@ -155,6 +156,8 @@ def train_and_predict(db_path: str, models_dir: str) -> List[Dict]:
 
 
 if __name__ == "__main__":
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from model.features import FEATURE_COLS, TARGET_COL, load_sellout  # noqa: F811
     db = os.path.join(os.path.dirname(__file__), '..', 'data', 'sellout.db')
     models_dir = os.path.join(os.path.dirname(__file__), 'models')
     results = train_and_predict(db, models_dir)
