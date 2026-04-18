@@ -1,6 +1,10 @@
+import os
 import sqlite3
-import numpy as np
+from collections import defaultdict
 from typing import Dict
+
+import numpy as np
+
 
 def week_to_int(year: int, week: str) -> int:
     w = int(week.replace('W', ''))
@@ -13,7 +17,6 @@ def compute_naive_mape(db_path: str, lookback_weeks: int = 12) -> Dict[str, floa
     ).fetchall()
     conn.close()
 
-    from collections import defaultdict
     series = defaultdict(list)
     for model, year, week, qty in rows:
         series[model].append((week_to_int(year, week), qty))
@@ -36,7 +39,6 @@ def compute_naive_mape(db_path: str, lookback_weeks: int = 12) -> Dict[str, floa
     return mape_by_model
 
 if __name__ == "__main__":
-    import os
     db = os.path.join(os.path.dirname(__file__), '..', 'data', 'sellout.db')
     results = compute_naive_mape(db)
     sorted_results = sorted(results.items(), key=lambda x: x[1])

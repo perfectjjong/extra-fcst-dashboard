@@ -1,4 +1,6 @@
-import sqlite3, sys, os, pytest
+import os
+import sqlite3
+import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from pipeline.init_db import init_db
 from model.baseline import compute_naive_mape, week_to_int
