@@ -14,12 +14,15 @@ PROPHET_WEIGHT = 0.3
 PROMO_ELASTICITY = 0.7   # 할인 +10% → 수요 +7%
 RAMADAN_BOOST = 1.20     # 라마단 기간 +20%
 
-COLDSTART_MODELS = [
-    {'model': 'W181EC.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
-    {'model': 'W181EH.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
-    {'model': 'W242EC.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
-    {'model': 'W242EH.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
-]
+WINDOW_SEEC_MODELS = ['W181EC.SN0', 'W181EH.SN0', 'W242EC.SN0', 'W242EH.SN0']
+WINDOW_PREDECESSORS = {
+    'W181EC.SN0': 'C182EC.SN2',   # 18K Cooling Only
+    'W181EH.SN0': 'C182EH.SN2',   # 18K Heat Pump
+    'W242EC.SN0': 'C242EC.SN2',   # 24K Cooling Only
+    'W242EH.SN0': None,            # 24K Heat Pump — no meaningful predecessor
+}
+WINDOW_COLDSTART_START_WEEK = 22   # W22 = June launch
+WINDOW_COLDSTART_TARGET = 5000.0   # 4-model annual target
 
 WEEK_MONTH = {
     'W1': 'Jan', 'W2': 'Jan', 'W3': 'Jan', 'W4': 'Jan',
@@ -38,6 +41,105 @@ WEEK_MONTH = {
 }
 
 RAMADAN_WEEKS_2026 = {'W5', 'W6', 'W7', 'W8', 'W9'}
+
+
+def _compute_window_coldstart(db_path: str) -> List[Dict]:
+    """
+    Window SEEC 신제품(W22-W52) cold-start 예측.
+    - 과거 전세대 Window AC(C182EC.SN2 등) 주차별 판매 트렌드로 seasonality 도출
+    - 전체 판매 비중으로 BTU/H-C 모델별 allocation
+    - 4모델 합산 WINDOW_COLDSTART_TARGET 기준 스케일링
+    """
+    target_weeks = list(range(WINDOW_COLDSTART_START_WEEK, 53))
+    predecessor_models = [m for m in WINDOW_PREDECESSORS.values() if m]
+
+    conn = sqlite3.connect(db_path)
+
+    # 2024 W22-W52: 월별 합계로 seasonal 가중치 도출
+    rows = conn.execute('''
+        SELECT week, SUM(qty) as qty
+        FROM weekly_sellout
+        WHERE model IN ({})
+          AND year = 2024
+          AND CAST(SUBSTR(week,2) AS INTEGER) >= ?
+        GROUP BY week
+    '''.format(','.join('?' * len(predecessor_models))),
+        predecessor_models + [WINDOW_COLDSTART_START_WEEK]
+    ).fetchall()
+
+    # 주차 → 월 매핑 (W22-W52)
+    def week_to_month(w: int) -> int:
+        if w <= 25: return 6
+        if w <= 29: return 7
+        if w <= 33: return 8
+        if w <= 37: return 9
+        if w <= 41: return 10
+        if w <= 45: return 11
+        return 12
+
+    monthly_totals: Dict[int, float] = {m: 0.0 for m in range(6, 13)}
+    for week_str, qty in rows:
+        if qty and qty > 0:
+            w = int(week_str.replace('W', ''))
+            monthly_totals[week_to_month(w)] += float(qty)
+
+    total_hist = sum(monthly_totals.values())
+
+    weeks_per_month = {m: sum(1 for w in target_weeks if week_to_month(w) == m) for m in range(6, 13)}
+
+    if total_hist > 0:
+        seasonal_profile = {}
+        for w in target_weeks:
+            m = week_to_month(w)
+            month_share = monthly_totals[m] / total_hist
+            seasonal_profile[f'W{w}'] = month_share / weeks_per_month[m] if weeks_per_month[m] else 0.0
+    else:
+        # 과거 W22-W52 데이터 없음 → 동일 분포
+        seasonal_profile = {f'W{w}': 1.0 / len(target_weeks) for w in target_weeks}
+
+    # BTU/HC 모델 비중: 2024+2025 전체 기간 기준
+    mix_rows = conn.execute('''
+        SELECT model, SUM(qty) as total
+        FROM weekly_sellout
+        WHERE model IN ({})
+          AND year IN (2024, 2025)
+        GROUP BY model
+    '''.format(','.join('?' * len(predecessor_models))),
+        predecessor_models
+    ).fetchall()
+    conn.close()
+
+    mix = {r[0]: max(0.0, float(r[1])) for r in mix_rows}
+    total_mix = sum(mix.values())
+
+    if total_mix > 0:
+        model_shares = {
+            'W181EC.SN0': mix.get('C182EC.SN2', 0) / total_mix,
+            'W181EH.SN0': mix.get('C182EH.SN2', 0) / total_mix,
+            'W242EC.SN0': mix.get('C242EC.SN2', 0) / total_mix,
+        }
+        # 24K HP는 전세대 실적 없음 — 잔여분 (≈0)
+        model_shares['W242EH.SN0'] = max(0.0, 1.0 - sum(model_shares.values()))
+    else:
+        model_shares = {'W181EC.SN0': 0.617, 'W181EH.SN0': 0.152, 'W242EC.SN0': 0.231, 'W242EH.SN0': 0.0}
+
+    results = []
+    for new_model in WINDOW_SEEC_MODELS:
+        share = model_shares.get(new_model, 0.0)
+        for w in target_weeks:
+            week_str = f'W{w}'
+            season_wt = seasonal_profile.get(week_str, 0.0)
+            predicted = round(WINDOW_COLDSTART_TARGET * share * season_wt, 1)
+            results.append({
+                'model': new_model,
+                'category': 'Window',
+                'level': 'L3_coldstart',
+                'week': week_str,
+                'predicted': predicted,
+                'ci_low': round(predicted * 0.6, 1),
+                'ci_high': round(predicted * 1.4, 1),
+            })
+    return results
 
 
 def _compute_scenarios(forecasts: List[Dict]) -> Dict:
@@ -85,22 +187,8 @@ def build_fcst_output(
             'prophet_total_contribution': round(prophet_total, 1) if prophet_total else None,
         })
 
+    # Window SEEC 신제품은 단기(NEXT week) 예측에서 제외 (W22 이후에만 예측)
     existing_models = {f['model'] for f in forecasts}
-    for cs in COLDSTART_MODELS:
-        if cs['model'] not in existing_models:
-            w = cs['weekly_fcst']
-            forecasts.append({
-                'model': cs['model'],
-                'category': cs['category'],
-                'level': 'L3_coldstart',
-                'week': 'NEXT',
-                'predicted': round(w, 1),
-                'ci_low': round(w * 0.5, 1),
-                'ci_high': round(w * 1.5, 1),
-                'mape': None,
-                'lgbm_raw': None,
-                'prophet_total_contribution': None,
-            })
 
     long_range = []
     if multistep_results:
@@ -115,22 +203,15 @@ def build_fcst_output(
                 'ci_low': round(r['ci_low'] * scale, 1),
                 'ci_high': round(r['ci_high'] * scale, 1),
             })
-        cs_models_existing = {r['model'] for r in long_range}
-        weeks_in_long_range = sorted(set(r['week'] for r in long_range))
-        for cs in COLDSTART_MODELS:
-            if cs['model'] not in cs_models_existing:
-                for wk in weeks_in_long_range:
-                    w = cs['weekly_fcst']
-                    long_range.append({
-                        'model': cs['model'],
-                        'category': cs['category'],
-                        'level': 'L3_coldstart',
-                        'week': wk,
-                        'month': WEEK_MONTH.get(wk, ''),
-                        'predicted': round(w, 1),
-                        'ci_low': round(w * 0.5, 1),
-                        'ci_high': round(w * 1.5, 1),
-                    })
+
+    # Window SEEC cold-start: 과거 전세대 트렌드 기반 W22-W52 장기 예측 추가
+    cs_models_existing = {r['model'] for r in long_range}
+    if any(m not in cs_models_existing for m in WINDOW_SEEC_MODELS):
+        window_cs = _compute_window_coldstart(db_path)
+        for entry in window_cs:
+            if entry['model'] not in cs_models_existing:
+                entry['month'] = WEEK_MONTH.get(entry['week'], '')
+                long_range.append(entry)
 
     all_for_scenario = forecasts + long_range
     scenarios = _compute_scenarios(all_for_scenario)
