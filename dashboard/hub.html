@@ -294,7 +294,7 @@ function buildFilters() {
   const months = [...new Set(actuals.map(a => a.month))].sort((a,b) => MONTH_ORDER.indexOf(a)-MONTH_ORDER.indexOf(b));
   const cats = [...new Set(Object.values(meta).map(m => m.category).filter(v => v && v !== '-'))].sort();
   const comps = [...new Set(Object.values(meta).map(m => m.compressor).filter(v => v && v !== '-'))].sort();
-  const types = [...new Set(Object.values(meta).map(m => m.type).filter(v => v && v !== '-'))].sort();
+  const types = [...new Set(Object.values(meta).map(m => m.sub_category).filter(v => v && v !== '-'))].sort();
   const btus = [...new Set(Object.values(meta).map(m => m.btu).filter(v => v && v !== '-'))].sort();
 
   fill('f-month', months);
@@ -340,7 +340,7 @@ function modelPassesMeta(model, f) {
   const m = (raw.metadata[model] || {});
   if (f.category && m.category !== f.category) return false;
   if (f.compressor && m.compressor !== f.compressor) return false;
-  if (f.type && m.type !== f.type) return false;
+  if (f.type && m.sub_category !== f.type) return false;
   if (f.btu && m.btu !== f.btu) return false;
   return true;
 }
@@ -670,7 +670,7 @@ function updateTable(actuals, forecasts) {
       model,
       category: meta.category || '-',
       compressor: meta.compressor || '-',
-      type: meta.type || '-',
+      type: meta.sub_category || '-',
       btu: meta.btu || '-',
       actual_latest: latestWeekByModel[model]?.qty || 0,
       actual_total: actualByModel[model] || 0,
