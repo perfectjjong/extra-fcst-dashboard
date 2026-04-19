@@ -1,6 +1,5 @@
 import json
-import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 CACHE_PATH = Path(__file__).parent.parent / 'data' / 'trends_cache.json'
