@@ -147,14 +147,15 @@
 </div>
 
 <script>
-const API = 'http://localhost:5050';
+const API = '';
 let allForecasts = [];
 let filteredForecasts = [];
 let fcstChart = null;
 
 async function loadData() {
   try {
-    const resp = await fetch(`${API}/api/fcst`);
+    const base = 'https://perfectjjong.github.io/extra-fcst-dashboard/dashboard';
+    const resp = await fetch(`${base}/fcst_output.json`);
     const data = await resp.json();
     allForecasts = data.forecasts || [];
     document.getElementById('generated-at').textContent = '생성: ' + new Date(data.generated_at).toLocaleString('ko-KR');

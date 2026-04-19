@@ -52,12 +52,12 @@
   <div class="card">
     <h2>📊 Sell-out Dashboard</h2>
     <p>주간 모델별 실적, 채널 필터, Sell-thru 진척</p>
-    <a class="btn" href="../00. Sell Thru/03. github-deploy/index.html" target="_blank">대시보드 열기 →</a>
+    <a class="btn" href="https://perfectjjong.github.io/Shaker-MD-App/dashboards/extra-sellout/" target="_blank">대시보드 열기 →</a>
   </div>
   <div class="card">
     <h2>💰 Price Tracking</h2>
     <p>LG vs 경쟁사 일별 가격 스냅샷, 할인 모니터링</p>
-    <a class="btn" href="../../06. Price Tracking/dashboard/index.html" target="_blank">대시보드 열기 →</a>
+    <a class="btn" href="https://perfectjjong.github.io/Shaker-MD-App/dashboards/extra-price/" target="_blank">대시보드 열기 →</a>
   </div>
   <div class="card">
     <h2>🔮 FCST Dashboard</h2>
@@ -126,7 +126,7 @@
 </div>
 
 <script>
-const API = 'http://localhost:5050';
+const API = '';
 const requestLog = JSON.parse(localStorage.getItem('extraRequests') || '[]');
 
 function getCurrentWeek() {
@@ -138,7 +138,8 @@ function getCurrentWeek() {
 
 async function loadFcst() {
   try {
-    const resp = await fetch(`${API}/api/fcst`);
+    const base = 'https://perfectjjong.github.io/extra-fcst-dashboard/dashboard';
+    const resp = await fetch(`${base}/fcst_output.json`);
     if (!resp.ok) throw new Error('API unavailable');
     const data = await resp.json();
     const forecasts = data.forecasts || [];
