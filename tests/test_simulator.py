@@ -3,6 +3,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from pipeline.build_price_segments import get_brand_price_context, get_oos_signals
+from api.trends import get_trends_index
 
 DB_PATH = str(Path(__file__).parent.parent / 'data' / 'sellout.db')
 
@@ -29,3 +30,13 @@ def test_oos_signals_structure():
     assert isinstance(signals, dict)
     for seg, brands in signals.items():
         assert isinstance(brands, list)
+
+
+def test_trends_index_structure():
+    """Google Trends 결과가 주차별 딕셔너리로 반환되어야 한다."""
+    result = get_trends_index(use_cache=False)
+    # 네트워크 없을 수 있으니 빈 dict도 허용
+    assert isinstance(result, dict)
+    for week, val in result.items():
+        assert week.startswith('W')
+        assert 0 <= val <= 100
