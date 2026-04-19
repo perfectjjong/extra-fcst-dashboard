@@ -155,10 +155,14 @@ tbody tr:last-child td { border-bottom: none; }
     <div class="chart-tabs">
       <button class="chart-tab active" onclick="setChartMode('weekly',this)">주별</button>
       <button class="chart-tab" onclick="setChartMode('monthly',this)">월별</button>
+      <button class="chart-tab" onclick="setChartMode('annual',this)">연간 전망 (W52)</button>
     </div>
     <h3 id="chart-title">주별 실적 vs FCST</h3>
-    <div class="chart-canvas-wrap">
+    <div class="chart-canvas-wrap" id="trend-chart-wrap">
       <canvas id="trend-chart"></canvas>
+    </div>
+    <div class="chart-canvas-wrap" id="annual-chart-wrap" style="display:none;">
+      <canvas id="annual-chart"></canvas>
     </div>
   </div>
 
@@ -287,6 +291,12 @@ function applyFilters() {
   // Filter forecasts (meta only — week filter doesn't apply to FCST)
   const filtFcst = raw.forecasts.filter(fc => modelPassesMeta(fc.model, f));
 
+  // 필터된 모델 Set 저장 (연간 차트용)
+  window._filteredModels = new Set([
+    ...filtActuals.map(a => a.model),
+    ...filtFcst.map(fc => fc.model)
+  ]);
+
   // Filter desc
   const parts = [f.month, f.week, f.category, f.compressor, f.type, f.btu].filter(Boolean);
   document.getElementById('filter-desc').textContent = parts.length ? '— ' + parts.join(' · ') : '';
@@ -294,6 +304,11 @@ function applyFilters() {
   updateSummary(filtActuals, filtFcst);
   updateChart(filtActuals, filtFcst, f);
   updateTable(filtActuals, filtFcst);
+
+  // 연간 탭이 활성화된 경우 차트 갱신
+  if (chartMode === 'annual') {
+    renderAnnualChart();
+  }
 }
 
 function updateSummary(actuals, forecasts) {
@@ -330,7 +345,15 @@ function setChartMode(mode, btn) {
   chartMode = mode;
   document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  applyFilters();
+  if (mode === 'annual') {
+    document.getElementById('trend-chart-wrap').style.display = 'none';
+    document.getElementById('annual-chart-wrap').style.display = 'block';
+    renderAnnualChart();
+  } else {
+    document.getElementById('trend-chart-wrap').style.display = 'block';
+    document.getElementById('annual-chart-wrap').style.display = 'none';
+    applyFilters();
+  }
 }
 
 function updateChart(actuals, forecasts, f) {
@@ -399,6 +422,77 @@ function updateChart(actuals, forecasts, f) {
       }
     }
   });
+}
+
+function renderAnnualChart() {
+  if (!raw) return;
+
+  // 필터된 모델 Set (없으면 전체 모델)
+  const filtered = window._filteredModels || new Set(Object.keys(raw.metadata || {}));
+
+  // 실적 데이터: 필터된 모델 기준 월별 집계
+  const actualsByMonth = {};
+  (raw.actuals || []).forEach(a => {
+    if (!filtered.has(a.model)) return;
+    if (!a.month) return;
+    actualsByMonth[a.month] = (actualsByMonth[a.month] || 0) + a.qty;
+  });
+
+  // 장기 예측: 필터된 모델 기준 월별 집계
+  const fcstByMonth = {};
+  (raw.long_range_forecasts || []).forEach(f => {
+    if (!filtered.has(f.model)) return;
+    if (!f.month) return;
+    fcstByMonth[f.month] = (fcstByMonth[f.month] || 0) + f.predicted;
+  });
+
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const actualVals = months.map(m => actualsByMonth[m] ? Math.round(actualsByMonth[m]) : null);
+  const fcstVals = months.map(m => fcstByMonth[m] ? Math.round(fcstByMonth[m]) : null);
+
+  if (window._annualChart) window._annualChart.destroy();
+  const ctx = document.getElementById('annual-chart').getContext('2d');
+  window._annualChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: '실적',
+          data: actualVals,
+          backgroundColor: 'rgba(59,130,246,0.7)',
+          borderRadius: 4,
+        },
+        {
+          label: 'FCST',
+          data: fcstVals,
+          backgroundColor: 'rgba(124,58,237,0.5)',
+          borderColor: 'rgba(167,139,250,0.8)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8b92a5', font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${(ctx.raw || 0).toLocaleString()} units`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#8b92a5', font: { size: 11 } }, grid: { color: '#2d3561' } },
+        y: {
+          ticks: { color: '#8b92a5', font: { size: 11 }, callback: v => v.toLocaleString() },
+          grid: { color: '#2d3561' }
+        }
+      }
+    }
+  });
+  document.getElementById('chart-title').textContent = '연간 전망 — 월별 실적 + W52 FCST';
 }
 
 function updateTable(actuals, forecasts) {
