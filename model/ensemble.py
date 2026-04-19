@@ -138,16 +138,29 @@ def _compute_window_coldstart(db_path: str) -> List[Dict]:
         for w in target_weeks:
             week_str = f'W{w}'
             season_wt = seasonal_profile.get(week_str, 0.0)
-            predicted = round(WINDOW_COLDSTART_TARGET * share * season_wt, 1)
+            predicted = round(WINDOW_COLDSTART_TARGET * share * season_wt)
             results.append({
                 'model': new_model,
                 'category': 'Window',
                 'level': 'L3_coldstart',
                 'week': week_str,
                 'predicted': predicted,
-                'ci_low': round(predicted * 0.6, 1),
-                'ci_high': round(predicted * 1.4, 1),
+                'ci_low': round(predicted * 0.6),
+                'ci_high': round(predicted * 1.4),
             })
+
+    # 합계를 정확히 WINDOW_COLDSTART_TARGET(5,000)에 맞춤 — 가장 큰 모델의 마지막 주차 조정
+    actual_total = sum(r['predicted'] for r in results)
+    diff = int(WINDOW_COLDSTART_TARGET) - actual_total
+    if diff != 0:
+        # W181EC.SN0 마지막 예측 주차에 차이 반영
+        for r in reversed(results):
+            if r['model'] == 'W181EC.SN0' and r['predicted'] > 0:
+                r['predicted'] += diff
+                r['ci_low'] = round(r['predicted'] * 0.6)
+                r['ci_high'] = round(r['predicted'] * 1.4)
+                break
+
     return results
 
 
@@ -158,10 +171,10 @@ def _compute_scenarios(forecasts: List[Dict]) -> Dict:
         week = f.get('week', 'NEXT')
         base = f['predicted']
         key = f'{model}|{week}'
-        scenarios['promo_10'][key] = round(base * (1 + PROMO_ELASTICITY * 0.10), 1)
-        scenarios['promo_20'][key] = round(base * (1 + PROMO_ELASTICITY * 0.20), 1)
+        scenarios['promo_10'][key] = round(base * (1 + PROMO_ELASTICITY * 0.10))
+        scenarios['promo_20'][key] = round(base * (1 + PROMO_ELASTICITY * 0.20))
         is_ramadan = week in RAMADAN_WEEKS_2026
-        scenarios['ramadan'][key] = round(base * (RAMADAN_BOOST if is_ramadan else 1.0), 1)
+        scenarios['ramadan'][key] = round(base * (RAMADAN_BOOST if is_ramadan else 1.0))
     return scenarios
 
 
@@ -188,12 +201,12 @@ def build_fcst_output(
             'category': r['category'],
             'level': r['level'],
             'week': r['week'],
-            'predicted': round(r['predicted'] * scale, 1),
-            'ci_low': round(r['ci_low'] * scale, 1),
-            'ci_high': round(r['ci_high'] * scale, 1),
+            'predicted': round(r['predicted'] * scale),
+            'ci_low': round(r['ci_low'] * scale),
+            'ci_high': round(r['ci_high'] * scale),
             'mape': r.get('mape'),
             'lgbm_raw': r['predicted'],
-            'prophet_total_contribution': round(prophet_total, 1) if prophet_total else None,
+            'prophet_total_contribution': round(prophet_total) if prophet_total else None,
         })
 
     # Window SEEC 신제품은 단기(NEXT week) 예측에서 제외 (W22 이후에만 예측)
@@ -208,9 +221,9 @@ def build_fcst_output(
                 'level': r['level'],
                 'week': r['week'],
                 'month': WEEK_MONTH.get(r['week'], ''),
-                'predicted': round(r['predicted'] * scale, 1),
-                'ci_low': round(r['ci_low'] * scale, 1),
-                'ci_high': round(r['ci_high'] * scale, 1),
+                'predicted': round(r['predicted'] * scale),
+                'ci_low': round(r['ci_low'] * scale),
+                'ci_high': round(r['ci_high'] * scale),
             })
 
     # Window SEEC cold-start: 과거 전세대 트렌드 기반 W22-W52 장기 예측 추가

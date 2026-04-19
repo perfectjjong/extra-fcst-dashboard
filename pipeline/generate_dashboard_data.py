@@ -94,7 +94,7 @@ def load_actuals():
                 'year': year,
                 'week': week,
                 'month': WEEK_MONTH.get(week, ''),
-                'qty': round(float(qty), 0),
+                'qty': int(round(qty)),
             })
     return actuals
 
