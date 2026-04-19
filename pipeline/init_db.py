@@ -59,6 +59,18 @@ CREATE TABLE IF NOT EXISTS fcst_accuracy_log (
     mape       REAL,
     retrained  INTEGER DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS fcst_snapshots (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    snapshot_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    week         TEXT NOT NULL,
+    model        TEXT NOT NULL,
+    level        TEXT,
+    predicted    REAL,
+    ci_low       REAL,
+    ci_high      REAL,
+    UNIQUE(week, model)
+);
 """
 
 def init_db(db_path: str) -> None:
