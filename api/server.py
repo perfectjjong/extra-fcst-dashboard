@@ -1,16 +1,32 @@
 import json
 import os
 import sqlite3
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(os.path.abspath(__file__)).parent.parent))
+from collections import defaultdict
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
+from api.simulator import SimulationEngine
+from api.trends import get_trends_index
+from pipeline.build_price_segments import get_brand_price_context, get_oos_signals
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), '..')
 DEFAULT_DB = os.path.join(BASE_DIR, 'data', 'sellout.db')
 DEFAULT_FCST = os.path.join(BASE_DIR, 'dashboard', 'fcst_output.json')
+DASHBOARD_DIR = os.path.join(BASE_DIR, 'dashboard')
 
 
 def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
     app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        return send_from_directory(os.path.abspath(DASHBOARD_DIR), 'hub.html')
+
+    @app.route('/fcst')
+    def fcst_page():
+        return send_from_directory(os.path.abspath(DASHBOARD_DIR), 'fcst_dashboard.html')
 
     @app.after_request
     def add_cors(response):
@@ -71,6 +87,78 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
             return jsonify(data)
         except FileNotFoundError:
             return jsonify({'error': 'fcst_output.json not found'}), 404
+
+    @app.route('/simulator')
+    def simulator_page():
+        return send_from_directory(os.path.abspath(DASHBOARD_DIR), 'simulator.html')
+
+    @app.route('/api/oos', methods=['GET'])
+    def get_oos():
+        try:
+            return jsonify(get_oos_signals(db_path))
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/trends', methods=['GET'])
+    def get_trends():
+        try:
+            return jsonify(get_trends_index())
+        except Exception:
+            return jsonify({}), 200
+
+    @app.route('/api/simulate', methods=['POST', 'OPTIONS'])
+    def post_simulate():
+        if request.method == 'OPTIONS':
+            return jsonify({}), 200
+        params = request.get_json() or {}
+        params.setdefault('price_positioning', {})
+        params.setdefault('promo_periods', [])
+        params.setdefault('external_vars', {
+            'temp_scenario': 'normal', 'humidity_scenario': 'normal',
+            'oil_price_usd': 75, 'electricity_burden': True, 'oos_brands': {},
+        })
+        params.setdefault('scope', {'week_from': 1, 'week_to': 52, 'categories': []})
+        params.setdefault('trends_index', {})
+
+        try:
+            with open(fcst_path, encoding='utf-8') as f:
+                fcst_data = json.load(f)
+        except FileNotFoundError:
+            return jsonify({'error': 'fcst_output.json not found'}), 404
+
+        try:
+            gaps = get_brand_price_context(db_path)
+        except Exception:
+            gaps = {}
+
+        engine = SimulationEngine()
+        results = engine.simulate(fcst_data.get('long_range_forecasts', []), params, gaps)
+
+        base_total = sum(r.get('predicted', 0) for r in results)
+        adj_total  = sum(r.get('adjusted', 0) for r in results)
+        delta_pct  = round((adj_total / base_total - 1) * 100, 1) if base_total > 0 else 0.0
+
+        by_week = defaultdict(lambda: {'base': 0, 'adjusted': 0, 'promo': False, 'hangover': False})
+        for r in results:
+            w = r['week']
+            by_week[w]['base']     += r['predicted']
+            by_week[w]['adjusted'] += r['adjusted']
+            if r['is_promo_week']:  by_week[w]['promo']    = True
+            if r['is_hangover']:    by_week[w]['hangover'] = True
+
+        return jsonify({
+            'results': results,
+            'by_week': dict(by_week),
+            'summary': {
+                'base_total':    base_total,
+                'adjusted_total': adj_total,
+                'delta_pct':     delta_pct,
+                'model_count':   len(set(r['model'] for r in results)),
+                'promo_weeks':   sum(1 for w in by_week.values() if w['promo']),
+                'week_range':    [params['scope']['week_from'], params['scope']['week_to']],
+            },
+            'current_price_gaps': gaps,
+        })
 
     return app
 

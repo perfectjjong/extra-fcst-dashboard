@@ -165,3 +165,47 @@ def test_seg_key():
     assert _seg_key('W181EC.SN0') == 'Window AC|Inverter'
     assert _seg_key('APNQ55GT3MA') == 'Free Standing AC|Inverter'
     assert _seg_key('UT182CE') == 'Cassette AC|Inverter'
+
+
+import pytest
+
+@pytest.fixture
+def client():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from api.server import create_app
+    app = create_app(
+        db_path=str(Path(__file__).parent.parent / 'data' / 'sellout.db'),
+        fcst_path=str(Path(__file__).parent.parent / 'dashboard' / 'fcst_output.json'),
+    )
+    app.config['TESTING'] = True
+    return app.test_client()
+
+
+def test_simulate_endpoint(client):
+    resp = client.post('/api/simulate', json={
+        'price_positioning': {}, 'promo_periods': [],
+        'external_vars': {'temp_scenario': 'normal', 'humidity_scenario': 'normal',
+                          'oil_price_usd': 75, 'electricity_burden': True, 'oos_brands': {}},
+        'scope': {'week_from': 22, 'week_to': 30, 'categories': []},
+        'trends_index': {},
+    })
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert 'results' in data
+    assert 'summary' in data
+    assert 'current_price_gaps' in data
+    assert 'by_week' in data
+
+
+def test_oos_endpoint(client):
+    resp = client.get('/api/oos')
+    assert resp.status_code == 200
+    assert isinstance(resp.get_json(), dict)
+
+
+def test_trends_endpoint(client):
+    resp = client.get('/api/trends')
+    assert resp.status_code == 200
+    assert isinstance(resp.get_json(), dict)
