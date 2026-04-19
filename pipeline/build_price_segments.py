@@ -359,20 +359,21 @@ def get_oos_signals(db_path: str) -> dict:
     conn = sqlite3.connect(db_path)
 
     # 최근 4개 주차 (최신순)
-    weeks = conn.execute(
+    recent_weeks = conn.execute(
         "SELECT DISTINCT period FROM competitor_prices "
         "WHERE source='price_tracking' AND period_type='week' "
         "ORDER BY year DESC, CAST(SUBSTR(period,2) AS INTEGER) DESC LIMIT 4"
     ).fetchall()
-    conn.close()
 
-    if len(weeks) < 2:
+    if len(recent_weeks) < 2:
+        conn.close()
         return {}
 
-    latest = weeks[0][0]
-    prev_weeks = [w[0] for w in weeks[1:]]
+    if len(recent_weeks) < 4:
+        print(f"  [경고] OOS 감지: 최근 주차 데이터 {len(recent_weeks)}개뿐 (4개 권장)")
 
-    conn = sqlite3.connect(db_path)
+    latest = recent_weeks[0][0]
+    prev_weeks = [w[0] for w in recent_weeks[1:]]
 
     # 최근 주차 데이터 (brand, segment)
     latest_rows = conn.execute(
