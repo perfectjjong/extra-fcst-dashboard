@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCST Demand Simulator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080b14; --surface: #0f1520; --card: #141926; --border: #1e2640;
+  --purple: #7c3aed; --purple-lt: #a78bfa;
+  --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+  --text: #f1f5f9; --muted: #94a3b8; --dim: #4b5679;
+}
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 13px; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+header {
+  height: 52px; flex-shrink: 0;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px; gap: 16px;
+}
+header .logo { font-size: 1.1rem; font-weight: 700; color: var(--purple-lt); }
+header .back-link { color: var(--muted); text-decoration: none; font-size: 0.78rem; margin-right: auto; }
+header .back-link:hover { color: var(--purple-lt); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.loading-bar {
+  position: fixed; top: 0; left: 0; height: 2px; background: var(--purple);
+  width: 0%; transition: width .3s; z-index: 999;
+}
+
+/* ── KPI Strip ── */
+.kpi-strip {
+  height: 72px; flex-shrink: 0;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1px; padding: 0 2px;
+}
+.kpi-card {
+  flex: 1; height: 56px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; margin: 0 4px; padding: 8px 14px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.kpi-card .kpi-label { font-size: 0.66rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+.kpi-card .kpi-value { font-size: 1.25rem; font-weight: 700; color: var(--text); line-height: 1; }
+.kpi-card .kpi-sub { font-size: 0.68rem; color: var(--dim); margin-top: 2px; }
+.kpi-up { color: var(--green) !important; }
+.kpi-down { color: var(--red) !important; }
+.kpi-neutral { color: var(--purple-lt) !important; }
+
+/* ── Body ── */
+.body-wrap {
+  flex: 1; display: grid; grid-template-columns: 320px 1fr;
+  overflow: hidden; min-height: 0;
+}
+
+/* ── Controls Panel ── */
+.controls-panel {
+  background: var(--surface); border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 10px 0;
+}
+.controls-panel::-webkit-scrollbar { width: 4px; }
+.controls-panel::-webkit-scrollbar-track { background: transparent; }
+.controls-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Accordion */
+.accordion { border-bottom: 1px solid var(--border); }
+.accordion-header {
+  display: flex; align-items: center; padding: 10px 16px; cursor: pointer;
+  user-select: none; gap: 8px; font-size: 0.82rem; font-weight: 600;
+  color: var(--muted); transition: color .15s;
+}
+.accordion-header:hover { color: var(--text); }
+.accordion-header.open { color: var(--purple-lt); }
+.accordion-header .acc-icon { margin-left: auto; transition: transform .25s; font-size: 0.7rem; }
+.accordion-header.open .acc-icon { transform: rotate(180deg); }
+.accordion-body {
+  overflow: hidden; max-height: 0; transition: max-height .3s ease;
+  padding: 0 14px;
+}
+.accordion-body.open { max-height: 800px; padding-bottom: 12px; }
+
+/* Form elements */
+.form-row { margin-top: 10px; }
+.form-row label { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+select, input[type=number], input[type=text] {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 10px; border-radius: 6px; font-size: 0.8rem;
+  outline: none; transition: border-color .15s;
+}
+select:focus, input:focus { border-color: var(--purple); }
+select option { background: var(--card); }
+
+/* Slider */
+.slider-row { margin-top: 10px; }
+.slider-row .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.slider-row .slider-label { font-size: 0.78rem; color: var(--text); }
+.slider-row .slider-val { font-size: 0.75rem; color: var(--purple-lt); font-weight: 700; }
+.slider-row .slider-effect { font-size: 0.68rem; margin-top: 2px; }
+input[type=range] {
+  width: 100%; height: 4px; appearance: none; background: var(--border);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--purple-lt); cursor: pointer; transition: background .15s;
+}
+input[type=range]:hover::-webkit-slider-thumb { background: var(--purple); }
+
+/* Toggle switch */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.toggle-row .toggle-info { flex: 1; }
+.toggle-row .toggle-name { font-size: 0.8rem; color: var(--text); }
+.toggle-row .toggle-sub { font-size: 0.68rem; color: var(--dim); margin-top: 1px; }
+.toggle {
+  position: relative; width: 36px; height: 20px; cursor: pointer; flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0; background: var(--border); border-radius: 10px;
+  transition: background .2s;
+}
+.toggle input:checked ~ .toggle-track { background: var(--purple); }
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
+  background: white; border-radius: 50%; transition: transform .2s;
+}
+.toggle input:checked ~ .toggle-knob { transform: translateX(16px); }
+
+/* Segment tabs */
+.seg-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 10px; }
+.seg-tab {
+  padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  transition: all .15s;
+}
+.seg-tab.active { background: var(--purple); color: white; border-color: var(--purple); }
+.seg-tab:hover:not(.active) { border-color: var(--purple-lt); color: var(--text); }
+
+/* Ext var card */
+.ext-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; margin-top: 8px;
+}
+.ext-card .ext-title { font-size: 0.75rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+
+/* Promo builder */
+.promo-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; margin-top: 8px; position: relative;
+}
+.promo-card .promo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.promo-card .delete-btn {
+  position: absolute; top: 8px; right: 8px; background: transparent;
+  border: none; color: var(--red); cursor: pointer; font-size: 0.75rem; padding: 2px 6px;
+  border-radius: 4px; transition: background .15s;
+}
+.promo-card .delete-btn:hover { background: rgba(239,68,68,.15); }
+.promo-card .depth-label { font-size: 0.7rem; margin-top: 6px; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+.depth-ok { background: rgba(16,185,129,.12); color: var(--green); }
+.depth-warn { background: rgba(245,158,11,.12); color: var(--amber); }
+.add-promo-btn {
+  width: calc(100% - 28px); margin: 8px 14px 0; padding: 6px;
+  background: transparent; border: 1px dashed var(--border); color: var(--muted);
+  border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: all .15s;
+}
+.add-promo-btn:hover { border-color: var(--purple-lt); color: var(--purple-lt); }
+
+/* OOS section */
+.oos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+.oos-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 8px; display: flex; align-items: center; gap: 6px; cursor: pointer;
+}
+.oos-item.active { border-color: var(--red); background: rgba(239,68,68,.08); }
+.oos-item .oos-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.oos-item.active .oos-dot { background: var(--red); }
+.oos-item .oos-name { font-size: 0.7rem; color: var(--muted); line-height: 1.2; }
+.oos-item.active .oos-name { color: var(--text); }
+
+/* ── Visualization Area ── */
+.viz-area {
+  display: flex; flex-direction: column; overflow: hidden; background: var(--bg);
+}
+
+/* Chart zone — top 55% */
+.chart-zone {
+  flex: 0 0 55%; border-bottom: 1px solid var(--border); padding: 14px 18px 10px;
+  display: flex; flex-direction: column; min-height: 0;
+}
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.chart-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.chart-legend { display: flex; gap: 12px; font-size: 0.68rem; color: var(--muted); align-items: center; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.chart-canvas-wrap { flex: 1; position: relative; min-height: 0; }
+
+/* Table zone — bottom 45% */
+.table-zone {
+  flex: 1; overflow-y: auto; padding: 0;
+}
+.table-zone::-webkit-scrollbar { width: 4px; }
+.table-zone::-webkit-scrollbar-track { background: transparent; }
+.table-zone::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--surface); padding: 8px 14px; text-align: left;
+  color: var(--muted); font-size: 0.68rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td { padding: 7px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tbody tr:hover { background: var(--card); }
+.badge {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  font-size: 0.65rem; font-weight: 600; line-height: 1.6;
+}
+.badge-promo { background: rgba(124,58,237,.2); color: var(--purple-lt); }
+.badge-hang { background: rgba(245,158,11,.2); color: var(--amber); }
+.badge-none { color: var(--dim); }
+.val-up { color: var(--green); }
+.val-down { color: var(--red); }
+.val-promo { color: var(--purple-lt); }
+
+/* Inline label */
+.inline-label { font-size: 0.68rem; color: var(--muted); margin-left: 2px; }
+
+/* Spinner */
+.spinner-overlay {
+  position: absolute; inset: 0; background: rgba(8,11,20,.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10; opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.spinner-overlay.show { opacity: 1; pointer-events: all; }
+.spinner {
+  width: 28px; height: 28px; border: 3px solid var(--border);
+  border-top-color: var(--purple); border-radius: 50%; animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Error toast */
+.toast {
+  position: fixed; bottom: 20px; right: 20px; background: var(--card);
+  border: 1px solid var(--border); border-left: 3px solid var(--red);
+  padding: 10px 16px; border-radius: 8px; font-size: 0.8rem; z-index: 100;
+  opacity: 0; transform: translateY(8px); transition: all .25s; max-width: 320px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Responsive no-overflow */
+.seg-panel { display: none; }
+.seg-panel.active { display: block; }
+</style>
+</head>
+<body>
+<div class="loading-bar" id="loading-bar"></div>
+
+<!-- Header -->
+<header>
+  <span class="logo">🔮 Demand Simulator</span>
+  <a class="back-link" href="hub.html">← Hub로 돌아가기</a>
+  <span class="status-dot" id="status-dot"></span>
+  <span style="font-size:.72rem;color:var(--dim);" id="last-update">준비 중...</span>
+</header>
+
+<!-- KPI Strip -->
+<div class="kpi-strip">
+  <div class="kpi-card">
+    <div class="kpi-label">Base 수요</div>
+    <div class="kpi-value" id="kpi-base">—</div>
+    <div class="kpi-sub" id="kpi-base-sub">주간 합계</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">조정 수요</div>
+    <div class="kpi-value" id="kpi-adj">—</div>
+    <div class="kpi-sub">시나리오 적용</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">변화율</div>
+    <div class="kpi-value" id="kpi-delta">—</div>
+    <div class="kpi-sub">Base 대비</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">피크 주차</div>
+    <div class="kpi-value" id="kpi-peak">—</div>
+    <div class="kpi-sub" id="kpi-peak-val">최고 조정 수요</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">프로모션 주간수</div>
+    <div class="kpi-value" id="kpi-promo-weeks">—</div>
+    <div class="kpi-sub">프로모 적용 주</div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body-wrap">
+
+  <!-- Controls Panel -->
+  <div class="controls-panel" id="controls-panel">
+
+    <!-- 분석 범위 -->
+    <div class="accordion">
+      <div class="accordion-header open" onclick="toggleAccordion(this)">
+        <span>📅</span> 분석 범위
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body open">
+        <div class="form-row">
+          <label>시작 주차</label>
+          <select id="scope-from" onchange="scheduleSimulate()">
+            <!-- populated by JS -->
+          </select>
+        </div>
+        <div class="form-row">
+          <label>종료 주차</label>
+          <select id="scope-to" onchange="scheduleSimulate()">
+          </select>
+        </div>
+        <div class="form-row">
+          <label>카테고리 필터</label>
+          <select id="scope-cat" onchange="scheduleSimulate()">
+            <option value="">전체</option>
+            <option value="Mini Split">Mini Split AC</option>
+            <option value="Window">Window AC</option>
+            <option value="Free Standing">Free Standing AC</option>
+            <option value="Cassette">Cassette AC</option>
+            <option value="Packaged">Packaged AC</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 가격 포지셔닝 -->
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>💰</span> 가격 포지셔닝
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body">
+        <div class="seg-tabs" id="price-seg-tabs"></div>
+        <div id="price-seg-panels"></div>
+      </div>
+    </div>
+
+    <!-- 프로모션 -->
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🏷</span> 프로모션
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body">
+        <div id="promo-list"></div>
+        <button class="add-promo-btn" onclick="addPromo()">+ 프로모션 추가</button>
+      </div>
+    </div>
+
+    <!-- 외부 변수 -->
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🌍</span> 외부 변수
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body">
+        <div class="ext-card">
+          <div class="ext-title">🌡 기온 시나리오</div>
+          <select id="ext-temp" onchange="scheduleSimulate()">
+            <option value="normal">보통</option>
+            <option value="hot">더위 +5°C</option>
+            <option value="mild">온화 -5°C</option>
+          </select>
+        </div>
+        <div class="ext-card">
+          <div class="ext-title">💧 습도 시나리오</div>
+          <select id="ext-humidity" onchange="scheduleSimulate()">
+            <option value="normal">보통</option>
+            <option value="high">높음 +15%</option>
+            <option value="low">낮음 -10%</option>
+          </select>
+        </div>
+        <div class="ext-card">
+          <div class="ext-title">🛢 국제유가 (USD/배럴)</div>
+          <input type="number" id="ext-oil" value="75" min="20" max="200" step="1"
+                 oninput="scheduleSimulate()" style="margin-top:4px;">
+        </div>
+        <div class="ext-card">
+          <div class="toggle-row" style="margin-top:0;">
+            <div class="toggle-info">
+              <div class="toggle-name">⚡ 전기요금 부담</div>
+              <div class="toggle-sub">인버터 수요 가중치</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="ext-electricity" checked onchange="scheduleSimulate()">
+              <span class="toggle-track"></span>
+              <span class="toggle-knob"></span>
+            </label>
+          </div>
+        </div>
+        <div class="ext-card">
+          <div class="toggle-row" style="margin-top:0;">
+            <div class="toggle-info">
+              <div class="toggle-name">📡 Google Trends</div>
+              <div class="toggle-sub" id="trends-status">데이터 미적용</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="ext-trends" onchange="onTrendsToggle()">
+              <span class="toggle-track"></span>
+              <span class="toggle-knob"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OOS 신호 -->
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🚨</span> OOS 신호
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body">
+        <div style="font-size:.72rem;color:var(--dim);margin-top:4px;margin-bottom:2px;">경쟁사 OOS → LG 수요 전환 적용</div>
+        <div id="oos-grid" class="oos-grid"></div>
+      </div>
+    </div>
+
+  </div><!-- /controls-panel -->
+
+  <!-- Visualization Area -->
+  <div class="viz-area">
+
+    <!-- Chart Zone -->
+    <div class="chart-zone">
+      <div class="chart-header">
+        <span class="chart-title">주간 수요 시뮬레이션</span>
+        <div class="chart-legend">
+          <span class="legend-dot" style="background:#3d4566;"></span> Base
+          <span class="legend-dot" style="background:var(--green);"></span> 증가
+          <span class="legend-dot" style="background:var(--red);"></span> 감소
+          <span class="legend-dot" style="background:var(--purple);"></span> 프로모
+          <span class="legend-dot" style="background:var(--amber);"></span> 행오버
+        </div>
+      </div>
+      <div class="chart-canvas-wrap" style="position:relative;">
+        <canvas id="main-chart"></canvas>
+        <div class="spinner-overlay" id="chart-spinner">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Zone -->
+    <div class="table-zone">
+      <table>
+        <thead>
+          <tr>
+            <th>주차</th>
+            <th>Base 수요</th>
+            <th>조정 수요</th>
+            <th>변화 (Δ)</th>
+            <th>변화율</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="week-table-body">
+          <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--dim);">시뮬레이션 결과를 불러오는 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /viz-area -->
+</div><!-- /body-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+const state = {
+  priceGaps: {},      // from API response
+  trendsData: {},     // from /api/trends
+  oosData: {},        // from /api/oos
+  activeOOS: {},      // {segment: [brands]}
+  priceSliders: {},   // {segKey: {brandName: value}}
+  promos: [],         // array of promo objects
+  activePriceSeg: '', // currently shown seg tab key
+  trendsEnabled: false,
+  chart: null,
+  debounceTimer: null,
+  lastResult: null,
+};
+
+// Segment display names -> api keys
+const SEG_DISPLAY = {
+  'MS INV': 'Mini Split AC|Inverter',
+  'MS ROT': 'Mini Split AC|Rotary',
+  'WIN INV': 'Window AC|Inverter',
+  'PAC': 'Packaged AC|Inverter',
+  'CASS': 'Cassette AC|Inverter',
+};
+const SEG_DISPLAY_REV = Object.fromEntries(Object.entries(SEG_DISPLAY).map(([k,v]) => [v,k]));
+
+// ── Accordion ─────────────────────────────────────────────────────────────────
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// ── Week Selects ──────────────────────────────────────────────────────────────
+function populateWeekSelects() {
+  const fromSel = document.getElementById('scope-from');
+  const toSel   = document.getElementById('scope-to');
+  for (let w = 1; w <= 52; w++) {
+    const o1 = new Option(`W${w}`, w);
+    const o2 = new Option(`W${w}`, w);
+    fromSel.add(o1);
+    toSel.add(o2);
+  }
+  fromSel.value = 1;
+  toSel.value = 52;
+}
+
+// ── Debounce Simulate ─────────────────────────────────────────────────────────
+function scheduleSimulate() {
+  clearTimeout(state.debounceTimer);
+  state.debounceTimer = setTimeout(runSimulate, 350);
+}
+
+// ── Build params ──────────────────────────────────────────────────────────────
+function buildParams() {
+  const weekFrom = parseInt(document.getElementById('scope-from').value);
+  const weekTo   = parseInt(document.getElementById('scope-to').value);
+  const cat      = document.getElementById('scope-cat').value;
+
+  // Price positioning
+  const pp = {};
+  for (const [segKey, brands] of Object.entries(state.priceSliders)) {
+    const gaps = state.priceGaps[segKey];
+    if (!gaps) continue;
+    for (const [brand, val] of Object.entries(brands)) {
+      // Get current gap
+      const currentGap = gaps.brands?.[brand]?.gap_pct ?? 0;
+      if (Math.abs(val - currentGap) > 0.5) {
+        if (!pp[segKey]) pp[segKey] = {};
+        const brandKey = 'vs_' + brand.replace(/ /g, '_');
+        pp[segKey][brandKey] = val;
+      }
+    }
+  }
+
+  // External vars
+  const oosBrands = {};
+  for (const [seg, brands] of Object.entries(state.activeOOS)) {
+    if (brands.length > 0) oosBrands[seg] = brands;
+  }
+
+  return {
+    price_positioning: pp,
+    promo_periods: state.promos.map(p => ({
+      start_week:      parseInt(p.startW) || 1,
+      end_week:        parseInt(p.endW) || 1,
+      segment:         p.segment,
+      competitor:      p.competitor,
+      target_gap_pct:  parseFloat(p.targetGap) || 0,
+      current_gap_pct: parseFloat(p.currentGap) || 0,
+      hangover_weeks:  parseInt(p.hangover) || 1,
+    })),
+    external_vars: {
+      temp_scenario:       document.getElementById('ext-temp').value,
+      humidity_scenario:   document.getElementById('ext-humidity').value,
+      oil_price_usd:       parseFloat(document.getElementById('ext-oil').value) || 75,
+      electricity_burden:  document.getElementById('ext-electricity').checked,
+      oos_brands:          oosBrands,
+    },
+    scope: {
+      week_from:  weekFrom,
+      week_to:    weekTo,
+      categories: cat ? [cat] : [],
+    },
+    trends_index: state.trendsEnabled ? state.trendsData : {},
+  };
+}
+
+// ── Run Simulate ──────────────────────────────────────────────────────────────
+async function runSimulate() {
+  showSpinner(true);
+  setLoadingBar(30);
+  try {
+    const params = buildParams();
+    const resp = await fetch('/api/simulate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    setLoadingBar(90);
+    state.lastResult = data;
+    if (data.current_price_gaps && Object.keys(data.current_price_gaps).length > 0) {
+      state.priceGaps = data.current_price_gaps;
+      buildPricePanel();
+    }
+    renderKPIs(data.summary);
+    renderChart(data.by_week);
+    renderTable(data.by_week);
+    updateLastUpdate();
+    setLoadingBar(100);
+    setTimeout(() => setLoadingBar(0), 500);
+  } catch (err) {
+    showToast('시뮬레이션 오류: ' + err.message);
+    setLoadingBar(0);
+  } finally {
+    showSpinner(false);
+  }
+}
+
+// ── KPI Render ────────────────────────────────────────────────────────────────
+function renderKPIs(s) {
+  if (!s) return;
+  document.getElementById('kpi-base').textContent = fmt(s.base_total);
+  document.getElementById('kpi-adj').textContent  = fmt(s.adjusted_total);
+
+  const deltaEl = document.getElementById('kpi-delta');
+  const d = s.delta_pct;
+  deltaEl.textContent = (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
+  deltaEl.className = 'kpi-value ' + (d > 0 ? 'kpi-up' : d < 0 ? 'kpi-down' : '');
+
+  document.getElementById('kpi-promo-weeks').textContent = s.promo_weeks ?? 0;
+
+  // Peak week
+  if (state.lastResult?.by_week) {
+    const bw = state.lastResult.by_week;
+    const weeks = Object.keys(bw).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+    let peakW = weeks[0], peakV = 0;
+    for (const w of weeks) {
+      if ((bw[w].adjusted || 0) > peakV) { peakV = bw[w].adjusted; peakW = w; }
+    }
+    document.getElementById('kpi-peak').textContent = peakW;
+    document.getElementById('kpi-peak-val').textContent = fmt(peakV) + '대';
+  }
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────────────
+function renderChart(byWeek) {
+  const weeks = Object.keys(byWeek || {}).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+  if (!weeks.length) return;
+
+  const bases     = weeks.map(w => byWeek[w].base     || 0);
+  const adjusted  = weeks.map(w => byWeek[w].adjusted || 0);
+  const isPromo   = weeks.map(w => byWeek[w].promo    || false);
+  const isHang    = weeks.map(w => byWeek[w].hangover || false);
+
+  // Delta colors per bar
+  const deltaColors = weeks.map((w, i) => {
+    if (isPromo[i])  return '#7c3aed';
+    if (isHang[i])   return '#f59e0b';
+    const delta = adjusted[i] - bases[i];
+    if (Math.abs(delta) < 1) return '#3d4566';
+    return delta > 0 ? '#10b981' : '#ef4444';
+  });
+
+  const deltas = weeks.map((w,i) => Math.max(0, adjusted[i] - bases[i]));
+  const negDeltas = weeks.map((w,i) => Math.max(0, bases[i] - adjusted[i]));
+  const baseForStacked = weeks.map((w,i) => {
+    // show base as the bottom, delta stacked on top
+    return Math.min(bases[i], adjusted[i]);
+  });
+
+  const datasets = [
+    {
+      label: 'Base',
+      data: bases,
+      backgroundColor: '#2a3050',
+      borderRadius: 2,
+      borderSkipped: false,
+      stack: 's1',
+    },
+    {
+      label: 'Delta (조정)',
+      data: weeks.map((w, i) => {
+        const delta = adjusted[i] - bases[i];
+        return Math.abs(delta);
+      }),
+      backgroundColor: deltaColors,
+      borderRadius: 2,
+      borderSkipped: false,
+      stack: 's1',
+    },
+  ];
+
+  // For negative deltas, we need a different approach: show base adjusted down
+  // Actually let's just use base + separate delta dataset with proper vis
+
+  const ctx = document.getElementById('main-chart').getContext('2d');
+  if (state.chart) {
+    state.chart.destroy();
+  }
+
+  // Rebuild as simple: base bar (bottom), overlay positive delta green, negative shows as shorter bar
+  const simpleBase = weeks.map((w,i) => Math.min(bases[i], adjusted[i]));
+  const positiveDelta = weeks.map((w,i) => Math.max(0, adjusted[i] - bases[i]));
+  const negativeDelta = weeks.map((w,i) => Math.max(0, bases[i] - adjusted[i]));
+
+  const posColors  = weeks.map((w,i) => isPromo[i] ? '#7c3aed' : '#10b981');
+  const negColors  = weeks.map((w,i) => isHang[i] ? '#f59e0b' : '#ef4444');
+
+  state.chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: weeks,
+      datasets: [
+        {
+          label: 'Base',
+          data: simpleBase,
+          backgroundColor: '#2a3050',
+          borderRadius: 2,
+          stack: 's1',
+          order: 3,
+        },
+        {
+          label: '증가',
+          data: positiveDelta,
+          backgroundColor: posColors,
+          borderRadius: 2,
+          stack: 's1',
+          order: 2,
+        },
+        {
+          label: '감소',
+          data: weeks.map((w,i) => {
+            // Show as reduction from base
+            return -negativeDelta[i];
+          }),
+          backgroundColor: negColors,
+          borderRadius: 0,
+          stack: 's2',
+          order: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#141926',
+          borderColor: '#1e2640',
+          borderWidth: 1,
+          titleColor: '#f1f5f9',
+          bodyColor: '#94a3b8',
+          padding: 10,
+          callbacks: {
+            title: (items) => {
+              const w = items[0].label;
+              const d = byWeek[w];
+              const promo = d.promo ? ' 🏷 프로모' : d.hangover ? ' ⚠️ 행오버' : '';
+              return w + promo;
+            },
+            label: (item) => {
+              const w = item.label;
+              const d = byWeek[w];
+              const delta = (d.adjusted - d.base);
+              return [
+                ` Base:   ${fmt(d.base)}`,
+                ` 조정:   ${fmt(d.adjusted)}`,
+                ` Delta:  ${delta >= 0 ? '+' : ''}${fmt(delta)} (${deltaStr(d.base, d.adjusted)})`,
+              ];
+            },
+            afterBody: (items) => {
+              const w = items[0].label;
+              const d = byWeek[w];
+              const lines = [];
+              if (d.promo)    lines.push(' 📌 프로모션 적용 주');
+              if (d.hangover) lines.push(' ⚠️ 행오버 주');
+              return lines;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { color: '#1a1f30' },
+          ticks: { color: '#4b5679', font: { size: 10 }, maxRotation: 0 },
+        },
+        y: {
+          stacked: true,
+          grid: { color: '#1a1f30' },
+          ticks: { color: '#4b5679', font: { size: 10 },
+            callback: v => v < 0 ? '' : fmt(v),
+          },
+        },
+      },
+    },
+  });
+}
+
+// ── Table Render ──────────────────────────────────────────────────────────────
+function renderTable(byWeek) {
+  const weeks = Object.keys(byWeek || {}).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+  const tbody = document.getElementById('week-table-body');
+  if (!weeks.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--dim);">데이터 없음</td></tr>';
+    return;
+  }
+  tbody.innerHTML = weeks.map(w => {
+    const d = byWeek[w];
+    const delta = d.adjusted - d.base;
+    const deltaPct = d.base > 0 ? (delta / d.base * 100) : 0;
+    const cls = d.promo ? 'val-promo' : (delta > 0 ? 'val-up' : delta < 0 ? 'val-down' : '');
+    const statusBadge = d.promo
+      ? '<span class="badge badge-promo">프로모</span>'
+      : d.hangover
+      ? '<span class="badge badge-hang">행오버</span>'
+      : '<span class="badge-none">—</span>';
+    return `<tr>
+      <td style="font-weight:600;color:var(--text);">${w}</td>
+      <td>${fmt(d.base)}</td>
+      <td class="${cls}">${fmt(d.adjusted)}</td>
+      <td class="${cls}">${delta >= 0 ? '+' : ''}${fmt(delta)}</td>
+      <td class="${cls}">${deltaPct >= 0 ? '+' : ''}${deltaPct.toFixed(1)}%</td>
+      <td>${statusBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Price Panel ───────────────────────────────────────────────────────────────
+function buildPricePanel() {
+  const gaps = state.priceGaps;
+  const tabsEl   = document.getElementById('price-seg-tabs');
+  const panelsEl = document.getElementById('price-seg-panels');
+
+  // Get available segments
+  const segKeys = Object.keys(gaps);
+  if (!segKeys.length) {
+    tabsEl.innerHTML = '<div style="color:var(--dim);font-size:.75rem;">가격 데이터 없음</div>';
+    return;
+  }
+
+  // Map to display names (use short if known, else use raw)
+  const tabs = segKeys.map(k => SEG_DISPLAY_REV[k] || k.split('|')[0].trim().slice(0,8));
+
+  if (!state.activePriceSeg || !segKeys.includes(state.activePriceSeg)) {
+    state.activePriceSeg = segKeys[0];
+  }
+
+  tabsEl.innerHTML = segKeys.map((k, i) =>
+    `<button class="seg-tab ${k === state.activePriceSeg ? 'active' : ''}" onclick="switchPriceSeg('${k}')">${tabs[i]}</button>`
+  ).join('');
+
+  panelsEl.innerHTML = segKeys.map(k => {
+    const segData = gaps[k];
+    if (!segData?.brands) return '';
+    const brands = Object.keys(segData.brands);
+    if (!brands.length) return '';
+    if (!state.priceSliders[k]) state.priceSliders[k] = {};
+
+    return `<div class="seg-panel ${k === state.activePriceSeg ? 'active' : ''}" id="seg-${slugify(k)}">
+      <div style="font-size:.68rem;color:var(--dim);margin-top:8px;margin-bottom:4px;">
+        LG 기준가: ${fmt(segData.lg_avg_price_vat_ex)} SAR (기준: ${segData.reference_period})
+      </div>
+      ${brands.map(brand => {
+        const info = segData.brands[brand];
+        const currentGap = info.gap_pct ?? 0;
+        if (!(brand in state.priceSliders[k])) {
+          state.priceSliders[k][brand] = currentGap;
+        }
+        const curVal = state.priceSliders[k][brand];
+        const effect = curVal < currentGap ? `<span style="color:var(--green)">↘ 가격 축소 (수요↑)</span>`
+                     : curVal > currentGap ? `<span style="color:var(--red)">↗ 가격 확대 (수요↓)</span>`
+                     : `<span style="color:var(--dim)">변화 없음</span>`;
+        return `<div class="slider-row">
+          <div class="slider-header">
+            <span class="slider-label">${brand}</span>
+            <span class="slider-val" id="sv-${slugify(k)}-${slugify(brand)}">${curVal.toFixed(1)}%p</span>
+          </div>
+          <input type="range" min="-20" max="50" step="0.5" value="${curVal}"
+            data-seg="${k}" data-brand="${brand}"
+            oninput="onPriceSlider(this)">
+          <div class="slider-effect" id="se-${slugify(k)}-${slugify(brand)}">${effect}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+function switchPriceSeg(key) {
+  state.activePriceSeg = key;
+  document.querySelectorAll('.seg-tab').forEach((t, i) => {
+    const k = Object.keys(state.priceGaps)[i];
+    t.classList.toggle('active', k === key);
+  });
+  document.querySelectorAll('.seg-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `seg-${slugify(key)}`);
+  });
+}
+
+function onPriceSlider(el) {
+  const k     = el.dataset.seg;
+  const brand = el.dataset.brand;
+  const val   = parseFloat(el.value);
+  const currentGap = state.priceGaps[k]?.brands?.[brand]?.gap_pct ?? 0;
+
+  state.priceSliders[k][brand] = val;
+
+  const svEl = document.getElementById(`sv-${slugify(k)}-${slugify(brand)}`);
+  const seEl = document.getElementById(`se-${slugify(k)}-${slugify(brand)}`);
+  if (svEl) svEl.textContent = val.toFixed(1) + '%p';
+  if (seEl) {
+    seEl.innerHTML = val < currentGap ? `<span style="color:var(--green)">↘ 가격 축소 (수요↑)</span>`
+                   : val > currentGap ? `<span style="color:var(--red)">↗ 가격 확대 (수요↓)</span>`
+                   : `<span style="color:var(--dim)">변화 없음</span>`;
+  }
+  scheduleSimulate();
+}
+
+// ── Promo Builder ─────────────────────────────────────────────────────────────
+let promoIdx = 0;
+
+function addPromo() {
+  const idx = promoIdx++;
+  const segKeys = Object.keys(state.priceGaps);
+  const firstSeg = segKeys[0] || 'Mini Split AC|Inverter';
+  const competitors = Object.keys(state.priceGaps[firstSeg]?.brands || { MIDEA: {} });
+  const firstComp = competitors[0] || 'MIDEA';
+  const currentGap = state.priceGaps[firstSeg]?.brands?.[firstComp]?.gap_pct ?? 20;
+
+  state.promos.push({
+    idx, segment: firstSeg, competitor: firstComp,
+    startW: '22', endW: '26', targetGap: '10',
+    currentGap: currentGap.toFixed(1), hangover: '1',
+  });
+  renderPromos();
+}
+
+function deletePromo(idx) {
+  state.promos = state.promos.filter(p => p.idx !== idx);
+  renderPromos();
+  scheduleSimulate();
+}
+
+function updatePromo(idx, field, val) {
+  const p = state.promos.find(p => p.idx === idx);
+  if (!p) return;
+  p[field] = val;
+
+  // Update current gap if segment/competitor changed
+  if (field === 'segment' || field === 'competitor') {
+    const seg  = p.segment;
+    const comp = p.competitor;
+    const cg   = state.priceGaps[seg]?.brands?.[comp]?.gap_pct;
+    if (cg !== undefined) p.currentGap = cg.toFixed(1);
+  }
+
+  renderPromos();
+  scheduleSimulate();
+}
+
+function renderPromos() {
+  const el = document.getElementById('promo-list');
+  const segKeys = Object.keys(state.priceGaps);
+
+  el.innerHTML = state.promos.map(p => {
+    const competitors = Object.keys(state.priceGaps[p.segment]?.brands || {});
+    const tg = parseFloat(p.targetGap) || 0;
+    const cg = parseFloat(p.currentGap) || 0;
+    const depth = tg < cg
+      ? `<span class="depth-label depth-ok">✅ ${(cg - tg).toFixed(1)}%p 갭 축소</span>`
+      : `<span class="depth-label depth-warn">⚠️ 갭 확대 (수요↓)</span>`;
+
+    return `<div class="promo-card">
+      <button class="delete-btn" onclick="deletePromo(${p.idx})">삭제</button>
+      <div class="promo-grid">
+        <div class="form-row">
+          <label>세그먼트</label>
+          <select onchange="updatePromo(${p.idx},'segment',this.value)">
+            ${segKeys.map(k => `<option value="${k}" ${k===p.segment?'selected':''}>${k.split('|')[0].trim()}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row">
+          <label>경쟁사</label>
+          <select onchange="updatePromo(${p.idx},'competitor',this.value)">
+            ${competitors.map(c => `<option value="${c}" ${c===p.competitor?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row">
+          <label>시작 W</label>
+          <input type="number" min="1" max="52" value="${p.startW}" oninput="updatePromo(${p.idx},'startW',this.value)">
+        </div>
+        <div class="form-row">
+          <label>종료 W</label>
+          <input type="number" min="1" max="52" value="${p.endW}" oninput="updatePromo(${p.idx},'endW',this.value)">
+        </div>
+        <div class="form-row">
+          <label>목표 갭 %</label>
+          <input type="number" min="0" max="60" step="0.5" value="${p.targetGap}" oninput="updatePromo(${p.idx},'targetGap',this.value)">
+        </div>
+        <div class="form-row">
+          <label>Hangover 주</label>
+          <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
+        </div>
+      </div>
+      ${depth}
+    </div>`;
+  }).join('');
+}
+
+// ── OOS Grid ──────────────────────────────────────────────────────────────────
+function buildOOSGrid() {
+  const grid = document.getElementById('oos-grid');
+  const oos  = state.oosData;
+  const items = [];
+
+  for (const [seg, brands] of Object.entries(oos)) {
+    for (const brand of brands) {
+      items.push({ seg, brand });
+    }
+  }
+
+  if (!items.length) {
+    grid.innerHTML = '<div style="color:var(--dim);font-size:.72rem;grid-column:span 2;">OOS 신호 없음</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(({ seg, brand }) => {
+    const active = (state.activeOOS[seg] || []).includes(brand);
+    return `<div class="oos-item ${active ? 'active' : ''}"
+        onclick="toggleOOS('${seg}','${brand}',this)">
+      <div class="oos-dot"></div>
+      <div class="oos-name">${brand}<br><span style="font-size:.6rem;color:var(--dim);">${seg.split('|')[0].trim()}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function toggleOOS(seg, brand, el) {
+  if (!state.activeOOS[seg]) state.activeOOS[seg] = [];
+  const idx = state.activeOOS[seg].indexOf(brand);
+  if (idx >= 0) {
+    state.activeOOS[seg].splice(idx, 1);
+    el.classList.remove('active');
+    el.querySelector('.oos-dot').style.background = 'var(--dim)';
+  } else {
+    state.activeOOS[seg].push(brand);
+    el.classList.add('active');
+    el.querySelector('.oos-dot').style.background = 'var(--red)';
+  }
+  scheduleSimulate();
+}
+
+// ── Trends Toggle ─────────────────────────────────────────────────────────────
+function onTrendsToggle() {
+  state.trendsEnabled = document.getElementById('ext-trends').checked;
+  const statusEl = document.getElementById('trends-status');
+  if (state.trendsEnabled) {
+    const count = Object.keys(state.trendsData).length;
+    statusEl.textContent = count > 0 ? `${count}주 데이터 적용 중` : '데이터 없음';
+  } else {
+    statusEl.textContent = '데이터 미적용';
+  }
+  scheduleSimulate();
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === undefined || n === null) return '—';
+  return Math.round(n).toLocaleString('ko-KR');
+}
+function deltaStr(base, adj) {
+  if (!base) return '—';
+  return ((adj / base - 1) * 100).toFixed(1) + '%';
+}
+function slugify(s) {
+  return s.replace(/[^a-zA-Z0-9]/g, '_');
+}
+function showSpinner(v) {
+  document.getElementById('chart-spinner').classList.toggle('show', v);
+}
+function setLoadingBar(pct) {
+  const el = document.getElementById('loading-bar');
+  el.style.width = pct + '%';
+  if (pct >= 100) el.style.opacity = '0';
+  else el.style.opacity = '1';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+function updateLastUpdate() {
+  const now = new Date();
+  document.getElementById('last-update').textContent =
+    `업데이트 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  populateWeekSelects();
+  // Set default week range to ~W15-W40 (peak season)
+  document.getElementById('scope-from').value = 15;
+  document.getElementById('scope-to').value   = 40;
+
+  // Parallel fetch OOS + Trends
+  const [oosResp, trendsResp] = await Promise.allSettled([
+    fetch('/api/oos').then(r => r.json()),
+    fetch('/api/trends').then(r => r.json()),
+  ]);
+
+  if (oosResp.status === 'fulfilled') {
+    state.oosData = oosResp.value || {};
+    buildOOSGrid();
+  }
+  if (trendsResp.status === 'fulfilled') {
+    state.trendsData = trendsResp.value || {};
+    const count = Object.keys(state.trendsData).length;
+    document.getElementById('trends-status').textContent =
+      count > 0 ? `${count}주 데이터 — 비활성` : '데이터 없음';
+  }
+
+  // Initial simulation
+  await runSimulate();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
