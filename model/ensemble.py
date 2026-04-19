@@ -235,6 +235,36 @@ def build_fcst_output(
                 entry['month'] = WEEK_MONTH.get(entry['week'], '')
                 long_range.append(entry)
 
+    # L3_total 모델(PAC 등 데이터 부족 신제품) 장기 예측: YTD 주간 평균 × 잔여 주차
+    lr_models_existing = {r['model'] for r in long_range}
+    l3_total_models = [r for r in forecasts if r['level'] == 'L3_total']
+    if l3_total_models and multistep_results is not None:
+        conn = sqlite3.connect(db_path)
+        latest_w = conn.execute(
+            "SELECT week FROM weekly_sellout WHERE year=2026 "
+            "ORDER BY CAST(SUBSTR(week,2) AS INTEGER) DESC LIMIT 1"
+        ).fetchone()
+        conn.close()
+        start_lr = int(latest_w[0].replace('W', '')) + 1 if latest_w else 17
+        lr_weeks = list(range(start_lr, 53))
+        if lr_weeks:
+            for r in l3_total_models:
+                if r['model'] in lr_models_existing:
+                    continue
+                weekly_avg = round(r['predicted'])
+                for wk in lr_weeks:
+                    week_str = f'W{wk}'
+                    long_range.append({
+                        'model': r['model'],
+                        'category': r['category'],
+                        'level': 'L3_total',
+                        'week': week_str,
+                        'month': WEEK_MONTH.get(week_str, ''),
+                        'predicted': weekly_avg,
+                        'ci_low': round(weekly_avg * 0.4),
+                        'ci_high': round(weekly_avg * 1.6),
+                    })
+
     all_for_scenario = forecasts + long_range
     scenarios = _compute_scenarios(all_for_scenario)
 

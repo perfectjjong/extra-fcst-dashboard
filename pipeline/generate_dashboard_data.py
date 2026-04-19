@@ -119,7 +119,7 @@ def load_forecasts():
     # 단기 예측 (next week)
     forecasts = []
     for f in data.get('forecasts', []):
-        if f.get('level') in ('L1_sku', 'L3_coldstart', 'L2_category'):
+        if f.get('level') in ('L1_sku', 'L3_coldstart', 'L2_category', 'L3_total'):
             forecasts.append({
                 'model': f['model'],
                 'week': next_week,
