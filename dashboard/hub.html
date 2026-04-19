@@ -229,6 +229,30 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<div style="padding: 0 24px 24px;">
+  <div class="card">
+    <h2 style="font-size:1rem; color:#a78bfa; margin-bottom:16px;">📊 FCST 정확도 이력</h2>
+    <div id="accuracy-empty" style="color:#8b92a5; font-size:0.85rem; display:none;">
+      아직 정확도 데이터가 없습니다. 실적이 업데이트되면 자동으로 계산됩니다.
+    </div>
+    <div style="height:200px; margin-bottom:16px;">
+      <canvas id="accuracy-chart"></canvas>
+    </div>
+    <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+      <thead>
+        <tr>
+          <th style="text-align:left; color:#8b92a5; padding:8px; border-bottom:1px solid #2d3561;">주차</th>
+          <th style="text-align:left; color:#8b92a5; padding:8px; border-bottom:1px solid #2d3561;">모델</th>
+          <th style="text-align:left; color:#8b92a5; padding:8px; border-bottom:1px solid #2d3561;">레벨</th>
+          <th style="text-align:right; color:#8b92a5; padding:8px; border-bottom:1px solid #2d3561;">MAPE</th>
+          <th style="text-align:center; color:#8b92a5; padding:8px; border-bottom:1px solid #2d3561;">신호</th>
+        </tr>
+      </thead>
+      <tbody id="accuracy-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
 <script>
 const DATA_URL = 'https://perfectjjong.github.io/extra-fcst-dashboard/dashboard/dashboard_data.json';
 let raw = null;
@@ -248,6 +272,7 @@ async function init() {
     buildFilters();
     applyFilters();
     updateScenarioDisplay();
+    renderAccuracySection();
   } catch(e) {
     document.getElementById('total-fcst').textContent = 'N/A';
     document.getElementById('avg-mape').textContent = '로드 실패';
@@ -537,6 +562,84 @@ function renderAnnualChart() {
     }
   });
   document.getElementById('chart-title').textContent = '연간 전망 — 월별 실적 + W52 FCST';
+}
+
+function renderAccuracySection() {
+  const data = raw;
+  const history = (data && data.accuracy_history) || [];
+
+  const emptyEl = document.getElementById('accuracy-empty');
+  if (!emptyEl) return;
+
+  if (history.length === 0) {
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  // 주차별 평균 MAPE 계산 (차트용)
+  const mapeByWeek = {};
+  history.forEach(h => {
+    if (!mapeByWeek[h.week]) mapeByWeek[h.week] = [];
+    if (h.mape != null) mapeByWeek[h.week].push(h.mape);
+  });
+  const weeks = Object.keys(mapeByWeek).sort((a, b) =>
+    parseInt(a.replace('W','')) - parseInt(b.replace('W',''))
+  );
+  const avgMapes = weeks.map(w => {
+    const vals = mapeByWeek[w];
+    return vals.length ? parseFloat((vals.reduce((s,v) => s+v, 0) / vals.length * 100).toFixed(1)) : null;
+  });
+
+  if (window._accChart) window._accChart.destroy();
+  const ctx = document.getElementById('accuracy-chart').getContext('2d');
+  window._accChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: weeks,
+      datasets: [{
+        label: '평균 MAPE (%)',
+        data: avgMapes,
+        borderColor: '#a78bfa',
+        backgroundColor: 'rgba(167,139,250,0.1)',
+        pointBackgroundColor: avgMapes.map(v =>
+          v == null ? '#8b92a5' : v < 10 ? '#34d399' : v < 20 ? '#fbbf24' : '#f87171'
+        ),
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8b92a5' } },
+        tooltip: { callbacks: { label: ctx => `MAPE: ${ctx.raw?.toFixed(1)}%` } }
+      },
+      scales: {
+        x: { ticks: { color: '#8b92a5' }, grid: { color: '#2d3561' } },
+        y: {
+          ticks: { color: '#8b92a5', callback: v => v + '%' },
+          grid: { color: '#2d3561' }
+        }
+      }
+    }
+  });
+
+  // 테이블 (최근 30개)
+  const tbody = document.getElementById('accuracy-tbody');
+  const recent = [...history].reverse().slice(0, 30);
+  tbody.innerHTML = recent.map(h => {
+    const mapePct = h.mape != null ? (h.mape * 100).toFixed(1) + '%' : '—';
+    const signal = h.mape == null ? '—'
+      : h.mape < 0.10 ? '🟢' : h.mape < 0.20 ? '🟡' : '🔴';
+    return `<tr>
+      <td style="padding:6px 8px; border-bottom:1px solid #1a1d2e;">${h.week}</td>
+      <td style="padding:6px 8px; border-bottom:1px solid #1a1d2e; font-weight:bold;">${h.model}</td>
+      <td style="padding:6px 8px; border-bottom:1px solid #1a1d2e; color:#8b92a5; font-size:0.75rem;">${h.level}</td>
+      <td style="padding:6px 8px; border-bottom:1px solid #1a1d2e; text-align:right;">${mapePct}</td>
+      <td style="padding:6px 8px; border-bottom:1px solid #1a1d2e; text-align:center;">${signal}</td>
+    </tr>`;
+  }).join('');
 }
 
 function updateTable(actuals, forecasts) {
