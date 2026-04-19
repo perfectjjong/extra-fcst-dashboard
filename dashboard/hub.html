@@ -28,18 +28,6 @@
   .delta-up { color: #34d399; }
   .delta-down { color: #f87171; }
   .alert-banner { background: #2d1a1a; border: 1px solid #7f1d1d; border-radius: 8px; padding: 12px 16px; margin: 0 24px 16px; font-size: 0.85rem; color: #fca5a5; display: none; }
-  .request-section { padding: 0 24px 24px; }
-  .request-form { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
-  .request-form h2 { font-size: 1rem; color: #a78bfa; margin-bottom: 16px; }
-  .form-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-  .form-group { display: flex; flex-direction: column; gap: 4px; }
-  .form-group label { font-size: 0.75rem; color: #8b92a5; }
-  .form-group select, .form-group input { background: #0f1117; border: 1px solid #2d3561; color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; }
-  .log-table { margin-top: 16px; width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-  .log-table th { text-align: left; padding: 8px; color: #8b92a5; border-bottom: 1px solid #2d3561; }
-  .log-table td { padding: 8px; border-bottom: 1px solid #1a1d2e; }
-  .status-pending { color: #fbbf24; }
-  .status-done { color: #34d399; }
 </style>
 </head>
 <body>
@@ -91,43 +79,8 @@
   </div>
 </div>
 
-<div class="request-section">
-  <div class="request-form">
-    <h2>📥 로우데이터 요청</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label>모델</label>
-        <select id="req-model">
-          <option value="">전체</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>시작 주</label>
-        <input type="text" id="req-from" placeholder="2026-W01">
-      </div>
-      <div class="form-group">
-        <label>종료 주</label>
-        <input type="text" id="req-to" placeholder="2026-W17">
-      </div>
-      <div class="form-group">
-        <label>요청자</label>
-        <input type="text" id="req-user" placeholder="이름">
-      </div>
-      <div class="form-group">
-        <label>&nbsp;</label>
-        <button class="btn btn-primary" onclick="submitRequest()">요청하기</button>
-      </div>
-    </div>
-    <table class="log-table" id="request-log">
-      <thead><tr><th>요청 시각</th><th>모델</th><th>기간</th><th>요청자</th><th>상태</th></tr></thead>
-      <tbody id="request-log-body"></tbody>
-    </table>
-  </div>
-</div>
 
 <script>
-const API = '';
-const requestLog = JSON.parse(localStorage.getItem('extraRequests') || '[]');
 
 function getCurrentWeek() {
   const now = new Date();
@@ -156,64 +109,14 @@ async function loadFcst() {
       el.style.color = avg < 0.15 ? '#34d399' : avg < 0.20 ? '#fbbf24' : '#f87171';
     }
 
-    const sel = document.getElementById('req-model');
-    const models = [...new Set(forecasts.map(f => f.model))].sort();
-    models.forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m; opt.textContent = m;
-      sel.appendChild(opt);
-    });
   } catch (e) {
     document.getElementById('total-fcst').textContent = 'N/A';
     document.getElementById('avg-mape').textContent = 'API 오프라인';
   }
 }
 
-async function submitRequest() {
-  const model = document.getElementById('req-model').value;
-  const dateFrom = document.getElementById('req-from').value;
-  const dateTo = document.getElementById('req-to').value;
-  const requester = document.getElementById('req-user').value;
-
-  if (!dateFrom || !dateTo || !requester) {
-    alert('기간과 요청자 이름을 입력해주세요.');
-    return;
-  }
-
-  const entry = { model: model || '전체', dateFrom, dateTo, requester, requestedAt: new Date().toISOString(), status: 'pending' };
-
-  try {
-    await fetch(`${API}/api/request`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, date_from: dateFrom, date_to: dateTo, requester })
-    });
-    entry.status = 'submitted';
-  } catch (e) {
-    entry.status = 'local-only';
-  }
-
-  requestLog.unshift(entry);
-  localStorage.setItem('extraRequests', JSON.stringify(requestLog.slice(0, 50)));
-  renderRequestLog();
-}
-
-function renderRequestLog() {
-  const tbody = document.getElementById('request-log-body');
-  tbody.innerHTML = requestLog.slice(0, 10).map(r => `
-    <tr>
-      <td>${new Date(r.requestedAt).toLocaleString('ko-KR')}</td>
-      <td>${r.model}</td>
-      <td>${r.dateFrom} ~ ${r.dateTo}</td>
-      <td>${r.requester}</td>
-      <td class="status-${r.status === 'pending' || r.status === 'submitted' ? 'pending' : 'done'}">${r.status}</td>
-    </tr>
-  `).join('');
-}
-
 document.getElementById('current-week').textContent = getCurrentWeek();
 loadFcst();
-renderRequestLog();
 </script>
 </body>
 </html>
