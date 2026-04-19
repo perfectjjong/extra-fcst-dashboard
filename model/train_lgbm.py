@@ -1,5 +1,6 @@
 import os
 import pickle
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Dict, List
@@ -174,14 +175,10 @@ def forecast_multistep(db_path: str, models_dir: str, start_week_num: int, n_wee
     L1 SKU별로 start_week_num ~ start_week_num+n_weeks-1 재귀 예측.
     Returns list of dicts: {model, category, level, week, predicted, ci_low, ci_high, mape}
     """
-    import pickle
-    import sqlite3 as _sqlite3
-    from model.features import load_sellout, FEATURE_COLS
-
     df, cat_enc, model_enc = load_sellout(db_path)
 
     # season_vars에서 미래 주차 플래그 로드
-    conn = _sqlite3.connect(db_path)
+    conn = sqlite3.connect(db_path)
     season_df = pd.read_sql("SELECT week, ramadan_flag, summer_flag, holiday_flag FROM season_vars", conn)
     conn.close()
     season_map = {}
