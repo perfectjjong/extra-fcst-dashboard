@@ -169,6 +169,104 @@ def train_and_predict(db_path: str, models_dir: str) -> List[Dict]:
     return results
 
 
+def forecast_multistep(db_path: str, models_dir: str, start_week_num: int, n_weeks: int) -> list:
+    """
+    L1 SKU별로 start_week_num ~ start_week_num+n_weeks-1 재귀 예측.
+    Returns list of dicts: {model, category, level, week, predicted, ci_low, ci_high, mape}
+    """
+    import pickle
+    import sqlite3 as _sqlite3
+    from model.features import load_sellout, FEATURE_COLS
+
+    df, cat_enc, model_enc = load_sellout(db_path)
+
+    # season_vars에서 미래 주차 플래그 로드
+    conn = _sqlite3.connect(db_path)
+    season_df = pd.read_sql("SELECT week, ramadan_flag, summer_flag, holiday_flag FROM season_vars", conn)
+    conn.close()
+    season_map = {}
+    for _, row in season_df.iterrows():
+        season_map[row['week']] = {
+            'ramadan_flag': int(row['ramadan_flag']),
+            'summer_flag': int(row['summer_flag']),
+            'holiday_flag': int(row['holiday_flag']),
+        }
+
+    model_week_counts = df.groupby('model')['week'].count()
+    active_counts = model_week_counts[~model_week_counts.index.isin(DISCONTINUED_MODELS)]
+    l1_models = active_counts[active_counts >= MIN_WEEKS_LEVEL1].index.tolist()
+
+    results = []
+    for sku in l1_models:
+        safe_sku = sku.replace('/', '_').replace(' ', '_')
+        pkl_path = os.path.join(models_dir, f'lgbm_L1_{safe_sku}.pkl')
+        if not os.path.exists(pkl_path):
+            continue
+        with open(pkl_path, 'rb') as f:
+            mdl_bundle = pickle.load(f)
+        mdl = mdl_bundle['point']
+        mdl_q10 = mdl_bundle['q10']
+        mdl_q90 = mdl_bundle['q90']
+
+        sub = df[df['model'] == sku].copy()
+        category = sub['category'].iloc[-1]
+
+        # 마지막 실제 행을 시작점으로 사용
+        recent_qty = list(sub['qty'].tail(52).values)  # lag_52w용 히스토리
+        recent_4 = list(sub['qty'].tail(4).values)     # rollmean_4w용
+
+        last_row_feats = sub.iloc[-1][FEATURE_COLS].to_dict()
+
+        for i in range(n_weeks):
+            week_num = start_week_num + i
+            if week_num > 52:
+                week_num = 52
+            week_label = f'W{week_num}'
+
+            s = season_map.get(f'2026-{week_label}',
+                season_map.get(week_label, {'ramadan_flag': 0, 'summer_flag': 0, 'holiday_flag': 0}))
+
+            lag_1 = recent_qty[-1] if recent_qty else 0.0
+            lag_4 = recent_qty[-4] if len(recent_qty) >= 4 else 0.0
+            lag_52 = recent_qty[-52] if len(recent_qty) >= 52 else 0.0
+            roll_4 = float(np.mean(recent_4[-4:])) if recent_4 else 0.0
+
+            row = {
+                'qty_lag_1w': lag_1,
+                'qty_lag_4w': lag_4,
+                'qty_lag_52w': lag_52,
+                'qty_rollmean_4w': roll_4,
+                'week_of_year': week_num,
+                'ramadan_flag': s['ramadan_flag'],
+                'summer_flag': s['summer_flag'],
+                'holiday_flag': s['holiday_flag'],
+                'lg_discount_rate': last_row_feats.get('lg_discount_rate', 0.0),
+                'competitor_min_price': 0.0,
+                'category_enc': last_row_feats.get('category_enc', 0),
+                'model_enc': last_row_feats.get('model_enc', 0),
+            }
+            X = np.array([[row[c] for c in FEATURE_COLS]])
+            pred = max(0.0, float(mdl.predict(X)[0]))
+            ci_low = max(0.0, float(mdl_q10.predict(X)[0]))
+            ci_high = max(0.0, float(mdl_q90.predict(X)[0]))
+
+            results.append({
+                'model': sku,
+                'category': category,
+                'level': 'L1_sku',
+                'week': week_label,
+                'predicted': round(pred, 1),
+                'ci_low': round(ci_low, 1),
+                'ci_high': round(ci_high, 1),
+                'mape': None,
+            })
+
+            recent_qty.append(pred)
+            recent_4.append(pred)
+
+    return results
+
+
 if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).parent.parent))
     from model.features import FEATURE_COLS, TARGET_COL, load_sellout  # noqa: F811
