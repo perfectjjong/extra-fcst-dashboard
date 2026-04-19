@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-04-19T13:08:24.321593",
+  "generated_at": "2026-04-19T14:40:09.393125",
   "next_week": "W16",
   "metadata": {
     "AF182C": {
-      "category": "Inverter",
-      "compressor": "-",
-      "type": "-",
-      "btu": "-"
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "sub_category": "Split Inverter",
+      "btu": "18K"
     },
     "AF182C0N20": {
       "category": "Inverter",
@@ -15,10 +15,10 @@
       "btu": "-"
     },
     "AF242C": {
-      "category": "Inverter",
-      "compressor": "-",
-      "type": "-",
-      "btu": "-"
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "AF242C0N20": {
       "category": "Inverter",
@@ -29,127 +29,127 @@
     "AM182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "AM242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "APNQ55GT3E6": {
       "category": "PAC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "36K+"
+      "sub_category": "Free Standing",
+      "btu": "48K"
     },
     "APNQ55GT3MA": {
-      "category": "PAC",
-      "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "36K+"
+      "category": "Floor Standing AC",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
     },
     "APNW55GT3MA": {
-      "category": "PAC",
-      "compressor": "Inverter",
-      "type": "Hot/Cold",
-      "btu": "36K+"
+      "category": "Floor Standing AC",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
     },
     "C182EC": {
       "category": "Window",
       "compressor": "Rotary",
-      "type": "Cold",
+      "sub_category": "Window SEEC",
       "btu": "18K"
     },
     "LA182C": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Cold",
+      "sub_category": "Split on/off",
       "btu": "18K"
     },
     "LA182H": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Hot/Cold",
+      "sub_category": "Split on/off",
       "btu": "18K"
     },
     "LA242C": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split on/off",
+      "btu": "24K"
     },
     "LA242H": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Hot/Cold",
-      "btu": "22K"
+      "sub_category": "Split on/off",
+      "btu": "24K"
     },
     "LA302C": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Cold",
+      "sub_category": "Split on/off",
       "btu": "30K"
     },
     "LA302H": {
       "category": "Split AC",
       "compressor": "Rotary",
-      "type": "Hot/Cold",
+      "sub_category": "Split on/off",
       "btu": "30K"
     },
     "ND182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "ND182H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "ND242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "ND242H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NF122C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "12K"
     },
     "NF122H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
+      "sub_category": "Split Inverter",
       "btu": "12K"
     },
     "NF182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NF242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NG182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NG182H": {
@@ -161,74 +161,74 @@
     "NG242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NG242H": {
-      "category": "Inverter",
-      "compressor": "-",
-      "type": "-",
-      "btu": "-"
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NS182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NS182H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NS242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NS242H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NT382C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "30K"
+      "sub_category": "Split Inverter",
+      "btu": "38K"
     },
     "NT382H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
-      "btu": "30K"
+      "sub_category": "Split Inverter",
+      "btu": "38K"
     },
     "NW182C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NW182H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
+      "sub_category": "Split Inverter",
       "btu": "18K"
     },
     "NW242C": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "NW242H": {
       "category": "Split AC",
       "compressor": "Inverter",
-      "type": "Hot/Cold",
-      "btu": "22K"
+      "sub_category": "Split Inverter",
+      "btu": "24K"
     },
     "W181EC.SN0": {
       "category": "-",

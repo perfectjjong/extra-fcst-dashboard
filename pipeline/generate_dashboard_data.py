@@ -15,7 +15,7 @@ from pathlib import Path
 import pandas as pd
 
 BASE_DIR = Path(__file__).parent.parent
-MMT_PATH = Path('/home/ubuntu/2026/10. Automation/01. Sell Out Dashboard/00. OR/01. Python Code/Model_Mapping_Table_v4.xlsx')
+MMT_PATH = Path('/home/ubuntu/2026/07. Claude Rule/00. Model Mapping/Model_Mapping_Master_v6_Updated.xlsx')
 DB_PATH = BASE_DIR / 'data' / 'sellout.db'
 FCST_PATH = BASE_DIR / 'dashboard' / 'fcst_output.json'
 OUT_PATH = BASE_DIR / 'dashboard' / 'dashboard_data.json'
@@ -51,21 +51,27 @@ def btu_band(btu_raw):
 
 def load_metadata():
     mmt = pd.read_excel(MMT_PATH)
-    mmt = mmt[mmt['Standard Model'].notna() & ~mmt['Standard Model'].astype(str).str.startswith('▶')]
+    mmt = mmt[mmt['Unified Model'].notna()]
+    # v6: Category 값 중 RAC → Split AC로 정규화
+    cat_map = {
+        'Split AC': 'Split AC', 'RAC': 'Split AC',
+        'Free Standing': 'PAC',
+        'Window': 'Window',
+        'Concealed': 'Concealed', 'Cassette': 'Cassette',
+    }
     meta = {}
     for _, row in mmt.iterrows():
-        model = str(row['Standard Model']).strip()
+        model = str(row['Unified Model']).strip()
+        if not model or model == 'nan':
+            continue
         cat_raw = str(row.get('Category', '')).strip()
-        cat_map = {
-            'Split AC': 'Split AC', 'Free Standing': 'PAC',
-            'Window': 'Window', 'Window AC': 'Window',
-            'Concealed': 'Concealed', 'Cassette': 'Cassette',
-        }
+        # v6 BTU는 이미 '12K', '18K' 형식 문자열
+        btu_raw = str(row.get('BTU', '')).strip()
         meta[model] = {
             'category': cat_map.get(cat_raw, cat_raw),
             'compressor': str(row.get('Compressor', '')).strip(),
-            'type': str(row.get('Type', '')).strip(),
-            'btu': btu_band(row.get('BTU', '')),
+            'sub_category': str(row.get('Sub-Category', '')).strip(),
+            'btu': btu_raw if btu_raw and btu_raw != 'nan' else '-',
         }
     return meta
 
