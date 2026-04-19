@@ -2,7 +2,9 @@
 dashboard_data.json 생성 스크립트
 - 모델 메타데이터 (Category, Compressor, Type, BTU)
 - 2026 주차별 실적 (actuals)
-- FCST 예측 (forecasts)
+- FCST 예측 — 단기 (next week) + 장기 (W17-W52)
+- 시나리오 데이터
+- 정확도 이력
 """
 import json
 import os
@@ -33,6 +35,7 @@ WEEK_MONTH = {
     'W45': 'Nov', 'W46': 'Dec', 'W47': 'Dec', 'W48': 'Dec',
     'W49': 'Dec', 'W50': 'Dec', 'W51': 'Dec', 'W52': 'Dec',
 }
+
 
 def btu_band(btu_raw):
     try:
@@ -74,7 +77,7 @@ def load_actuals():
         FROM weekly_sellout
         WHERE year = 2026
         GROUP BY model, year, week
-        ORDER BY model, week
+        ORDER BY model, CAST(SUBSTR(week,2) AS INTEGER)
     ''').fetchall()
     conn.close()
     actuals = []
@@ -93,19 +96,24 @@ def load_actuals():
 def load_forecasts():
     with open(FCST_PATH, encoding='utf-8') as f:
         data = json.load(f)
-    # 다음 주 번호 계산
+
     conn = sqlite3.connect(str(DB_PATH))
-    latest = conn.execute("SELECT week FROM weekly_sellout WHERE year=2026 ORDER BY CAST(SUBSTR(week,2) AS INTEGER) DESC LIMIT 1").fetchone()
+    latest = conn.execute(
+        "SELECT week FROM weekly_sellout WHERE year=2026 "
+        "ORDER BY CAST(SUBSTR(week,2) AS INTEGER) DESC LIMIT 1"
+    ).fetchone()
     conn.close()
+
     if latest:
         w_num = int(latest[0].replace('W', '')) + 1
         next_week = f'W{w_num}'
     else:
-        next_week = 'W16'
+        next_week = 'W17'
 
+    # 단기 예측 (next week)
     forecasts = []
     for f in data.get('forecasts', []):
-        if f.get('level') in ('L1_sku', 'L3_coldstart'):
+        if f.get('level') in ('L1_sku', 'L3_coldstart', 'L2_category'):
             forecasts.append({
                 'model': f['model'],
                 'week': next_week,
@@ -116,7 +124,36 @@ def load_forecasts():
                 'ci_high': f.get('ci_high', 0),
                 'mape': f.get('mape'),
             })
-    return forecasts, next_week
+
+    # 장기 예측 (W17-W52)
+    long_range = []
+    for f in data.get('long_range_forecasts', []):
+        long_range.append({
+            'model': f['model'],
+            'week': f['week'],
+            'month': f.get('month', WEEK_MONTH.get(f['week'], '')),
+            'level': f['level'],
+            'predicted': f.get('predicted', 0),
+            'ci_low': f.get('ci_low', 0),
+            'ci_high': f.get('ci_high', 0),
+        })
+
+    scenarios = data.get('scenarios', {})
+
+    return forecasts, long_range, scenarios, next_week
+
+
+def load_accuracy_history():
+    conn = sqlite3.connect(str(DB_PATH))
+    rows = conn.execute(
+        "SELECT week, model, level, mape, logged_at FROM fcst_accuracy_log "
+        "ORDER BY CAST(SUBSTR(week,2) AS INTEGER)"
+    ).fetchall()
+    conn.close()
+    return [
+        {'week': r[0], 'model': r[1], 'level': r[2], 'mape': r[3], 'logged_at': r[4]}
+        for r in rows
+    ]
 
 
 def main():
@@ -127,16 +164,22 @@ def main():
     actuals = load_actuals()
 
     print('FCST 로드...')
-    forecasts, next_week = load_forecasts()
+    forecasts, long_range, scenarios, next_week = load_forecasts()
 
-    # 실적 + FCST에 등장하는 모델에 메타 보정
-    all_models = set(a['model'] for a in actuals) | set(f['model'] for f in forecasts)
+    print('정확도 이력 로드...')
+    accuracy_history = load_accuracy_history()
+
+    # 모델 메타 보정
+    all_models = (
+        set(a['model'] for a in actuals) |
+        set(f['model'] for f in forecasts) |
+        set(f['model'] for f in long_range)
+    )
     meta_out = {}
     for m in sorted(all_models):
         if m in meta:
             meta_out[m] = meta[m]
         else:
-            # DB category로 fallback
             conn = sqlite3.connect(str(DB_PATH))
             row = conn.execute("SELECT category FROM weekly_sellout WHERE model=? LIMIT 1", (m,)).fetchone()
             conn.close()
@@ -153,6 +196,9 @@ def main():
         'metadata': meta_out,
         'actuals': actuals,
         'forecasts': forecasts,
+        'long_range_forecasts': long_range,
+        'scenarios': scenarios,
+        'accuracy_history': accuracy_history,
     }
 
     with open(OUT_PATH, 'w', encoding='utf-8') as f:
@@ -161,7 +207,9 @@ def main():
     print(f'완료: {OUT_PATH}')
     print(f'  모델 수: {len(meta_out)}')
     print(f'  실적 행: {len(actuals)}')
-    print(f'  FCST 행: {len(forecasts)} (예측 주차: {next_week})')
+    print(f'  단기 FCST: {len(forecasts)} (예측 주차: {next_week})')
+    print(f'  장기 FCST: {len(long_range)} rows')
+    print(f'  정확도 이력: {len(accuracy_history)} rows')
 
 
 if __name__ == '__main__':
