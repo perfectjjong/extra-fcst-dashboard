@@ -175,7 +175,21 @@ def main():
     print('정확도 이력 로드...')
     accuracy_history = load_accuracy_history()
 
-    # 모델 메타 보정
+    # v6 MMT에 없는 모델의 수동 보정 (DB category는 eXtra 자체 용어라 신뢰 불가)
+    MANUAL_META = {
+        'NG182H':     {'category': 'Split AC', 'compressor': 'Inverter', 'sub_category': 'Split Inverter', 'btu': '18K'},
+        'NG242H':     {'category': 'Split AC', 'compressor': 'Inverter', 'sub_category': 'Split Inverter', 'btu': '24K'},
+        'AF182C0N20': {'category': 'Split AC', 'compressor': 'Inverter', 'sub_category': 'Split Inverter', 'btu': '18K'},
+        'AF242C0N20': {'category': 'Split AC', 'compressor': 'Inverter', 'sub_category': 'Split Inverter', 'btu': '24K'},
+        'APNQ55GT3MA':{'category': 'PAC', 'compressor': 'Inverter', 'sub_category': 'Free Standing', 'btu': '48K'},
+        'APNW55GT3MA':{'category': 'PAC', 'compressor': 'Inverter', 'sub_category': 'Free Standing', 'btu': '55K'},
+        'W181EC.SN0': {'category': 'Window', 'compressor': 'Inverter', 'sub_category': 'Window SEEC', 'btu': '18K'},
+        'W181EH.SN0': {'category': 'Window', 'compressor': 'Inverter', 'sub_category': 'Window SEEC', 'btu': '18K'},
+        'W242EC.SN0': {'category': 'Window', 'compressor': 'Inverter', 'sub_category': 'Window SEEC', 'btu': '24K'},
+        'W242EH.SN0': {'category': 'Window', 'compressor': 'Inverter', 'sub_category': 'Window SEEC', 'btu': '24K'},
+    }
+
+    # 모델 메타 보정 (v6 MMT → 수동 보정 → DB fallback 순)
     all_models = (
         set(a['model'] for a in actuals) |
         set(f['model'] for f in forecasts) |
@@ -185,16 +199,16 @@ def main():
     for m in sorted(all_models):
         if m in meta:
             meta_out[m] = meta[m]
+        elif m in MANUAL_META:
+            meta_out[m] = MANUAL_META[m]
         else:
-            conn = sqlite3.connect(str(DB_PATH))
-            row = conn.execute("SELECT category FROM weekly_sellout WHERE model=? LIMIT 1", (m,)).fetchone()
-            conn.close()
-            meta_out[m] = {
-                'category': row[0] if row else '-',
-                'compressor': '-',
-                'type': '-',
-                'btu': '-',
-            }
+            meta_out[m] = {'category': '-', 'compressor': '-', 'sub_category': '-', 'btu': '-'}
+
+    # forecasts / long_range에 category 필드 추가 (metadata 기준)
+    for f in forecasts:
+        f['category'] = meta_out.get(f['model'], {}).get('category', '-')
+    for f in long_range:
+        f['category'] = meta_out.get(f['model'], {}).get('category', '-')
 
     output = {
         'generated_at': datetime.now().isoformat(),
