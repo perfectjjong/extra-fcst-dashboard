@@ -10,9 +10,21 @@ import pandas as pd
 
 from model.features import FEATURE_COLS, TARGET_COL, load_sellout
 
-MIN_WEEKS_LEVEL1 = 52
+MIN_WEEKS_LEVEL1 = 26
 HOLDOUT_WEEKS = 12
 FORECAST_HORIZON = 8
+
+# 단종 모델: 2026년 FCST 생성 제외 (역사 데이터는 학습용으로 유지)
+DISCONTINUED_MODELS = {
+    # NW 계열 → NS로 대체
+    'NW182C', 'NW182H', 'NW242C', 'NW242H',
+    # NV 계열 → NS로 대체
+    'NV182C', 'NV182H', 'NV242C', 'NV242H',
+    # NF 18/24 계열 → ND로 대체 (NF122 계열은 유지)
+    'NF182C', 'NF182H', 'NF242C', 'NF242H',
+    # Window SN2 계열 단종
+    'C182EC.SN2', 'C182EH.SN2', 'C242EC.SN2', 'C242EH.SN2',
+}
 
 
 def _train_lgbm(X_train, y_train, quantile=None):
@@ -47,8 +59,10 @@ def train_and_predict(db_path: str, models_dir: str) -> List[Dict]:
 
     results = []
     model_week_counts = df.groupby('model')['week'].count()
-    l1_models = model_week_counts[model_week_counts >= MIN_WEEKS_LEVEL1].index.tolist()
-    l2_skus = model_week_counts[model_week_counts < MIN_WEEKS_LEVEL1].index.tolist()
+    # 단종 모델 제외
+    active_counts = model_week_counts[~model_week_counts.index.isin(DISCONTINUED_MODELS)]
+    l1_models = active_counts[active_counts >= MIN_WEEKS_LEVEL1].index.tolist()
+    l2_skus = active_counts[active_counts < MIN_WEEKS_LEVEL1].index.tolist()
 
     # --- Level 1: per-SKU ---
     for sku in l1_models:

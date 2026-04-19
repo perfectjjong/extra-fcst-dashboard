@@ -11,6 +11,16 @@ from model.train_prophet import train_prophet_total
 LGBM_WEIGHT = 0.7
 PROPHET_WEIGHT = 0.3
 
+# 신규 런칭 예정 모델 cold-start 예측
+# 연간 목표 5,000대 ÷ 4개 모델, W19(5월 초) 런칭 기준 남은 34주 분배
+# 주당: 5000 / 4 / 52 ≈ 24대 (연간 균등 배분)
+COLDSTART_MODELS = [
+    {'model': 'W181EC.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
+    {'model': 'W181EH.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
+    {'model': 'W242EC.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
+    {'model': 'W242EH.SN0', 'category': 'Window', 'weekly_fcst': 24.0},
+]
+
 
 def build_fcst_output(lgbm_results: List[Dict], db_path: str, output_path: str) -> None:
     models_dir = os.path.join(os.path.dirname(__file__), 'models')
@@ -37,6 +47,24 @@ def build_fcst_output(lgbm_results: List[Dict], db_path: str, output_path: str) 
             'lgbm_raw': r['predicted'],
             'prophet_total_contribution': round(prophet_total, 1) if prophet_total else None,
         })
+
+    # 신규 런칭 모델 cold-start 예측 추가
+    existing_models = {f['model'] for f in forecasts}
+    for cs in COLDSTART_MODELS:
+        if cs['model'] not in existing_models:
+            w = cs['weekly_fcst']
+            forecasts.append({
+                'model': cs['model'],
+                'category': cs['category'],
+                'level': 'L3_coldstart',
+                'week': 'NEXT',
+                'predicted': round(w, 1),
+                'ci_low': round(w * 0.5, 1),
+                'ci_high': round(w * 1.5, 1),
+                'mape': None,
+                'lgbm_raw': None,
+                'prophet_total_contribution': None,
+            })
 
     output = {
         'generated_at': datetime.now().isoformat(),
