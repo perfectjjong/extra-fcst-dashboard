@@ -6,28 +6,69 @@
 <title>eXtra Operations Hub</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; }
-  header { background: #1a1d2e; padding: 16px 24px; border-bottom: 2px solid #2d3561; display: flex; align-items: center; justify-content: space-between; }
-  header h1 { font-size: 1.3rem; font-weight: 700; color: #a78bfa; }
-  header .week-badge { background: #2d3561; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; }
-  .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 24px; }
-  .card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
-  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: #a78bfa; }
-  .card p { font-size: 0.85rem; color: #8b92a5; margin-bottom: 12px; }
-  .btn { display: inline-block; padding: 8px 16px; border-radius: 8px; background: #2d3561; color: #e0e0e0; text-decoration: none; font-size: 0.85rem; cursor: pointer; border: none; }
-  .btn:hover { background: #3d4a7a; }
-  .btn-primary { background: #7c3aed; }
-  .btn-primary:hover { background: #6d28d9; }
-  .summary-section { padding: 0 24px 24px; }
-  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .metric-card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; padding: 16px; }
-  .metric-card .label { font-size: 0.75rem; color: #8b92a5; }
-  .metric-card .value { font-size: 1.8rem; font-weight: 700; color: #e0e0e0; margin: 4px 0; }
-  .metric-card .delta { font-size: 0.8rem; }
-  .delta-up { color: #34d399; }
-  .delta-down { color: #f87171; }
-  .alert-banner { background: #2d1a1a; border: 1px solid #7f1d1d; border-radius: 8px; padding: 12px 16px; margin: 0 24px 16px; font-size: 0.85rem; color: #fca5a5; display: none; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; font-size: 14px; }
+header { background: #1a1d2e; padding: 14px 24px; border-bottom: 2px solid #2d3561; display: flex; align-items: center; justify-content: space-between; }
+header h1 { font-size: 1.25rem; font-weight: 700; color: #a78bfa; }
+header .week-badge { background: #2d3561; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
+
+/* Top nav cards */
+.hub-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; padding: 20px 24px 0; }
+.card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; padding: 16px; }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #a78bfa; }
+.card p { font-size: 0.78rem; color: #8b92a5; margin-bottom: 10px; }
+.btn { display: inline-block; padding: 7px 14px; border-radius: 7px; background: #2d3561; color: #e0e0e0; text-decoration: none; font-size: 0.78rem; cursor: pointer; border: none; }
+.btn:hover { background: #3d4a7a; }
+.btn-primary { background: #7c3aed; }
+.btn-primary:hover { background: #6d28d9; }
+
+/* Filter bar */
+.filter-bar { background: #1a1d2e; border-top: 1px solid #2d3561; border-bottom: 1px solid #2d3561; padding: 12px 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-top: 16px; }
+.filter-group { display: flex; flex-direction: column; gap: 3px; }
+.filter-group label { font-size: 0.7rem; color: #8b92a5; text-transform: uppercase; letter-spacing: 0.04em; }
+.filter-group select { background: #0f1117; border: 1px solid #2d3561; color: #e0e0e0; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; min-width: 110px; }
+.filter-group select:focus { outline: none; border-color: #7c3aed; }
+.btn-reset { background: transparent; border: 1px solid #2d3561; color: #8b92a5; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; cursor: pointer; align-self: flex-end; }
+.btn-reset:hover { border-color: #a78bfa; color: #a78bfa; }
+
+/* Quick Summary */
+.section { padding: 20px 24px; }
+.section-title { font-size: 0.85rem; font-weight: 600; color: #a78bfa; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.metric-card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; padding: 14px; }
+.metric-card .label { font-size: 0.7rem; color: #8b92a5; }
+.metric-card .value { font-size: 1.6rem; font-weight: 700; color: #e0e0e0; margin: 4px 0; }
+.metric-card .delta { font-size: 0.75rem; color: #8b92a5; }
+
+/* Chart */
+.chart-wrap { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+.chart-wrap h3 { font-size: 0.82rem; color: #8b92a5; margin-bottom: 12px; }
+.chart-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.chart-tab { padding: 4px 12px; border-radius: 5px; font-size: 0.75rem; cursor: pointer; border: 1px solid #2d3561; background: transparent; color: #8b92a5; }
+.chart-tab.active { background: #2d3561; color: #e0e0e0; border-color: #7c3aed; }
+.chart-canvas-wrap { height: 260px; position: relative; }
+
+/* Breakdown table */
+.table-wrap { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+thead th { padding: 10px 14px; text-align: left; color: #8b92a5; border-bottom: 1px solid #2d3561; font-weight: 500; font-size: 0.75rem; white-space: nowrap; cursor: pointer; user-select: none; }
+thead th:hover { color: #a78bfa; }
+thead th .sort-icon { margin-left: 4px; opacity: 0.4; }
+thead th.sorted .sort-icon { opacity: 1; color: #a78bfa; }
+tbody td { padding: 9px 14px; border-bottom: 1px solid #0f1117; white-space: nowrap; }
+tbody tr:hover { background: #20233a; }
+tbody tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+.badge-inv { background: #1e3a5f; color: #60a5fa; }
+.badge-rot { background: #1a3a2a; color: #34d399; }
+.badge-win { background: #3a2a1a; color: #fb923c; }
+.badge-pac { background: #2a1a3a; color: #c084fc; }
+.mape-good { color: #34d399; }
+.mape-ok { color: #fbbf24; }
+.mape-bad { color: #f87171; }
+.bar-cell { display: flex; align-items: center; gap: 8px; }
+.mini-bar { height: 6px; border-radius: 3px; background: #7c3aed; min-width: 2px; }
+.no-data { text-align: center; padding: 32px; color: #8b92a5; }
 </style>
 </head>
 <body>
@@ -54,17 +95,43 @@
   </div>
 </div>
 
-<div id="alert-banner" class="alert-banner">
-  ⚠️ <span id="alert-text"></span>
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Month</label>
+    <select id="f-month"><option value="">전체</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Week</label>
+    <select id="f-week"><option value="">전체</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Category</label>
+    <select id="f-category"><option value="">전체</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Compressor</label>
+    <select id="f-compressor"><option value="">전체</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Type</label>
+    <select id="f-type"><option value="">전체</option></select>
+  </div>
+  <div class="filter-group">
+    <label>BTU</label>
+    <select id="f-btu"><option value="">전체</option></select>
+  </div>
+  <button class="btn-reset" onclick="resetFilters()">초기화</button>
 </div>
 
-<div class="summary-section">
-  <h2 style="padding-bottom:12px;font-size:1rem;color:#a78bfa;">이번 주 Quick Summary</h2>
-  <div class="summary-grid" id="summary-grid">
+<!-- Quick Summary -->
+<div class="section">
+  <div class="section-title">이번 주 Quick Summary <span id="filter-desc" style="color:#8b92a5;font-weight:400;font-size:0.75rem;"></span></div>
+  <div class="summary-grid">
     <div class="metric-card">
-      <div class="label">전체 예측 (다음 주)</div>
+      <div class="label">다음 주 FCST 합계</div>
       <div class="value" id="total-fcst">—</div>
-      <div class="delta" id="total-delta">로딩 중...</div>
+      <div class="delta" id="fcst-week-label">로딩 중...</div>
     </div>
     <div class="metric-card">
       <div class="label">예측 모델 수</div>
@@ -72,15 +139,75 @@
       <div class="delta">L1 SKU 예측</div>
     </div>
     <div class="metric-card">
+      <div class="label">당주 실적 합계</div>
+      <div class="value" id="actual-latest">—</div>
+      <div class="delta" id="actual-week-label">최신 주차</div>
+    </div>
+    <div class="metric-card">
       <div class="label">평균 MAPE (L1)</div>
       <div class="value" id="avg-mape">—</div>
       <div class="delta">목표: &lt;15%</div>
     </div>
   </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <div class="chart-tabs">
+      <button class="chart-tab active" onclick="setChartMode('weekly',this)">주별</button>
+      <button class="chart-tab" onclick="setChartMode('monthly',this)">월별</button>
+    </div>
+    <h3 id="chart-title">주별 실적 vs FCST</h3>
+    <div class="chart-canvas-wrap">
+      <canvas id="trend-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Breakdown Table -->
+  <div class="section-title" style="margin-bottom:10px;">모델별 상세 <span id="row-count" style="color:#8b92a5;font-weight:400;font-size:0.75rem;"></span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortTable('model')">모델 <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('category')">Category <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('compressor')">Compressor <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('type')">Type <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('btu')">BTU <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('actual_latest')">당주 실적 <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('actual_total')">누계 (W1~) <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('predicted')">FCST (다음주) <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable('mape')">MAPE <span class="sort-icon">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="breakdown-tbody"></tbody>
+    </table>
+  </div>
 </div>
 
-
 <script>
+const DATA_URL = 'https://perfectjjong.github.io/extra-fcst-dashboard/dashboard/dashboard_data.json';
+let raw = null;
+let chartMode = 'weekly';
+let trendChart = null;
+let sortKey = 'predicted';
+let sortAsc = false;
+
+const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const WEEK_ORDER = w => parseInt(w.replace('W',''));
+
+async function init() {
+  document.getElementById('current-week').textContent = getCurrentWeek();
+  try {
+    const resp = await fetch(DATA_URL);
+    raw = await resp.json();
+    buildFilters();
+    applyFilters();
+  } catch(e) {
+    document.getElementById('total-fcst').textContent = 'N/A';
+    document.getElementById('avg-mape').textContent = '로드 실패';
+    console.error(e);
+  }
+}
 
 function getCurrentWeek() {
   const now = new Date();
@@ -89,34 +216,303 @@ function getCurrentWeek() {
   return `W${String(week).padStart(2,'0')} ${now.getFullYear()}`;
 }
 
-async function loadFcst() {
-  try {
-    const base = 'https://perfectjjong.github.io/extra-fcst-dashboard/dashboard';
-    const resp = await fetch(`${base}/fcst_output.json`);
-    if (!resp.ok) throw new Error('API unavailable');
-    const data = await resp.json();
-    const forecasts = data.forecasts || [];
+function buildFilters() {
+  const meta = raw.metadata;
+  const actuals = raw.actuals;
+  const weeks = [...new Set(actuals.map(a => a.week))].sort((a,b) => WEEK_ORDER(a)-WEEK_ORDER(b));
+  const months = [...new Set(actuals.map(a => a.month))].sort((a,b) => MONTH_ORDER.indexOf(a)-MONTH_ORDER.indexOf(b));
+  const cats = [...new Set(Object.values(meta).map(m => m.category).filter(v => v && v !== '-'))].sort();
+  const comps = [...new Set(Object.values(meta).map(m => m.compressor).filter(v => v && v !== '-'))].sort();
+  const types = [...new Set(Object.values(meta).map(m => m.type).filter(v => v && v !== '-'))].sort();
+  const btus = [...new Set(Object.values(meta).map(m => m.btu).filter(v => v && v !== '-'))].sort();
 
-    const total = forecasts.reduce((s, f) => s + (f.predicted || 0), 0);
-    document.getElementById('total-fcst').textContent = Math.round(total).toLocaleString();
-    document.getElementById('model-count').textContent = forecasts.filter(f => f.level === 'L1_sku').length;
+  fill('f-month', months);
+  fill('f-week', weeks);
+  fill('f-category', cats);
+  fill('f-compressor', comps);
+  fill('f-type', types);
+  fill('f-btu', btus);
 
-    const mapes = forecasts.filter(f => f.mape != null).map(f => f.mape);
-    if (mapes.length) {
-      const avg = mapes.reduce((a,b)=>a+b,0)/mapes.length;
-      const el = document.getElementById('avg-mape');
-      el.textContent = (avg*100).toFixed(1) + '%';
-      el.style.color = avg < 0.15 ? '#34d399' : avg < 0.20 ? '#fbbf24' : '#f87171';
-    }
+  ['f-month','f-week','f-category','f-compressor','f-type','f-btu'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+}
 
-  } catch (e) {
-    document.getElementById('total-fcst').textContent = 'N/A';
-    document.getElementById('avg-mape').textContent = 'API 오프라인';
+function fill(id, items) {
+  const sel = document.getElementById(id);
+  items.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
+
+function getFilters() {
+  return {
+    month: document.getElementById('f-month').value,
+    week: document.getElementById('f-week').value,
+    category: document.getElementById('f-category').value,
+    compressor: document.getElementById('f-compressor').value,
+    type: document.getElementById('f-type').value,
+    btu: document.getElementById('f-btu').value,
+  };
+}
+
+function resetFilters() {
+  ['f-month','f-week','f-category','f-compressor','f-type','f-btu'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  applyFilters();
+}
+
+function modelPassesMeta(model, f) {
+  const m = (raw.metadata[model] || {});
+  if (f.category && m.category !== f.category) return false;
+  if (f.compressor && m.compressor !== f.compressor) return false;
+  if (f.type && m.type !== f.type) return false;
+  if (f.btu && m.btu !== f.btu) return false;
+  return true;
+}
+
+function applyFilters() {
+  const f = getFilters();
+
+  // Filter actuals
+  const filtActuals = raw.actuals.filter(a => {
+    if (f.month && a.month !== f.month) return false;
+    if (f.week && a.week !== f.week) return false;
+    return modelPassesMeta(a.model, f);
+  });
+
+  // Filter forecasts (meta only — week filter doesn't apply to FCST)
+  const filtFcst = raw.forecasts.filter(fc => modelPassesMeta(fc.model, f));
+
+  // Filter desc
+  const parts = [f.month, f.week, f.category, f.compressor, f.type, f.btu].filter(Boolean);
+  document.getElementById('filter-desc').textContent = parts.length ? '— ' + parts.join(' · ') : '';
+
+  updateSummary(filtActuals, filtFcst);
+  updateChart(filtActuals, filtFcst, f);
+  updateTable(filtActuals, filtFcst);
+}
+
+function updateSummary(actuals, forecasts) {
+  // FCST total (next week, L1 only)
+  const fcstTotal = forecasts.reduce((s,f) => s + (f.predicted||0), 0);
+  document.getElementById('total-fcst').textContent = Math.round(fcstTotal).toLocaleString();
+  document.getElementById('fcst-week-label').textContent = raw.next_week + ' 예측';
+  document.getElementById('model-count').textContent = forecasts.filter(f => f.level === 'L1_sku').length;
+
+  // Latest actual week total
+  if (actuals.length) {
+    const latestWeek = actuals.reduce((best, a) => WEEK_ORDER(a.week) > WEEK_ORDER(best) ? a.week : best, actuals[0].week);
+    const latestQty = actuals.filter(a => a.week === latestWeek).reduce((s,a) => s + a.qty, 0);
+    document.getElementById('actual-latest').textContent = Math.round(latestQty).toLocaleString();
+    document.getElementById('actual-week-label').textContent = latestWeek + ' 실적';
+  } else {
+    document.getElementById('actual-latest').textContent = '—';
+    document.getElementById('actual-week-label').textContent = '—';
+  }
+
+  // MAPE
+  const mapes = forecasts.filter(f => f.mape != null && f.level === 'L1_sku').map(f => f.mape);
+  if (mapes.length) {
+    const avg = mapes.reduce((a,b) => a+b, 0) / mapes.length;
+    const el = document.getElementById('avg-mape');
+    el.textContent = (avg * 100).toFixed(1) + '%';
+    el.style.color = avg < 0.15 ? '#34d399' : avg < 0.30 ? '#fbbf24' : '#f87171';
+  } else {
+    document.getElementById('avg-mape').textContent = '—';
   }
 }
 
-document.getElementById('current-week').textContent = getCurrentWeek();
-loadFcst();
+function setChartMode(mode, btn) {
+  chartMode = mode;
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function updateChart(actuals, forecasts, f) {
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  if (trendChart) trendChart.destroy();
+
+  let labels, actualData, fcstData;
+
+  if (chartMode === 'weekly') {
+    // 주별 집계
+    const weekMap = {};
+    actuals.forEach(a => { weekMap[a.week] = (weekMap[a.week]||0) + a.qty; });
+    const allWeeks = Object.keys(weekMap).sort((a,b) => WEEK_ORDER(a)-WEEK_ORDER(b));
+    // FCST 주차 추가
+    const fcstWeek = raw.next_week;
+    if (!allWeeks.includes(fcstWeek)) allWeeks.push(fcstWeek);
+
+    labels = allWeeks;
+    actualData = allWeeks.map(w => weekMap[w] != null ? weekMap[w] : null);
+    const fcstTotal = forecasts.reduce((s,fc) => s + (fc.predicted||0), 0);
+    fcstData = allWeeks.map(w => w === fcstWeek ? Math.round(fcstTotal) : null);
+    document.getElementById('chart-title').textContent = '주별 실적 vs FCST (W' + allWeeks[0]?.replace('W','') + '~)';
+  } else {
+    // 월별 집계
+    const monthMap = {};
+    actuals.forEach(a => { if(a.month) monthMap[a.month] = (monthMap[a.month]||0) + a.qty; });
+    const fcstMonth = forecasts[0]?.month || '';
+    const allMonths = [...Object.keys(monthMap)];
+    if (fcstMonth && !allMonths.includes(fcstMonth)) allMonths.push(fcstMonth);
+    allMonths.sort((a,b) => MONTH_ORDER.indexOf(a)-MONTH_ORDER.indexOf(b));
+
+    labels = allMonths;
+    actualData = allMonths.map(m => monthMap[m] != null ? monthMap[m] : null);
+    const fcstTotal = forecasts.reduce((s,fc) => s + (fc.predicted||0), 0);
+    fcstData = allMonths.map(m => m === fcstMonth ? Math.round(fcstTotal) : null);
+    document.getElementById('chart-title').textContent = '월별 실적 vs FCST';
+  }
+
+  trendChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '실적',
+          data: actualData,
+          backgroundColor: 'rgba(124,58,237,0.65)',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'FCST',
+          data: fcstData,
+          backgroundColor: 'rgba(52,211,153,0.75)',
+          borderRadius: 4,
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#8b92a5', font: { size: 11 } } } },
+      scales: {
+        x: { ticks: { color: '#8b92a5', font: { size: 11 } }, grid: { color: '#1e2240' } },
+        y: { ticks: { color: '#8b92a5', font: { size: 11 } }, grid: { color: '#1e2240' } }
+      }
+    }
+  });
+}
+
+function updateTable(actuals, forecasts) {
+  // 모델별 집계
+  const actualByModel = {};
+  const latestWeekByModel = {};
+  actuals.forEach(a => {
+    actualByModel[a.model] = (actualByModel[a.model] || 0) + a.qty;
+    if (!latestWeekByModel[a.model] || WEEK_ORDER(a.week) > WEEK_ORDER(latestWeekByModel[a.model].week)) {
+      latestWeekByModel[a.model] = { week: a.week, qty: 0 };
+    }
+  });
+  // 최신 주차별 qty
+  actuals.forEach(a => {
+    if (latestWeekByModel[a.model]?.week === a.week) {
+      latestWeekByModel[a.model].qty += a.qty;
+    }
+  });
+
+  const fcstByModel = {};
+  forecasts.forEach(fc => { fcstByModel[fc.model] = fc; });
+
+  const models = [...new Set([...Object.keys(actualByModel), ...Object.keys(fcstByModel)])];
+  let rows = models.map(model => {
+    const meta = raw.metadata[model] || {};
+    const fc = fcstByModel[model] || {};
+    return {
+      model,
+      category: meta.category || '-',
+      compressor: meta.compressor || '-',
+      type: meta.type || '-',
+      btu: meta.btu || '-',
+      actual_latest: latestWeekByModel[model]?.qty || 0,
+      actual_total: actualByModel[model] || 0,
+      predicted: fc.predicted || 0,
+      ci_low: fc.ci_low || 0,
+      ci_high: fc.ci_high || 0,
+      mape: fc.mape,
+      level: fc.level,
+    };
+  });
+
+  // Sort
+  rows.sort((a,b) => {
+    const va = a[sortKey], vb = b[sortKey];
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    const cmp = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+    return sortAsc ? cmp : -cmp;
+  });
+
+  document.getElementById('row-count').textContent = `${rows.length}개 모델`;
+
+  const maxPred = Math.max(...rows.map(r => r.predicted), 1);
+  const tbody = document.getElementById('breakdown-tbody');
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">해당 조건의 데이터가 없습니다</td></tr>';
+    return;
+  }
+
+  const catBadge = cat => {
+    const cls = cat === 'Inverter' || cat === 'Split AC' ? 'badge-inv'
+               : cat === 'Onoff' ? 'badge-rot'
+               : cat === 'Window' ? 'badge-win'
+               : 'badge-pac';
+    return `<span class="badge ${cls}">${cat}</span>`;
+  };
+
+  const mapeHtml = m => {
+    if (m == null) return '<span style="color:#8b92a5">—</span>';
+    const pct = (m * 100).toFixed(1);
+    const cls = m < 0.15 ? 'mape-good' : m < 0.30 ? 'mape-ok' : 'mape-bad';
+    return `<span class="${cls}">${pct}%</span>`;
+  };
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><strong>${r.model}</strong></td>
+      <td>${catBadge(r.category)}</td>
+      <td style="color:#8b92a5">${r.compressor}</td>
+      <td style="color:#8b92a5">${r.type}</td>
+      <td style="color:#8b92a5">${r.btu}</td>
+      <td>${r.actual_latest > 0 ? Math.round(r.actual_latest).toLocaleString() : '<span style="color:#8b92a5">—</span>'}</td>
+      <td>${r.actual_total > 0 ? Math.round(r.actual_total).toLocaleString() : '<span style="color:#8b92a5">—</span>'}</td>
+      <td>
+        <div class="bar-cell">
+          <span style="min-width:38px;text-align:right"><strong>${Math.round(r.predicted).toLocaleString()}</strong></span>
+          <div class="mini-bar" style="width:${Math.round(r.predicted/maxPred*80)}px"></div>
+        </div>
+      </td>
+      <td>${mapeHtml(r.mape)}</td>
+    </tr>
+  `).join('');
+
+  // Update sort icon highlight
+  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  const ths = document.querySelectorAll('thead th');
+  const keys = ['model','category','compressor','type','btu','actual_latest','actual_total','predicted','mape'];
+  const idx = keys.indexOf(sortKey);
+  if (idx >= 0) {
+    ths[idx].classList.add('sorted');
+    ths[idx].querySelector('.sort-icon').textContent = sortAsc ? '↑' : '↓';
+  }
+}
+
+function sortTable(key) {
+  if (sortKey === key) { sortAsc = !sortAsc; }
+  else { sortKey = key; sortAsc = false; }
+  applyFilters();
+}
+
+init();
 </script>
 </body>
 </html>

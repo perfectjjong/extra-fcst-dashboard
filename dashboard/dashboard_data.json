@@ -1,0 +1,3015 @@
+{
+  "generated_at": "2026-04-19T11:41:28.205680",
+  "next_week": "W16",
+  "metadata": {
+    "AF182C0N20": {
+      "category": "Inverter",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "AF242C0N20": {
+      "category": "Inverter",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "AM182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "AM242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "APNQ55GT3E6": {
+      "category": "PAC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "36K+"
+    },
+    "APNQ55GT3MA": {
+      "category": "PAC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "36K+"
+    },
+    "APNW55GT3MA": {
+      "category": "PAC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "36K+"
+    },
+    "C182EC": {
+      "category": "Window",
+      "compressor": "Rotary",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "LA182C": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "LA182H": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Hot/Cold",
+      "btu": "18K"
+    },
+    "LA242C": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "LA242H": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Hot/Cold",
+      "btu": "22K"
+    },
+    "LA302C": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Cold",
+      "btu": "30K"
+    },
+    "LA302H": {
+      "category": "Split AC",
+      "compressor": "Rotary",
+      "type": "Hot/Cold",
+      "btu": "30K"
+    },
+    "ND182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "ND182H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "18K"
+    },
+    "ND242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "ND242H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "22K"
+    },
+    "NF122C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "12K"
+    },
+    "NF122H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "12K"
+    },
+    "NF182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "NF242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "NG182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "NG182H": {
+      "category": "Inverter",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "NG242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "NG242H": {
+      "category": "Inverter",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "NS182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "NS182H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "18K"
+    },
+    "NS242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "NS242H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "22K"
+    },
+    "NT382C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "30K"
+    },
+    "NT382H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "30K"
+    },
+    "NW182C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "18K"
+    },
+    "NW182H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "18K"
+    },
+    "NW242C": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Cold",
+      "btu": "22K"
+    },
+    "NW242H": {
+      "category": "Split AC",
+      "compressor": "Inverter",
+      "type": "Hot/Cold",
+      "btu": "22K"
+    },
+    "W181EC.SN0": {
+      "category": "-",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "W181EH.SN0": {
+      "category": "-",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "W242EC.SN0": {
+      "category": "-",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    },
+    "W242EH.SN0": {
+      "category": "-",
+      "compressor": "-",
+      "type": "-",
+      "btu": "-"
+    }
+  },
+  "actuals": [
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 3.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "AF182C0N20",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 15.0
+    },
+    {
+      "model": "AF242C0N20",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 7.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 7.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 3.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 5.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 11.0
+    },
+    {
+      "model": "AM182C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 10.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 8.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 5.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 7.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 25.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 4.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 10.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 21.0
+    },
+    {
+      "model": "AM242C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "APNQ55GT3E6",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "APNQ55GT3E6",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "APNQ55GT3E6",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "APNQ55GT3E6",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 4.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 6.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 8.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 24.0
+    },
+    {
+      "model": "APNQ55GT3MA",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 1.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "APNW55GT3MA",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 2.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 6.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 23.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 2.0
+    },
+    {
+      "model": "C182EC",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 91.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 85.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 75.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 49.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 91.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 170.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 171.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 27.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 70.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 54.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 58.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 41.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 97.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 150.0
+    },
+    {
+      "model": "LA182C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 125.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 14.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 18.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 10.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 12.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 30.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 49.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 42.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 14.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 14.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 13.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 10.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 23.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 34.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 44.0
+    },
+    {
+      "model": "LA182H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 40.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 45.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 2.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 24.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 31.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 24.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 34.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 46.0
+    },
+    {
+      "model": "LA242C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 45.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 15.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 46.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 33.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 53.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 39.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 115.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 96.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 15.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 7.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 7.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 24.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 17.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 56.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 142.0
+    },
+    {
+      "model": "LA242H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 87.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 4.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 3.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 10.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 12.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 12.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 14.0
+    },
+    {
+      "model": "LA302C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 11.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 4.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 7.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 31.0
+    },
+    {
+      "model": "LA302H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 13.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 49.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 25.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 23.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 29.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 34.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 42.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 27.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 41.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 55.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 40.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 38.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 68.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 61.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 213.0
+    },
+    {
+      "model": "ND182C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 140.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 19.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 18.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 20.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 11.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 12.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 22.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 12.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 23.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 25.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 20.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 15.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 46.0
+    },
+    {
+      "model": "ND182H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 30.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 47.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 36.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 26.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 22.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 36.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 34.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 24.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 22.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 50.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 25.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 28.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 42.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 61.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 116.0
+    },
+    {
+      "model": "ND242C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 124.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 15.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 7.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 16.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 26.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 12.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 9.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 12.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 13.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 16.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 21.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 40.0
+    },
+    {
+      "model": "ND242H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 37.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 10.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 11.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 14.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 15.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 8.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 20.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 29.0
+    },
+    {
+      "model": "NF122C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 25.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 4.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 3.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 4.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 1.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 8.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "NF122H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 15.0
+    },
+    {
+      "model": "NF182C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 3.0
+    },
+    {
+      "model": "NF242C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 46.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 67.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 30.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 44.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 62.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 94.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 120.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 14.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 8.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 10.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 16.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 38.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 159.0
+    },
+    {
+      "model": "NS182C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 136.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 45.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 24.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 14.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 16.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 15.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 11.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 16.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 16.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 8.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 13.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 23.0
+    },
+    {
+      "model": "NS182H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 19.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 17.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 33.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 27.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 31.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 56.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 99.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 69.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 4.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 9.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 4.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 42.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 61.0
+    },
+    {
+      "model": "NS242C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 66.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 8.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 23.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 6.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 7.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 9.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 3.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 6.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 6.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 8.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 5.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 25.0
+    },
+    {
+      "model": "NS242H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 8.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 17.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 19.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 14.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 22.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 24.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 36.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 17.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 13.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 7.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 14.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 11.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 39.0
+    },
+    {
+      "model": "NT382C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 38.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 6.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 12.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 9.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 3.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 9.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 5.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W4",
+      "month": "Jan",
+      "qty": 11.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 13.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 17.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 6.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 10.0
+    },
+    {
+      "model": "NT382H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 7.0
+    },
+    {
+      "model": "NW182C",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 3.0
+    },
+    {
+      "model": "NW182C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182C",
+      "year": 2026,
+      "week": "W13",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "NW182C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W1",
+      "month": "Jan",
+      "qty": 6.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W11",
+      "month": "Mar",
+      "qty": 15.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 14.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W15",
+      "month": "Apr",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 4.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 2.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W5",
+      "month": "Feb",
+      "qty": 1.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W6",
+      "month": "Feb",
+      "qty": 15.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W7",
+      "month": "Feb",
+      "qty": 6.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W8",
+      "month": "Feb",
+      "qty": 31.0
+    },
+    {
+      "model": "NW182H",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 2.0
+    },
+    {
+      "model": "NW242C",
+      "year": 2026,
+      "week": "W10",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW242C",
+      "year": 2026,
+      "week": "W12",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW242C",
+      "year": 2026,
+      "week": "W14",
+      "month": "Apr",
+      "qty": 1.0
+    },
+    {
+      "model": "NW242C",
+      "year": 2026,
+      "week": "W2",
+      "month": "Jan",
+      "qty": 1.0
+    },
+    {
+      "model": "NW242C",
+      "year": 2026,
+      "week": "W9",
+      "month": "Mar",
+      "qty": 1.0
+    },
+    {
+      "model": "NW242H",
+      "year": 2026,
+      "week": "W3",
+      "month": "Jan",
+      "qty": 1.0
+    }
+  ],
+  "forecasts": [
+    {
+      "model": "AM182C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 7.6,
+      "ci_low": 5.4,
+      "ci_high": 8.1,
+      "mape": 3.3398
+    },
+    {
+      "model": "AM242C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 10.4,
+      "ci_low": 6.9,
+      "ci_high": 14.2,
+      "mape": 0.8961
+    },
+    {
+      "model": "LA182C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 67.2,
+      "ci_low": 19.9,
+      "ci_high": 114.1,
+      "mape": 0.4268
+    },
+    {
+      "model": "LA182H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 11.3,
+      "ci_low": 0.0,
+      "ci_high": 13.4,
+      "mape": 0.4555
+    },
+    {
+      "model": "LA242C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 30.8,
+      "ci_low": 1.0,
+      "ci_high": 34.8,
+      "mape": 12.1593
+    },
+    {
+      "model": "LA242H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 11.5,
+      "ci_low": 4.2,
+      "ci_high": 25.3,
+      "mape": 0.4852
+    },
+    {
+      "model": "LA302C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 4.2,
+      "ci_low": 1.9,
+      "ci_high": 8.5,
+      "mape": 0.6323
+    },
+    {
+      "model": "LA302H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 0.2,
+      "ci_low": 0.0,
+      "ci_high": 0.6,
+      "mape": 0.791
+    },
+    {
+      "model": "ND182C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 144.1,
+      "ci_low": 30.6,
+      "ci_high": 93.7,
+      "mape": 1.1833
+    },
+    {
+      "model": "ND182H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 23.6,
+      "ci_low": 15.8,
+      "ci_high": 38.1,
+      "mape": 0.3706
+    },
+    {
+      "model": "ND242C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 131.7,
+      "ci_low": 19.2,
+      "ci_high": 89.0,
+      "mape": 1.3557
+    },
+    {
+      "model": "ND242H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 21.2,
+      "ci_low": 13.1,
+      "ci_high": 31.2,
+      "mape": 1.35
+    },
+    {
+      "model": "NF122C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 16.9,
+      "ci_low": 8.7,
+      "ci_high": 10.2,
+      "mape": 1.6319
+    },
+    {
+      "model": "NF122H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 0.0,
+      "ci_low": 1.4,
+      "ci_high": 17.7,
+      "mape": 1.9111
+    },
+    {
+      "model": "NG182C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 1.0,
+      "mape": 1.4055
+    },
+    {
+      "model": "NG182H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 1.1,
+      "ci_low": 0.0,
+      "ci_high": 1.5,
+      "mape": 1.0032
+    },
+    {
+      "model": "NG242C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 5.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "mape": null
+    },
+    {
+      "model": "NG242H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 1.9,
+      "ci_low": 0.0,
+      "ci_high": 0.1,
+      "mape": 3.5587
+    },
+    {
+      "model": "NS182C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 42.6,
+      "ci_low": 20.4,
+      "ci_high": 55.6,
+      "mape": 3.6196
+    },
+    {
+      "model": "NS182H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 3.9,
+      "ci_low": 0.7,
+      "ci_high": 21.8,
+      "mape": 0.7206
+    },
+    {
+      "model": "NS242C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 26.8,
+      "ci_low": 6.6,
+      "ci_high": 50.1,
+      "mape": 2.1625
+    },
+    {
+      "model": "NS242H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 12.2,
+      "ci_low": 4.2,
+      "ci_high": 16.1,
+      "mape": 1.3296
+    },
+    {
+      "model": "NT382C",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 20.2,
+      "ci_low": 11.3,
+      "ci_high": 27.5,
+      "mape": 1.1199
+    },
+    {
+      "model": "NT382H",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L1_sku",
+      "predicted": 10.0,
+      "ci_low": 4.4,
+      "ci_high": 16.0,
+      "mape": 0.5789
+    },
+    {
+      "model": "W181EC.SN0",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L3_coldstart",
+      "predicted": 24.0,
+      "ci_low": 12.0,
+      "ci_high": 36.0,
+      "mape": null
+    },
+    {
+      "model": "W181EH.SN0",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L3_coldstart",
+      "predicted": 24.0,
+      "ci_low": 12.0,
+      "ci_high": 36.0,
+      "mape": null
+    },
+    {
+      "model": "W242EC.SN0",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L3_coldstart",
+      "predicted": 24.0,
+      "ci_low": 12.0,
+      "ci_high": 36.0,
+      "mape": null
+    },
+    {
+      "model": "W242EH.SN0",
+      "week": "W16",
+      "month": "Apr",
+      "level": "L3_coldstart",
+      "predicted": 24.0,
+      "ci_low": 12.0,
+      "ci_high": 36.0,
+      "mape": null
+    }
+  ]
+}
