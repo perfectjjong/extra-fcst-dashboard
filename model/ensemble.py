@@ -110,18 +110,27 @@ def _compute_window_coldstart(db_path: str) -> List[Dict]:
     conn.close()
 
     mix = {r[0]: max(0.0, float(r[1])) for r in mix_rows}
-    total_mix = sum(mix.values())
 
-    if total_mix > 0:
+    co_18k = mix.get('C182EC.SN2', 0)
+    hp_18k = mix.get('C182EH.SN2', 0)
+    co_24k = mix.get('C242EC.SN2', 0)
+
+    # 24K HP 전세대(C242EH.SN2) 실적 없음 → 18K CO:HP 비율로 24K HP 추정
+    # 전세대 유통/라인업 문제로 미판매된 것이지 신제품도 같다고 볼 수 없음
+    hp_co_ratio = (hp_18k / co_18k) if co_18k > 0 else 0.246
+    hp_24k_est = co_24k * hp_co_ratio
+
+    adjusted_total = co_18k + hp_18k + co_24k + hp_24k_est
+
+    if adjusted_total > 0:
         model_shares = {
-            'W181EC.SN0': mix.get('C182EC.SN2', 0) / total_mix,
-            'W181EH.SN0': mix.get('C182EH.SN2', 0) / total_mix,
-            'W242EC.SN0': mix.get('C242EC.SN2', 0) / total_mix,
+            'W181EC.SN0': co_18k / adjusted_total,
+            'W181EH.SN0': hp_18k / adjusted_total,
+            'W242EC.SN0': co_24k / adjusted_total,
+            'W242EH.SN0': hp_24k_est / adjusted_total,
         }
-        # 24K HP는 전세대 실적 없음 — 잔여분 (≈0)
-        model_shares['W242EH.SN0'] = max(0.0, 1.0 - sum(model_shares.values()))
     else:
-        model_shares = {'W181EC.SN0': 0.617, 'W181EH.SN0': 0.152, 'W242EC.SN0': 0.231, 'W242EH.SN0': 0.0}
+        model_shares = {'W181EC.SN0': 0.583, 'W181EH.SN0': 0.144, 'W242EC.SN0': 0.219, 'W242EH.SN0': 0.054}
 
     results = []
     for new_model in WINDOW_SEEC_MODELS:
