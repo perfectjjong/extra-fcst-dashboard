@@ -150,6 +150,47 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
   </div>
 
+  <!-- Scenario Planning Panel -->
+  <div style="margin-bottom:20px;">
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+        <h2 style="font-size:1rem; color:#a78bfa;">시나리오 플래닝</h2>
+        <span style="font-size:0.75rem; color:#8b92a5;">탄력성 0.7 가정 (할인 +10% → 수요 +7%)</span>
+      </div>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:16px;">
+        <div style="flex:1; min-width:200px;">
+          <label style="font-size:0.75rem; color:#8b92a5; display:block; margin-bottom:4px;">할인율 시나리오</label>
+          <input type="range" id="scenario-discount" min="0" max="20" step="10" value="0"
+            oninput="updateScenarioDisplay()" style="width:100%;">
+          <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#8b92a5; margin-top:2px;">
+            <span>기본 (0%)</span><span>+10%</span><span>+20%</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:#8b92a5; display:block; margin-bottom:4px;">라마단 부스트</label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="scenario-ramadan" onchange="updateScenarioDisplay()">
+            <span style="font-size:0.85rem;">적용 (+20% 라마단 주차)</span>
+          </label>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px;">
+        <div class="metric-card">
+          <div class="label">기본 예측 합계</div>
+          <div class="value" id="scenario-base-total" style="font-size:1.2rem;">—</div>
+        </div>
+        <div class="metric-card" style="border-color:#a78bfa;">
+          <div class="label">시나리오 예측 합계</div>
+          <div class="value" id="scenario-adjusted-total" style="font-size:1.2rem; color:#a78bfa;">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">증감</div>
+          <div class="value" id="scenario-delta" style="font-size:1.2rem; color:#34d399;">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Chart -->
   <div class="chart-wrap">
     <div class="chart-tabs">
@@ -206,6 +247,7 @@ async function init() {
     raw = await resp.json();
     buildFilters();
     applyFilters();
+    updateScenarioDisplay();
   } catch(e) {
     document.getElementById('total-fcst').textContent = 'N/A';
     document.getElementById('avg-mape').textContent = '로드 실패';
@@ -309,6 +351,8 @@ function applyFilters() {
   if (chartMode === 'annual') {
     renderAnnualChart();
   }
+
+  updateScenarioDisplay();
 }
 
 function updateSummary(actuals, forecasts) {
@@ -604,6 +648,57 @@ function sortTable(key) {
   if (sortKey === key) { sortAsc = !sortAsc; }
   else { sortKey = key; sortAsc = false; }
   applyFilters();
+}
+
+function updateScenarioDisplay() {
+  const data = raw;
+  if (!data || !data.scenarios) return;
+
+  const discount = parseInt(document.getElementById('scenario-discount').value);
+  const ramadan = document.getElementById('scenario-ramadan').checked;
+  const filtered = window._filteredModels || new Set(Object.keys(data.metadata || {}));
+
+  // 기본 예측 합계 (단기 forecasts 기준)
+  const baseForecasts = (data.forecasts || []).filter(f => filtered.has(f.model));
+  const baseTotal = baseForecasts.reduce((s, f) => s + (f.predicted || 0), 0);
+
+  // 시나리오 적용
+  let adjTotal = baseTotal;
+  if (discount === 10) {
+    const scenMap = data.scenarios.promo_10 || {};
+    adjTotal = baseForecasts.reduce((s, f) => {
+      const key = `${f.model}|${f.week || 'NEXT'}`;
+      return s + (scenMap[key] !== undefined ? scenMap[key] : (f.predicted || 0));
+    }, 0);
+  } else if (discount === 20) {
+    const scenMap = data.scenarios.promo_20 || {};
+    adjTotal = baseForecasts.reduce((s, f) => {
+      const key = `${f.model}|${f.week || 'NEXT'}`;
+      return s + (scenMap[key] !== undefined ? scenMap[key] : (f.predicted || 0));
+    }, 0);
+  }
+
+  if (ramadan) {
+    const ramadanWeeks = new Set(['W5','W6','W7','W8','W9']);
+    const ramadanMap = data.scenarios.ramadan || {};
+    const lrBoost = (data.long_range_forecasts || [])
+      .filter(f => filtered.has(f.model) && ramadanWeeks.has(f.week))
+      .reduce((s, f) => {
+        const key = `${f.model}|${f.week}`;
+        const boosted = ramadanMap[key] !== undefined ? ramadanMap[key] : f.predicted;
+        return s + (boosted - (f.predicted || 0));
+      }, 0);
+    adjTotal += lrBoost;
+  }
+
+  const delta = adjTotal - baseTotal;
+  const deltaPct = baseTotal > 0 ? (delta / baseTotal * 100).toFixed(1) : 0;
+
+  document.getElementById('scenario-base-total').textContent = Math.round(baseTotal).toLocaleString() + ' units';
+  document.getElementById('scenario-adjusted-total').textContent = Math.round(adjTotal).toLocaleString() + ' units';
+  document.getElementById('scenario-delta').textContent =
+    `${delta >= 0 ? '+' : ''}${Math.round(delta).toLocaleString()} (${Number(deltaPct) >= 0 ? '+' : ''}${deltaPct}%)`;
+  document.getElementById('scenario-delta').style.color = delta >= 0 ? '#34d399' : '#f87171';
 }
 
 init();
