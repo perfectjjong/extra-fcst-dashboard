@@ -14,7 +14,7 @@ import pandas as pd
 
 BASE_DIR = Path(__file__).parent.parent
 
-PRICE_TRACKING_GLOB = "/home/ubuntu/2026/06. Price Tracking/00. eXtra/00. Raw/extra_ac_Prices_Tracking_Master_*.xlsx"
+PRICE_TRACKING_MASTER = "/home/ubuntu/2026/06. Price Tracking/00. eXtra/extra_ac_Prices_Tracking_Master.xlsx"
 EXTRA_2025_PATH = "/home/ubuntu/2026/07. Claude Rule/extra_2025.xlsx"
 WEEKLY_SELLOUT_GLOB = "/home/ubuntu/2026/10. Automation/01. Sell Out Dashboard/00. OR/00. Raw/00. eXtra/00. Weekly Sell out/week*.xlsx"
 
@@ -45,28 +45,21 @@ def _norm_sf(raw: str) -> str:
 
 
 def _load_price_tracking() -> pd.DataFrame:
-    """Price Tracking Raw 파일 로드 → (year, week, brand, sub_family, compressor, avg_price_vat_ex, total_qty)"""
-    paths = sorted(glob.glob(PRICE_TRACKING_GLOB))
-    if not paths:
-        print("  [경고] Price Tracking 파일 없음")
+    """Price Tracking 마스터 파일(Prices DB 시트) 로드 → (year, week, brand, sub_family, compressor, avg_price_vat_ex, total_qty)"""
+    if not os.path.exists(PRICE_TRACKING_MASTER):
+        print(f"  [경고] Price Tracking 마스터 파일 없음: {PRICE_TRACKING_MASTER}")
+        return pd.DataFrame()
+    try:
+        df = pd.read_excel(PRICE_TRACKING_MASTER, sheet_name='Prices DB', engine='openpyxl')
+    except Exception as e:
+        print(f"  [경고] Price Tracking 마스터 파일 읽기 실패: {e}")
         return pd.DataFrame()
 
-    frames = []
-    for p in paths:
-        try:
-            df = pd.read_excel(p, sheet_name='Prices DB', engine='openpyxl')
-            frames.append(df)
-        except Exception as e:
-            print(f"  [경고] {os.path.basename(p)} 읽기 실패: {e}")
-
-    df = pd.concat(frames, ignore_index=True)
     df['Scraped_At'] = pd.to_datetime(df['Scraped_At'], errors='coerce')
     df = df.dropna(subset=['Scraped_At', 'Brand', 'Category'])
 
-    # Sale_Price: VAT-포함 → VAT-제외
     df['Sale_Price'] = pd.to_numeric(df['Sale_Price'], errors='coerce')
     df['Standard_Price'] = pd.to_numeric(df['Standard_Price'], errors='coerce')
-    # Sale_Price 없으면 Standard_Price 사용
     df['price_raw'] = df['Sale_Price'].where(df['Sale_Price'].notna(), df['Standard_Price'])
     df = df.dropna(subset=['price_raw'])
     df['price_vat_ex'] = df['price_raw'] / VAT_RATE
@@ -88,7 +81,7 @@ def _load_price_tracking() -> pd.DataFrame:
     agg['period_type'] = 'week'
     agg['source'] = 'price_tracking'
 
-    print(f"  Price Tracking: {len(paths)}개 파일 → {len(agg)}개 세그먼트-주차 레코드")
+    print(f"  Price Tracking: 마스터 파일 → {len(agg)}개 세그먼트-주차 레코드 (최신: {df['period'].max()})")
     return agg
 
 
