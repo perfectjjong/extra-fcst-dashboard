@@ -364,32 +364,48 @@ tbody tr:hover { background: var(--card); }
         <span class="acc-icon">▾</span>
       </div>
       <div class="accordion-body open">
+        <!-- 기온 -->
         <div class="ext-card">
-          <div class="ext-title">🌡 기온 시나리오</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="ext-title">🌡 리야드 기온</div>
+            <span id="env-temp-badge" style="font-size:.68rem;color:var(--purple-lt);font-weight:700;">— °C</span>
+          </div>
+          <div style="font-size:.65rem;color:var(--dim);margin:2px 0 6px;">주차별 계절 기온 자동 적용 · 시나리오 오버라이드</div>
           <select id="ext-temp" onchange="scheduleSimulate()">
-            <option value="normal">보통</option>
-            <option value="hot">더위 +5°C</option>
-            <option value="mild">온화 -5°C</option>
+            <option value="normal">기준값 적용</option>
+            <option value="hot">폭염 시나리오 (+5°C)</option>
+            <option value="mild">온화 시나리오 (-5°C)</option>
           </select>
         </div>
+        <!-- 습도 -->
         <div class="ext-card">
-          <div class="ext-title">💧 습도 시나리오</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="ext-title">💧 리야드 습도</div>
+            <span id="env-humidity-badge" style="font-size:.68rem;color:var(--purple-lt);font-weight:700;">— %</span>
+          </div>
+          <div style="font-size:.65rem;color:var(--dim);margin:2px 0 6px;">주차별 계절 습도 자동 적용 · 시나리오 오버라이드</div>
           <select id="ext-humidity" onchange="scheduleSimulate()">
-            <option value="normal">보통</option>
-            <option value="high">높음 +15%</option>
-            <option value="low">낮음 -10%</option>
+            <option value="normal">기준값 적용</option>
+            <option value="high">고습 시나리오 (+15%)</option>
+            <option value="low">저습 시나리오 (-10%)</option>
           </select>
         </div>
+        <!-- 유가 -->
         <div class="ext-card">
-          <div class="ext-title">🛢 국제유가 (USD/배럴)</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="ext-title">🛢 WTI 국제유가</div>
+            <span id="env-oil-badge" style="font-size:.68rem;color:var(--amber);font-weight:700;">조회 중...</span>
+          </div>
+          <div style="font-size:.65rem;color:var(--dim);margin:2px 0 6px;">실시간 시세 자동 적용 · 직접 입력으로 오버라이드</div>
           <input type="number" id="ext-oil" value="75" min="20" max="200" step="1"
-                 oninput="scheduleSimulate()" style="margin-top:4px;">
+                 oninput="onOilOverride()" style="margin-top:2px;">
         </div>
+        <!-- 전기요금 -->
         <div class="ext-card">
           <div class="toggle-row" style="margin-top:0;">
             <div class="toggle-info">
               <div class="toggle-name">⚡ 전기요금 부담</div>
-              <div class="toggle-sub">인버터 수요 가중치</div>
+              <div class="toggle-sub">W26-37 인버터 수요 가중치</div>
             </div>
             <label class="toggle">
               <input type="checkbox" id="ext-electricity" checked onchange="scheduleSimulate()">
@@ -398,6 +414,7 @@ tbody tr:hover { background: var(--card); }
             </label>
           </div>
         </div>
+        <!-- Google Trends -->
         <div class="ext-card">
           <div class="toggle-row" style="margin-top:0;">
             <div class="toggle-info">
@@ -417,11 +434,14 @@ tbody tr:hover { background: var(--card); }
     <!-- OOS 신호 -->
     <div class="accordion">
       <div class="accordion-header open" onclick="toggleAccordion(this)">
-        <span>🚨</span> OOS 신호
+        <span>🚨</span> 경쟁사 OOS 신호
         <span class="acc-icon">▾</span>
       </div>
       <div class="accordion-body open">
-        <div style="font-size:.72rem;color:var(--dim);margin-top:4px;margin-bottom:2px;">경쟁사 OOS → LG 수요 전환 적용</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-top:4px;margin-bottom:6px;line-height:1.5;">
+          Price Tracking 데이터 결락으로 <strong style="color:var(--red);">품절 감지</strong>된 경쟁사 브랜드.<br>
+          클릭 시 해당 브랜드 수요가 LG로 전환되는 효과를 시뮬레이션에 반영합니다.
+        </div>
         <div id="oos-grid" class="oos-grid"></div>
       </div>
     </div>
@@ -1046,7 +1066,7 @@ function buildOOSGrid() {
     return `<div class="oos-item ${active ? 'active' : ''}"
         onclick="toggleOOS('${seg}','${brand}',this)">
       <div class="oos-dot"></div>
-      <div class="oos-name">${brand}<br><span style="font-size:.6rem;color:var(--dim);">${seg.split('|')[0].trim()}</span></div>
+      <div class="oos-name">${brand}<br><span style="font-size:.6rem;color:var(--dim);">${SEG_DISPLAY_REV[seg] || seg.split('|')[0].trim()}</span></div>
     </div>`;
   }).join('');
 }
@@ -1112,6 +1132,35 @@ function updateLastUpdate() {
     `업데이트 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 }
 
+// ── Env Data (기온/습도/유가 자동 조회) ──────────────────────────────────────
+let _oilOverridden = false;
+
+function onOilOverride() {
+  _oilOverridden = true;
+  document.getElementById('env-oil-badge').textContent = '수동 입력';
+  document.getElementById('env-oil-badge').style.color = 'var(--amber)';
+  scheduleSimulate();
+}
+
+async function fetchEnvData(week) {
+  try {
+    const resp = await fetch(API_BASE + `/api/env-data?week=${week}`);
+    if (!resp.ok) return;
+    const d = await resp.json();
+
+    // 기온 배지
+    document.getElementById('env-temp-badge').textContent = `${d.temp_c}°C`;
+    // 습도 배지
+    document.getElementById('env-humidity-badge').textContent = `${d.humidity_pct}%`;
+    // 유가: 수동 입력 중이면 건드리지 않음
+    if (!_oilOverridden) {
+      document.getElementById('ext-oil').value = d.oil_price_usd;
+      document.getElementById('env-oil-badge').textContent = `$${d.oil_price_usd} 실시간`;
+      document.getElementById('env-oil-badge').style.color = 'var(--green)';
+    }
+  } catch (_) {}
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function init() {
   populateWeekSelects();
@@ -1119,11 +1168,13 @@ async function init() {
   document.getElementById('scope-from').value = 15;
   document.getElementById('scope-to').value   = 40;
 
-  // Parallel fetch OOS + Trends
+  // Parallel fetch OOS + Trends + Env data
+  const currentWeek = 'W' + document.getElementById('scope-from').value;
   const [oosResp, trendsResp] = await Promise.allSettled([
     fetch(API_BASE + '/api/oos').then(r => r.json()),
     fetch(API_BASE + '/api/trends').then(r => r.json()),
   ]);
+  fetchEnvData(currentWeek);
 
   if (oosResp.status === 'fulfilled') {
     state.oosData = oosResp.value || {};

@@ -2,14 +2,35 @@ import json
 import os
 import sqlite3
 import sys
+import time
+import urllib.request
 from pathlib import Path
 sys.path.insert(0, str(Path(os.path.abspath(__file__)).parent.parent))
 from collections import defaultdict
 
 from flask import Flask, jsonify, request, send_from_directory
-from api.simulator import SimulationEngine
+from api.simulator import SimulationEngine, RIYADH_TEMP, RIYADH_HUMIDITY
 from api.trends import get_trends_index
 from pipeline.build_price_segments import get_brand_price_context, get_oos_signals
+
+# 유가 캐시 (1시간)
+_oil_cache = {'price': None, 'ts': 0}
+
+def _fetch_oil_price() -> float:
+    now = time.time()
+    if _oil_cache['price'] and now - _oil_cache['ts'] < 3600:
+        return _oil_cache['price']
+    try:
+        url = 'https://query1.finance.yahoo.com/v8/finance/chart/CL=F'
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            data = json.loads(r.read())
+        price = data['chart']['result'][0]['meta']['regularMarketPrice']
+        _oil_cache['price'] = round(float(price), 1)
+        _oil_cache['ts'] = now
+    except Exception:
+        _oil_cache['price'] = _oil_cache['price'] or 75.0
+    return _oil_cache['price']
 
 BASE_DIR = os.path.join(os.path.dirname(__file__), '..')
 DEFAULT_DB = os.path.join(BASE_DIR, 'data', 'sellout.db')
@@ -91,6 +112,15 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
     @app.route('/simulator')
     def simulator_page():
         return send_from_directory(os.path.abspath(DASHBOARD_DIR), 'simulator.html')
+
+    @app.route('/api/env-data', methods=['GET'])
+    def get_env_data():
+        """현재 주차 기준 리야드 기온/습도 + 실시간 WTI 유가."""
+        week = request.args.get('week', 'W16')
+        temp     = RIYADH_TEMP.get(week, 25)
+        humidity = RIYADH_HUMIDITY.get(week, 30)
+        oil      = _fetch_oil_price()
+        return jsonify({'week': week, 'temp_c': temp, 'humidity_pct': humidity, 'oil_price_usd': oil})
 
     @app.route('/api/oos', methods=['GET'])
     def get_oos():
