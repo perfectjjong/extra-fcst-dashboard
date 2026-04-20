@@ -584,13 +584,18 @@ function buildParams() {
   };
 }
 
+// ── API Base URL (supports both local dev and external access via Cloudflare Tunnel)
+const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  ? ''
+  : 'https://tasks-fact-standard-bridges.trycloudflare.com';
+
 // ── Run Simulate ──────────────────────────────────────────────────────────────
 async function runSimulate() {
   showSpinner(true);
   setLoadingBar(30);
   try {
     const params = buildParams();
-    const resp = await fetch('/api/simulate', {
+    const resp = await fetch(API_BASE + '/api/simulate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -1107,8 +1112,8 @@ async function init() {
 
   // Parallel fetch OOS + Trends
   const [oosResp, trendsResp] = await Promise.allSettled([
-    fetch('/api/oos').then(r => r.json()),
-    fetch('/api/trends').then(r => r.json()),
+    fetch(API_BASE + '/api/oos').then(r => r.json()),
+    fetch(API_BASE + '/api/trends').then(r => r.json()),
   ]);
 
   if (oosResp.status === 'fulfilled') {

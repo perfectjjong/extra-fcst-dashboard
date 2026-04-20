@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eXtra Operations Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; }
+  header { background: #1a1d2e; padding: 16px 24px; border-bottom: 2px solid #2d3561; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.3rem; font-weight: 700; color: #a78bfa; }
+  header .week-badge { background: #2d3561; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; }
+  .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 24px; }
+  .card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
+  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: #a78bfa; }
+  .card p { font-size: 0.85rem; color: #8b92a5; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 8px 16px; border-radius: 8px; background: #2d3561; color: #e0e0e0; text-decoration: none; font-size: 0.85rem; cursor: pointer; border: none; }
+  .btn:hover { background: #3d4a7a; }
+  .btn-primary { background: #7c3aed; }
+  .btn-primary:hover { background: #6d28d9; }
+  .summary-section { padding: 0 24px 24px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .metric-card { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 10px; padding: 16px; }
+  .metric-card .label { font-size: 0.75rem; color: #8b92a5; }
+  .metric-card .value { font-size: 1.8rem; font-weight: 700; color: #e0e0e0; margin: 4px 0; }
+  .metric-card .delta { font-size: 0.8rem; }
+  .delta-up { color: #34d399; }
+  .delta-down { color: #f87171; }
+  .alert-banner { background: #2d1a1a; border: 1px solid #7f1d1d; border-radius: 8px; padding: 12px 16px; margin: 0 24px 16px; font-size: 0.85rem; color: #fca5a5; display: none; }
+  .request-section { padding: 0 24px 24px; }
+  .request-form { background: #1a1d2e; border: 1px solid #2d3561; border-radius: 12px; padding: 20px; }
+  .request-form h2 { font-size: 1rem; color: #a78bfa; margin-bottom: 16px; }
+  .form-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group label { font-size: 0.75rem; color: #8b92a5; }
+  .form-group select, .form-group input { background: #0f1117; border: 1px solid #2d3561; color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; }
+  .log-table { margin-top: 16px; width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .log-table th { text-align: left; padding: 8px; color: #8b92a5; border-bottom: 1px solid #2d3561; }
+  .log-table td { padding: 8px; border-bottom: 1px solid #1a1d2e; }
+  .status-pending { color: #fbbf24; }
+  .status-done { color: #34d399; }
+</style>
+</head>
+<body>
+<header>
+  <h1>eXtra Operations Hub</h1>
+  <span class="week-badge" id="current-week">Loading...</span>
+</header>
+
+<div class="hub-grid">
+  <div class="card">
+    <h2>📊 Sell-out Dashboard</h2>
+    <p>주간 모델별 실적, 채널 필터, Sell-thru 진척</p>
+    <a class="btn" href="https://shaker-dashboard.pages.dev/dashboards/extra-sellout/" target="_blank">대시보드 열기 →</a>
+
+  </div>
+  <div class="card">
+    <h2>💰 Price Tracking</h2>
+    <p>LG vs 경쟁사 일별 가격 스냅샷, 할인 모니터링</p>
+    <a class="btn" href="https://shaker-dashboard.pages.dev/dashboards/extra-price/" target="_blank">대시보드 열기 →</a>
+  </div>
+  <div class="card">
+    <h2>🔮 FCST Dashboard</h2>
+    <p>AI 주간 수요 예측 — SKU별 예측 + 신뢰구간</p>
+    <a class="btn btn-primary" href="fcst_dashboard.html" target="_blank">예측 보기 →</a>
+  </div>
+</div>
+
+<div id="alert-banner" class="alert-banner">
+  ⚠️ <span id="alert-text"></span>
+</div>
+
+<div class="summary-section">
+  <h2 style="padding-bottom:12px;font-size:1rem;color:#a78bfa;">이번 주 Quick Summary</h2>
+  <div class="summary-grid" id="summary-grid">
+    <div class="metric-card">
+      <div class="label">전체 예측 (다음 주)</div>
+      <div class="value" id="total-fcst">—</div>
+      <div class="delta" id="total-delta">로딩 중...</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">예측 모델 수</div>
+      <div class="value" id="model-count">—</div>
+      <div class="delta">L1 SKU 예측</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">평균 MAPE (L1)</div>
+      <div class="value" id="avg-mape">—</div>
+      <div class="delta">목표: &lt;15%</div>
+    </div>
+  </div>
+</div>
+
+<div class="request-section">
+  <div class="request-form">
+    <h2>📥 로우데이터 요청</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>모델</label>
+        <select id="req-model">
+          <option value="">전체</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>시작 주</label>
+        <input type="text" id="req-from" placeholder="2026-W01">
+      </div>
+      <div class="form-group">
+        <label>종료 주</label>
+        <input type="text" id="req-to" placeholder="2026-W17">
+      </div>
+      <div class="form-group">
+        <label>요청자</label>
+        <input type="text" id="req-user" placeholder="이름">
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="submitRequest()">요청하기</button>
+      </div>
+    </div>
+    <table class="log-table" id="request-log">
+      <thead><tr><th>요청 시각</th><th>모델</th><th>기간</th><th>요청자</th><th>상태</th></tr></thead>
+      <tbody id="request-log-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const API = '';
+const requestLog = JSON.parse(localStorage.getItem('extraRequests') || '[]');
+
+function getCurrentWeek() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const week = Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
+  return `W${String(week).padStart(2,'0')} ${now.getFullYear()}`;
+}
+
+async function loadFcst() {
+  try {
+    const resp = await fetch('./fcst_output.json');
+    if (!resp.ok) throw new Error('API unavailable');
+    const data = await resp.json();
+    const forecasts = data.forecasts || [];
+
+    const total = forecasts.reduce((s, f) => s + (f.predicted || 0), 0);
+    document.getElementById('total-fcst').textContent = Math.round(total).toLocaleString();
+    document.getElementById('model-count').textContent = forecasts.filter(f => f.level === 'L1_sku').length;
+
+    const mapes = forecasts.filter(f => f.mape != null).map(f => f.mape);
+    if (mapes.length) {
+      const avg = mapes.reduce((a,b)=>a+b,0)/mapes.length;
+      const el = document.getElementById('avg-mape');
+      el.textContent = (avg*100).toFixed(1) + '%';
+      el.style.color = avg < 0.15 ? '#34d399' : avg < 0.20 ? '#fbbf24' : '#f87171';
+    }
+
+    const sel = document.getElementById('req-model');
+    const models = [...new Set(forecasts.map(f => f.model))].sort();
+    models.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m; opt.textContent = m;
+      sel.appendChild(opt);
+    });
+  } catch (e) {
+    document.getElementById('total-fcst').textContent = 'N/A';
+    document.getElementById('avg-mape').textContent = 'API 오프라인';
+  }
+}
+
+async function submitRequest() {
+  const model = document.getElementById('req-model').value;
+  const dateFrom = document.getElementById('req-from').value;
+  const dateTo = document.getElementById('req-to').value;
+  const requester = document.getElementById('req-user').value;
+
+  if (!dateFrom || !dateTo || !requester) {
+    alert('기간과 요청자 이름을 입력해주세요.');
+    return;
+  }
+
+  const entry = { model: model || '전체', dateFrom, dateTo, requester, requestedAt: new Date().toISOString(), status: 'pending' };
+
+  try {
+    await fetch(`${API}/api/request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, date_from: dateFrom, date_to: dateTo, requester })
+    });
+    entry.status = 'submitted';
+  } catch (e) {
+    entry.status = 'local-only';
+  }
+
+  requestLog.unshift(entry);
+  localStorage.setItem('extraRequests', JSON.stringify(requestLog.slice(0, 50)));
+  renderRequestLog();
+}
+
+function renderRequestLog() {
+  const tbody = document.getElementById('request-log-body');
+  tbody.innerHTML = requestLog.slice(0, 10).map(r => `
+    <tr>
+      <td>${new Date(r.requestedAt).toLocaleString('ko-KR')}</td>
+      <td>${r.model}</td>
+      <td>${r.dateFrom} ~ ${r.dateTo}</td>
+      <td>${r.requester}</td>
+      <td class="status-${r.status === 'pending' || r.status === 'submitted' ? 'pending' : 'done'}">${r.status}</td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('current-week').textContent = getCurrentWeek();
+loadFcst();
+renderRequestLog();
+</script>
+</body>
+</html>
