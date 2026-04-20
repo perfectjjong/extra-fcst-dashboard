@@ -710,6 +710,11 @@ const API_BASE = (location.hostname === 'localhost' || location.hostname === '12
   ? ''
   : 'https://tasks-fact-standard-bridges.trycloudflare.com';
 
+// 현재 ISO 주차 (전역)
+const _now = new Date();
+const _startOfYear = new Date(_now.getFullYear(), 0, 1);
+const _currentWeekNum = Math.ceil(((_now - _startOfYear) / 86400000 + _startOfYear.getDay() + 1) / 7);
+
 // ── Run Simulate ──────────────────────────────────────────────────────────────
 async function runSimulate() {
   showSpinner(true);
@@ -1453,10 +1458,6 @@ async function init() {
   document.getElementById('scope-from').value = 15;
   document.getElementById('scope-to').value   = 40;
 
-  // 현재 달력 주차 계산 (연초부터 경과 주)
-  const _now = new Date();
-  const _startOfYear = new Date(_now.getFullYear(), 0, 1);
-  const _currentWeekNum = Math.ceil(((_now - _startOfYear) / 86400000 + _startOfYear.getDay() + 1) / 7);
   const currentWeek = 'W' + _currentWeekNum;
 
   const [oosResp, trendsResp] = await Promise.allSettled([
