@@ -493,11 +493,14 @@ const state = {
 
 // Segment display names -> api keys
 const SEG_DISPLAY = {
-  'MS INV': 'Mini Split AC|Inverter',
-  'MS ROT': 'Mini Split AC|Rotary',
-  'WIN INV': 'Window AC|Inverter',
-  'PAC': 'Packaged AC|Inverter',
-  'CASS': 'Cassette AC|Inverter',
+  'MS·INV':  'Mini Split AC | Inverter',
+  'MS·ROT':  'Mini Split AC | Rotary',
+  'WIN·INV': 'Window AC | Inverter',
+  'WIN·ROT': 'Window AC | Rotary',
+  'FS·INV':  'Free Standing AC | Inverter',
+  'FS·ROT':  'Free Standing AC | Rotary',
+  'PAC':     'Packaged AC | Inverter',
+  'CASS':    'Cassette AC | Inverter',
 };
 const SEG_DISPLAY_REV = Object.fromEntries(Object.entries(SEG_DISPLAY).map(([k,v]) => [v,k]));
 
@@ -848,7 +851,13 @@ function buildPricePanel() {
   }
 
   // Map to display names (use short if known, else use raw)
-  const tabs = segKeys.map(k => SEG_DISPLAY_REV[k] || k.split('|')[0].trim().slice(0,8));
+  const tabs = segKeys.map(k => {
+    if (SEG_DISPLAY_REV[k]) return SEG_DISPLAY_REV[k];
+    const parts = k.split('|').map(s => s.trim());
+    const cat  = parts[0].replace('Standing','Std').replace('Split','Spl').replace(' AC','').slice(0,7);
+    const type = parts[1] ? '·' + parts[1].slice(0,3).toUpperCase() : '';
+    return cat + type;
+  });
 
   if (!state.activePriceSeg || !segKeys.includes(state.activePriceSeg)) {
     state.activePriceSeg = segKeys[0];
