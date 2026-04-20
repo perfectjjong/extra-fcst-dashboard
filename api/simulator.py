@@ -77,12 +77,27 @@ def _heat_index_c(temp_c: float, humidity: float) -> float:
 
 class SimulationEngine:
 
+    # UI 카테고리명 → fcst_output에 실제 저장된 값 매핑
+    CAT_ALIASES = {
+        'Mini Split': {'Inverter', 'Split AC', 'Mini Split AC', 'Mini Split'},
+        'Window':     {'Window', 'Window AC'},
+        'Free Standing': {'Floor Standing AC', 'Free Standing AC', 'Free Standing', 'PAC'},
+        'Cassette':   {'Cassette AC', 'Cassette'},
+        'Packaged':   {'Packaged AC', 'Packaged'},
+    }
+
+    def _expand_categories(self, cats: set) -> set:
+        expanded = set()
+        for c in cats:
+            expanded |= self.CAT_ALIASES.get(c, {c})
+        return expanded
+
     def simulate(self, base_forecasts: list, params: dict,
                  current_price_gaps: dict) -> list:
         scope = params.get('scope', {})
         week_from = scope.get('week_from', 1)
         week_to = scope.get('week_to', 52)
-        categories = set(scope.get('categories', []))
+        categories = self._expand_categories(set(scope.get('categories', [])))
         ext = params.get('external_vars', {})
         trends = params.get('trends_index', {})
 
