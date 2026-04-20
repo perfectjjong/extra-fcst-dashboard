@@ -150,14 +150,16 @@ class SimulationEngine:
         return results
 
     def _price_factor(self, sk: str, positioning: dict, gaps: dict) -> float:
-        if sk not in positioning:
+        # sk = "Mini Split AC|Inverter" (no spaces), but positioning keys may use " | " (with spaces)
+        pos_data = positioning.get(sk) or positioning.get(sk.replace('|', ' | '))
+        if not pos_data:
             return 1.0
         seg_tuple = tuple(sk.split('|'))
         elasticity = SEGMENT_ELASTICITY.get(seg_tuple, _DEFAULT_ELASTICITY)
         db_key = sk.replace('|', ' | ')
         brands = gaps.get(db_key, {}).get('brands', {})
         effects = []
-        for comp_key, target in positioning[sk].items():
+        for comp_key, target in pos_data.items():
             brand = comp_key.replace('vs_', '').replace('_', ' ')
             current = brands.get(brand, {}).get('gap_pct')
             if current is None:
