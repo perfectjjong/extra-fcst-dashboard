@@ -11,6 +11,7 @@ from collections import defaultdict
 from flask import Flask, jsonify, request, send_from_directory
 from api.simulator import SimulationEngine, RIYADH_TEMP, RIYADH_HUMIDITY
 from api.trends import get_trends_index
+from api.note_interpreter import interpret_note
 from pipeline.build_price_segments import get_brand_price_context, get_oos_signals
 
 # 유가 캐시 (1시간)
@@ -189,6 +190,18 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
             },
             'current_price_gaps': gaps,
         })
+
+    @app.route('/api/interpret-note', methods=['POST', 'OPTIONS'])
+    def post_interpret_note():
+        if request.method == 'OPTIONS':
+            return jsonify({}), 200
+        data = request.get_json() or {}
+        text = data.get('text', '')
+        try:
+            result = interpret_note(text)
+            return jsonify(result)
+        except Exception as e:
+            return jsonify({'relevant': False, 'adjustments': [], 'reasoning': f'해석 오류: {e}'}), 200
 
     return app
 

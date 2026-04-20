@@ -167,6 +167,53 @@ input[type=range]:hover::-webkit-slider-thumb { background: var(--purple); }
   border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: all .15s;
 }
 .add-promo-btn:hover { border-color: var(--purple-lt); color: var(--purple-lt); }
+.promo-mode-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.promo-mode-tab {
+  flex: 1; padding: 3px 0; font-size: 0.68rem; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); border-radius: 4px; cursor: pointer;
+  transition: all .15s; text-align: center;
+}
+.promo-mode-tab.active { border-color: var(--purple); color: var(--purple-lt); background: rgba(124,58,237,.1); }
+.promo-week-info { font-size: 0.65rem; color: var(--dim); margin-top: 3px; }
+
+/* 자연어 메모 섹션 */
+.note-textarea {
+  width: 100%; min-height: 80px; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem;
+  outline: none; resize: vertical; font-family: inherit; line-height: 1.5;
+  transition: border-color .15s;
+}
+.note-textarea:focus { border-color: var(--purple); }
+.note-textarea::placeholder { color: var(--dim); }
+.note-interpret-btn {
+  width: 100%; margin-top: 6px; padding: 7px; font-size: 0.78rem;
+  background: rgba(124,58,237,.15); border: 1px solid var(--purple);
+  color: var(--purple-lt); border-radius: 6px; cursor: pointer; transition: all .15s;
+}
+.note-interpret-btn:hover { background: rgba(124,58,237,.25); }
+.note-interpret-btn:disabled { opacity: .5; cursor: default; }
+.note-result { margin-top: 8px; }
+.note-adj-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 8px 10px; margin-top: 6px; font-size: 0.75rem;
+}
+.note-adj-item.active { border-color: var(--green); background: rgba(16,185,129,.06); }
+.note-adj-item.inactive { border-color: var(--dim); opacity: .6; }
+.note-adj-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.note-adj-label { color: var(--text); font-weight: 600; flex: 1; }
+.note-adj-weeks { font-size: 0.65rem; color: var(--muted); margin-bottom: 3px; }
+.note-adj-reason { font-size: 0.67rem; color: var(--dim); line-height: 1.4; }
+.note-method-badge { font-size: 0.6rem; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+.nm-claude { background: rgba(124,58,237,.2); color: var(--purple-lt); }
+.nm-rule { background: rgba(148,163,184,.15); color: var(--muted); }
+.note-toggle-btn {
+  padding: 2px 8px; font-size: 0.65rem; border-radius: 4px; cursor: pointer;
+  border: 1px solid; transition: all .15s; flex-shrink: 0;
+}
+.note-toggle-btn.apply { border-color: var(--green); color: var(--green); background: transparent; }
+.note-toggle-btn.apply:hover { background: rgba(16,185,129,.1); }
+.note-toggle-btn.remove { border-color: var(--red); color: var(--red); background: transparent; }
+.note-toggle-btn.remove:hover { background: rgba(239,68,68,.1); }
 
 /* OOS section */
 .oos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
@@ -348,12 +395,32 @@ tbody tr:hover { background: var(--card); }
     <!-- 프로모션 -->
     <div class="accordion">
       <div class="accordion-header open" onclick="toggleAccordion(this)">
-        <span>🏷</span> 프로모션
+        <span>🏷</span> 프로모션 캠페인
         <span class="acc-icon">▾</span>
       </div>
       <div class="accordion-body open">
+        <div style="font-size:.68rem;color:var(--dim);margin-top:2px;margin-bottom:6px;line-height:1.5;">
+          날짜 또는 주차 범위로 프로모션 기간을 설정하고, 예상 수요 상승률(%)을 직접 입력합니다.
+        </div>
         <div id="promo-list"></div>
         <button class="add-promo-btn" onclick="addPromo()">+ 프로모션 추가</button>
+      </div>
+    </div>
+
+    <!-- 특이사항 메모 (자연어 해석) -->
+    <div class="accordion">
+      <div class="accordion-header open" onclick="toggleAccordion(this)">
+        <span>📝</span> 특이사항 메모 <span style="font-size:.65rem;color:var(--dim);margin-left:4px;">AI 해석 반영</span>
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body open">
+        <div style="font-size:.68rem;color:var(--dim);margin-top:2px;margin-bottom:6px;line-height:1.5;">
+          자유롭게 특이사항을 입력하면 수요에 영향을 미치는 요소를 자동 해석해 시뮬레이션에 반영합니다.
+        </div>
+        <textarea id="note-input" class="note-textarea"
+          placeholder="예) 4/26부터 미국-이란-이스라엘 종전. 소비심리 회복까지 1주 소요 예상&#10;예) 5월 유가 급등으로 소비 위축 우려&#10;예) 라마단 기간 이슬람 수요 기대 이상"></textarea>
+        <button class="note-interpret-btn" id="note-btn" onclick="interpretNote()">🔍 AI 해석 및 시뮬레이션 반영</button>
+        <div id="note-result" class="note-result"></div>
       </div>
     </div>
 
@@ -498,13 +565,14 @@ tbody tr:hover { background: var(--card); }
 <script>
 // ── State ────────────────────────────────────────────────────────────────────
 const state = {
-  priceGaps: {},      // from API response
-  trendsData: {},     // from /api/trends
-  oosData: {},        // from /api/oos
-  activeOOS: {},      // {segment: [brands]}
-  priceSliders: {},   // {segKey: {brandName: value}}
-  promos: [],         // array of promo objects
-  activePriceSeg: '', // currently shown seg tab key
+  priceGaps: {},         // from API response
+  trendsData: {},        // from /api/trends
+  oosData: {},           // from /api/oos
+  activeOOS: {},         // {segment: [brands]}
+  priceSliders: {},      // {segKey: {brandName: value}}
+  promos: [],            // array of promo objects
+  noteAdjustments: [],   // [{id, week_from, week_to, factor, label, active, method}]
+  activePriceSeg: '',    // currently shown seg tab key
   trendsEnabled: false,
   chart: null,
   debounceTimer: null,
@@ -582,15 +650,22 @@ function buildParams() {
 
   return {
     price_positioning: pp,
-    promo_periods: state.promos.map(p => ({
-      start_week:      parseInt(p.startW) || 1,
-      end_week:        parseInt(p.endW) || 1,
-      segment:         p.segment,
-      competitor:      p.competitor,
-      target_gap_pct:  parseFloat(p.targetGap) || 0,
-      current_gap_pct: parseFloat(p.currentGap) || 0,
-      hangover_weeks:  parseInt(p.hangover) || 1,
-    })),
+    promo_periods: state.promos.map(p => {
+      const base = {
+        start_week:    parseInt(p.startW) || 1,
+        end_week:      parseInt(p.endW) || 1,
+        segment:       p.segment,
+        hangover_weeks: parseInt(p.hangover) || 0,
+      };
+      if (p.mode === 'direct') {
+        base.boost_direct_pct = parseFloat(p.boostPct) || 0;
+      } else {
+        base.competitor      = p.competitor;
+        base.target_gap_pct  = parseFloat(p.targetGap) || 0;
+        base.current_gap_pct = parseFloat(p.currentGap) || 0;
+      }
+      return base;
+    }),
     external_vars: {
       temp_scenario:       document.getElementById('ext-temp').value,
       humidity_scenario:   document.getElementById('ext-humidity').value,
@@ -603,8 +678,31 @@ function buildParams() {
       week_to:    weekTo,
       categories: cat ? [cat] : [],
     },
-    trends_index: state.trendsEnabled ? state.trendsData : {},
+    trends_index: buildMergedTrendsIndex(),
   };
+}
+
+function buildMergedTrendsIndex() {
+  const activeNotes = state.noteAdjustments.filter(a => a.active);
+  if (!state.trendsEnabled && activeNotes.length === 0) return {};
+
+  // 기반: trends 사용 시 trendsData, 아니면 전 주 50 (중립)
+  const base = {};
+  for (let w = 1; w <= 52; w++) {
+    const k = `W${w}`;
+    base[k] = state.trendsEnabled ? (state.trendsData[k] ?? 50) : 50;
+  }
+
+  // 노트 조정값 합성: 팩터 곱셈 후 index 역변환
+  for (const adj of activeNotes) {
+    for (let w = adj.week_from; w <= adj.week_to; w++) {
+      const k = `W${w}`;
+      const curFactor = 1.0 + (base[k] - 50) / 500.0;
+      const newFactor = Math.min(1.2, Math.max(0.8, curFactor * adj.factor));
+      base[k] = Math.round(50 + (newFactor - 1.0) * 500);
+    }
+  }
+  return base;
 }
 
 // ── API Base URL (supports both local dev and external access via Cloudflare Tunnel)
@@ -956,18 +1054,27 @@ function onPriceSlider(el) {
 // ── Promo Builder ─────────────────────────────────────────────────────────────
 let promoIdx = 0;
 
+// 날짜 문자열(YYYY-MM-DD) → ISO 주차
+function dateToISOWeek(dateStr) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return null;
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+}
+
 function addPromo() {
   const idx = promoIdx++;
-  const segKeys = Object.keys(state.priceGaps);
-  const firstSeg = segKeys[0] || 'Mini Split AC|Inverter';
-  const competitors = Object.keys(state.priceGaps[firstSeg]?.brands || { MIDEA: {} });
-  const firstComp = competitors[0] || 'MIDEA';
-  const currentGap = state.priceGaps[firstSeg]?.brands?.[firstComp]?.gap_pct ?? 20;
-
   state.promos.push({
-    idx, segment: firstSeg, competitor: firstComp,
-    startW: '22', endW: '26', targetGap: '10',
-    currentGap: currentGap.toFixed(1), hangover: '1',
+    idx,
+    mode: 'direct',      // 'direct' | 'gap'
+    segment: 'ALL',
+    startW: String(_currentWeekNum + 1),
+    endW:   String(Math.min(52, _currentWeekNum + 4)),
+    startDate: '', endDate: '',
+    boostPct: '15',
+    hangover: '1',
+    // gap mode fields
+    competitor: '', targetGap: '10', currentGap: '20',
   });
   renderPromos();
 }
@@ -983,8 +1090,18 @@ function updatePromo(idx, field, val) {
   if (!p) return;
   p[field] = val;
 
-  // Update current gap if segment/competitor changed
-  if (field === 'segment' || field === 'competitor') {
+  // 날짜 입력 → 주차 자동 변환
+  if (field === 'startDate' && val) {
+    const w = dateToISOWeek(val);
+    if (w) p.startW = String(w);
+  }
+  if (field === 'endDate' && val) {
+    const w = dateToISOWeek(val);
+    if (w) p.endW = String(w);
+  }
+
+  // gap 모드: 세그먼트/경쟁사 변경 시 현재 갭 자동 업데이트
+  if ((field === 'segment' || field === 'competitor') && p.mode === 'gap') {
     const seg  = p.segment;
     const comp = p.competitor;
     const cg   = state.priceGaps[seg]?.brands?.[comp]?.gap_pct;
@@ -995,53 +1112,221 @@ function updatePromo(idx, field, val) {
   scheduleSimulate();
 }
 
+function setPromoMode(idx, mode) {
+  const p = state.promos.find(p => p.idx === idx);
+  if (!p) return;
+  p.mode = mode;
+  if (mode === 'gap' && !p.competitor) {
+    const segKeys = Object.keys(state.priceGaps);
+    const seg = segKeys[0] || '';
+    p.segment = seg;
+    const comps = Object.keys(state.priceGaps[seg]?.brands || {});
+    p.competitor = comps[0] || '';
+    const cg = state.priceGaps[seg]?.brands?.[p.competitor]?.gap_pct;
+    if (cg !== undefined) p.currentGap = cg.toFixed(1);
+  }
+  renderPromos();
+  scheduleSimulate();
+}
+
 function renderPromos() {
   const el = document.getElementById('promo-list');
   const segKeys = Object.keys(state.priceGaps);
+  const allSegOpts = [`<option value="ALL">전체 카테고리</option>`,
+    ...segKeys.map(k => `<option value="${k}">${SEG_DISPLAY_REV[k] || k}</option>`)
+  ].join('');
 
   el.innerHTML = state.promos.map(p => {
-    const competitors = Object.keys(state.priceGaps[p.segment]?.brands || {});
-    const tg = parseFloat(p.targetGap) || 0;
-    const cg = parseFloat(p.currentGap) || 0;
-    const depth = tg < cg
-      ? `<span class="depth-label depth-ok">✅ ${(cg - tg).toFixed(1)}%p 갭 축소</span>`
-      : `<span class="depth-label depth-warn">⚠️ 갭 확대 (수요↓)</span>`;
+    const sw = parseInt(p.startW) || 1;
+    const ew = parseInt(p.endW) || 1;
+    const dur = Math.max(0, ew - sw + 1);
+    const weekInfo = `<div class="promo-week-info">W${sw} ~ W${ew} (${dur}주)</div>`;
+
+    let modeBody = '';
+    if (p.mode === 'direct') {
+      const boost = parseFloat(p.boostPct) || 0;
+      const depthLabel = boost > 0
+        ? `<span class="depth-label depth-ok">✅ 수요 +${boost}% 부스트 적용</span>`
+        : `<span class="depth-label depth-warn">⚠️ 0% — 부스트 없음</span>`;
+      modeBody = `
+        <div class="promo-grid">
+          <div class="form-row">
+            <label>세그먼트</label>
+            <select onchange="updatePromo(${p.idx},'segment',this.value)">
+              ${allSegOpts.replace(`value="${p.segment}"`, `value="${p.segment}" selected`)}
+            </select>
+          </div>
+          <div class="form-row">
+            <label>수요 부스트 %</label>
+            <input type="number" min="0" max="100" step="1" value="${p.boostPct}"
+                   oninput="updatePromo(${p.idx},'boostPct',this.value)">
+          </div>
+          <div class="form-row">
+            <label>시작 날짜</label>
+            <input type="date" value="${p.startDate}" onchange="updatePromo(${p.idx},'startDate',this.value)">
+          </div>
+          <div class="form-row">
+            <label>종료 날짜</label>
+            <input type="date" value="${p.endDate}" onchange="updatePromo(${p.idx},'endDate',this.value)">
+          </div>
+          <div class="form-row">
+            <label>시작 주차</label>
+            <input type="number" min="1" max="52" value="${p.startW}" oninput="updatePromo(${p.idx},'startW',this.value)">
+          </div>
+          <div class="form-row">
+            <label>종료 주차</label>
+            <input type="number" min="1" max="52" value="${p.endW}" oninput="updatePromo(${p.idx},'endW',this.value)">
+          </div>
+          <div class="form-row">
+            <label>Hangover 주</label>
+            <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
+          </div>
+        </div>
+        ${depthLabel}`;
+    } else {
+      const competitors = Object.keys(state.priceGaps[p.segment]?.brands || {});
+      const tg = parseFloat(p.targetGap) || 0;
+      const cg = parseFloat(p.currentGap) || 0;
+      const depth = tg < cg
+        ? `<span class="depth-label depth-ok">✅ ${(cg - tg).toFixed(1)}%p 갭 축소</span>`
+        : `<span class="depth-label depth-warn">⚠️ 갭 확대 (수요↓)</span>`;
+      modeBody = `
+        <div class="promo-grid">
+          <div class="form-row">
+            <label>세그먼트</label>
+            <select onchange="updatePromo(${p.idx},'segment',this.value)">
+              ${segKeys.map(k => `<option value="${k}" ${k===p.segment?'selected':''}>${SEG_DISPLAY_REV[k] || k}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-row">
+            <label>경쟁사</label>
+            <select onchange="updatePromo(${p.idx},'competitor',this.value)">
+              ${competitors.map(c => `<option value="${c}" ${c===p.competitor?'selected':''}>${c}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-row">
+            <label>시작 W</label>
+            <input type="number" min="1" max="52" value="${p.startW}" oninput="updatePromo(${p.idx},'startW',this.value)">
+          </div>
+          <div class="form-row">
+            <label>종료 W</label>
+            <input type="number" min="1" max="52" value="${p.endW}" oninput="updatePromo(${p.idx},'endW',this.value)">
+          </div>
+          <div class="form-row">
+            <label>목표 갭 %</label>
+            <input type="number" min="0" max="60" step="0.5" value="${p.targetGap}" oninput="updatePromo(${p.idx},'targetGap',this.value)">
+          </div>
+          <div class="form-row">
+            <label>Hangover 주</label>
+            <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
+          </div>
+        </div>
+        ${depth}`;
+    }
 
     return `<div class="promo-card">
       <button class="delete-btn" onclick="deletePromo(${p.idx})">삭제</button>
-      <div class="promo-grid">
-        <div class="form-row">
-          <label>세그먼트</label>
-          <select onchange="updatePromo(${p.idx},'segment',this.value)">
-            ${segKeys.map(k => `<option value="${k}" ${k===p.segment?'selected':''}>${SEG_DISPLAY_REV[k] || k}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-row">
-          <label>경쟁사</label>
-          <select onchange="updatePromo(${p.idx},'competitor',this.value)">
-            ${competitors.map(c => `<option value="${c}" ${c===p.competitor?'selected':''}>${c}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-row">
-          <label>시작 W</label>
-          <input type="number" min="1" max="52" value="${p.startW}" oninput="updatePromo(${p.idx},'startW',this.value)">
-        </div>
-        <div class="form-row">
-          <label>종료 W</label>
-          <input type="number" min="1" max="52" value="${p.endW}" oninput="updatePromo(${p.idx},'endW',this.value)">
-        </div>
-        <div class="form-row">
-          <label>목표 갭 %</label>
-          <input type="number" min="0" max="60" step="0.5" value="${p.targetGap}" oninput="updatePromo(${p.idx},'targetGap',this.value)">
-        </div>
-        <div class="form-row">
-          <label>Hangover 주</label>
-          <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
-        </div>
+      <div class="promo-mode-tabs">
+        <button class="promo-mode-tab ${p.mode==='direct'?'active':''}" onclick="setPromoMode(${p.idx},'direct')">📢 캠페인 직접 설정</button>
+        <button class="promo-mode-tab ${p.mode==='gap'?'active':''}" onclick="setPromoMode(${p.idx},'gap')">📊 가격갭 기반</button>
       </div>
-      ${depth}
+      ${modeBody}
+      ${weekInfo}
     </div>`;
   }).join('');
+}
+
+// ── 자연어 메모 해석 ──────────────────────────────────────────────────────────
+let noteAdjIdx = 0;
+
+async function interpretNote() {
+  const text = document.getElementById('note-input').value.trim();
+  if (!text) { showToast('메모를 입력해 주세요.'); return; }
+
+  const btn = document.getElementById('note-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 해석 중...';
+
+  try {
+    const res = await fetch(API_BASE + '/api/interpret-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const data = await res.json();
+    renderNoteResult(data);
+  } catch (e) {
+    showToast('해석 API 오류: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 AI 해석 및 시뮬레이션 반영';
+  }
+}
+
+function renderNoteResult(data) {
+  const el = document.getElementById('note-result');
+  if (!data.relevant) {
+    el.innerHTML = `<div style="font-size:.72rem;color:var(--dim);margin-top:6px;padding:8px 10px;
+      background:var(--bg);border:1px solid var(--border);border-radius:6px;">
+      ⚪ 수요에 영향을 미치지 않는 메모로 판단됩니다.<br>
+      <span style="color:var(--dim);font-size:.65rem;">${data.reasoning || ''}</span>
+    </div>`;
+    return;
+  }
+
+  const method = data.method || 'rule';
+  const methodBadge = method.includes('claude')
+    ? `<span class="note-method-badge nm-claude">Claude AI</span>`
+    : `<span class="note-method-badge nm-rule">룰 기반</span>`;
+
+  const items = (data.adjustments || []).map(adj => {
+    const id = noteAdjIdx++;
+    const existing = state.noteAdjustments.find(a => a._rawAdj === adj);
+    const active = existing ? existing.active : true;
+    const pctStr = adj.factor > 1
+      ? `+${((adj.factor-1)*100).toFixed(0)}%`
+      : `${((adj.factor-1)*100).toFixed(0)}%`;
+    const color = adj.factor >= 1 ? 'var(--green)' : 'var(--red)';
+
+    // Register in state
+    if (!existing) {
+      state.noteAdjustments.push({
+        id, week_from: adj.week_from, week_to: adj.week_to,
+        factor: adj.factor, label: adj.label, active, method,
+        _rawAdj: adj,
+      });
+    }
+
+    return `<div class="note-adj-item ${active?'active':'inactive'}" id="note-adj-${id}">
+      <div class="note-adj-header">
+        <span class="note-adj-label" style="color:${color};">${pctStr} ${adj.label}</span>
+        <button class="note-toggle-btn ${active?'remove':'apply'}"
+          onclick="toggleNoteAdj(${id})">${active?'제거':'적용'}</button>
+      </div>
+      <div class="note-adj-weeks">W${adj.week_from} ~ W${adj.week_to} 적용</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div style="font-size:.68rem;color:var(--muted);margin-top:4px;margin-bottom:4px;">
+    ${methodBadge} 해석 결과 — ${data.reasoning || ''}
+  </div>${items}`;
+
+  scheduleSimulate();
+}
+
+function toggleNoteAdj(id) {
+  const adj = state.noteAdjustments.find(a => a.id === id);
+  if (!adj) return;
+  adj.active = !adj.active;
+
+  const el = document.getElementById(`note-adj-${id}`);
+  if (el) {
+    el.className = `note-adj-item ${adj.active?'active':'inactive'}`;
+    const btn = el.querySelector('.note-toggle-btn');
+    btn.className = `note-toggle-btn ${adj.active?'remove':'apply'}`;
+    btn.textContent = adj.active ? '제거' : '적용';
+  }
+  scheduleSimulate();
 }
 
 // ── OOS Grid ──────────────────────────────────────────────────────────────────

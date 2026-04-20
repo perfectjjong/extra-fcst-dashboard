@@ -218,12 +218,25 @@ class SimulationEngine:
         seg_tuple = tuple(sk.split('|'))
         elasticity = SEGMENT_ELASTICITY.get(seg_tuple, _DEFAULT_ELASTICITY)
         for p in promos:
-            if p.get('segment') != sk:
+            # 세그먼트 필터: 'ALL'이면 전체 적용
+            seg = p.get('segment', '')
+            if seg != 'ALL' and seg != sk:
                 continue
             start, end = p['start_week'], p['end_week']
+            hangover = p.get('hangover_weeks', 0)
+
+            # 직접 부스트 모드 (boost_direct_pct 사용)
+            if 'boost_direct_pct' in p:
+                boost = p['boost_direct_pct'] / 100.0
+                if start <= week_num <= end:
+                    return max(1.0, 1.0 + boost), True, False
+                if hangover > 0 and end < week_num <= end + hangover:
+                    return max(0.85, 1.0 - 0.30 * boost), False, True
+                continue
+
+            # 기존 갭 기반 모드
             current_gap = p.get('current_gap_pct', 0)
             target_gap  = p.get('target_gap_pct', 0)
-            hangover    = p.get('hangover_weeks', 0)
             cut = max(0.0, (current_gap - target_gap) / 100.0)
             if start <= week_num <= end:
                 return max(1.0, 1.0 + elasticity * cut), True, False
