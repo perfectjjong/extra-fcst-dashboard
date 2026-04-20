@@ -308,18 +308,33 @@ def get_brand_price_context(db_path: str) -> dict:
 
     period = latest[0]
     rows = conn.execute(
-        "SELECT brand, sub_family, compressor, avg_price_vat_ex "
+        "SELECT brand, sub_family, compressor, avg_price_vat_ex, total_qty "
         "FROM competitor_prices "
         "WHERE source='price_tracking' AND period=? AND period_type='week' AND avg_price_vat_ex > 0",
         (period,)
     ).fetchall()
+
+    # M/S 기준 Top 5 선정을 위해 연간 누적 수량도 조회
+    qty_rows = conn.execute(
+        "SELECT brand, sub_family, compressor, SUM(total_qty) as total_qty "
+        "FROM competitor_prices "
+        "WHERE source='price_tracking' AND period_type='week' AND year=(SELECT MAX(year) FROM competitor_prices) "
+        "AND brand != 'LG' "
+        "GROUP BY brand, sub_family, compressor"
+    ).fetchall()
     conn.close()
+
+    # 세그먼트별 브랜드 연간 누적 수량 (M/S 기준)
+    seg_brand_qty: dict = defaultdict(lambda: defaultdict(float))
+    for brand, sf, comp, qty in qty_rows:
+        seg = f"{sf} | {comp}"
+        seg_brand_qty[seg][brand] += (qty or 0)
 
     # 세그먼트별로 LG 가격 및 경쟁사별 가격 수집
     lg_prices: dict = defaultdict(list)
     brand_prices: dict = defaultdict(lambda: defaultdict(list))
 
-    for brand, sf, comp, price in rows:
+    for brand, sf, comp, price, qty in rows:
         seg = f"{sf} | {comp}"
         if brand == 'LG':
             lg_prices[seg].append(price)
@@ -331,8 +346,16 @@ def get_brand_price_context(db_path: str) -> dict:
     for seg in sorted(all_segs):
         lg_avg = sum(lg_prices[seg]) / len(lg_prices[seg]) if lg_prices[seg] else None
 
+        # M/S 기준 Top 5 브랜드만 선택
+        top5_brands = sorted(
+            brand_prices[seg].keys(),
+            key=lambda b: seg_brand_qty[seg].get(b, 0),
+            reverse=True
+        )[:5]
+
         brands = {}
-        for brand, prices in brand_prices[seg].items():
+        for brand in top5_brands:
+            prices = brand_prices[seg][brand]
             brand_avg = sum(prices) / len(prices)
             gap_pct = round((lg_avg / brand_avg - 1) * 100, 1) if lg_avg and brand_avg > 0 else None
             brands[brand] = {
