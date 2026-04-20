@@ -1168,8 +1168,12 @@ async function init() {
   document.getElementById('scope-from').value = 15;
   document.getElementById('scope-to').value   = 40;
 
-  // Parallel fetch OOS + Trends + Env data
-  const currentWeek = 'W' + document.getElementById('scope-from').value;
+  // 현재 달력 주차 계산 (연초부터 경과 주)
+  const _now = new Date();
+  const _startOfYear = new Date(_now.getFullYear(), 0, 1);
+  const _currentWeekNum = Math.ceil(((_now - _startOfYear) / 86400000 + _startOfYear.getDay() + 1) / 7);
+  const currentWeek = 'W' + _currentWeekNum;
+
   const [oosResp, trendsResp] = await Promise.allSettled([
     fetch(API_BASE + '/api/oos').then(r => r.json()),
     fetch(API_BASE + '/api/trends').then(r => r.json()),
