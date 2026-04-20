@@ -993,7 +993,7 @@ function renderPromos() {
         <div class="form-row">
           <label>세그먼트</label>
           <select onchange="updatePromo(${p.idx},'segment',this.value)">
-            ${segKeys.map(k => `<option value="${k}" ${k===p.segment?'selected':''}>${k.split('|')[0].trim()}</option>`).join('')}
+            ${segKeys.map(k => `<option value="${k}" ${k===p.segment?'selected':''}>${SEG_DISPLAY_REV[k] || k}</option>`).join('')}
           </select>
         </div>
         <div class="form-row">
