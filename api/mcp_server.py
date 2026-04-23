@@ -44,8 +44,11 @@ def _fetch_oil_price() -> float:
 
 
 def _load_fcst() -> list:
-    with open(FCST_PATH, encoding="utf-8") as f:
-        return json.load(f).get("long_range_forecasts", [])
+    try:
+        with open(FCST_PATH, encoding="utf-8") as f:
+            return json.load(f).get("long_range_forecasts", [])
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
 
 def _load_price_gaps() -> dict:
@@ -61,8 +64,9 @@ def _run_simulate(params: dict) -> dict:
     gaps = _load_price_gaps()
     engine = SimulationEngine()
 
-    note_adjs = params.pop("note_adjustments", [])
-    results = engine.simulate(fcst, params, gaps)
+    note_adjs = params.get("note_adjustments", [])
+    sim_params = {k: v for k, v in params.items() if k != "note_adjustments"}
+    results = engine.simulate(fcst, sim_params, gaps)
 
     for r in results:
         wnum = int(r["week"][1:])

@@ -2,6 +2,24 @@ import json
 import os
 from datetime import datetime
 
+# B2C 대시보드 카테고리 → 시뮬레이터 카테고리 매핑
+CAT_NORMALIZE = {
+    "Split AC": "Inverter",
+    "Mini Split AC": "Inverter",
+    "Mini Split": "Inverter",
+    "Window AC": "Window AC",
+    "Window": "Window AC",
+    "Floor Standing AC": "Floor Standing AC",
+    "Free Standing AC": "Floor Standing AC",
+    "Free Standing": "Floor Standing AC",
+    "Cassette AC": "Cassette AC",
+    "Cassette": "Cassette AC",
+    "Packaged AC": "Packaged AC",
+    "Packaged": "Packaged AC",
+    "Inverter": "Inverter",
+    "Concealed Set": "Concealed Set",
+}
+
 
 class ForecastLogger:
 
@@ -67,9 +85,11 @@ class ForecastLogger:
         cat_result = {}
         sim_cats = latest.get("results_by_category", {})
         for cat, actual in actuals_by_category.items():
-            if cat not in sim_cats or actual == 0:
+            norm = CAT_NORMALIZE.get(cat, cat)
+            sim_entry = sim_cats.get(norm) or sim_cats.get(cat)
+            if not sim_entry or actual == 0:
                 continue
-            sim_val = sim_cats[cat]["adjusted"]
+            sim_val = sim_entry["adjusted"]
             mape = abs(actual - sim_val) / actual * 100
             cat_result[cat] = {"sim": sim_val, "actual": actual,
                                "mape": round(mape, 1)}
