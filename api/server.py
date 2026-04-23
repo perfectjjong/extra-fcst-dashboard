@@ -12,6 +12,7 @@ from flask import Flask, jsonify, request, send_from_directory
 from api.simulator import SimulationEngine, RIYADH_TEMP, RIYADH_HUMIDITY
 from api.trends import get_trends_index
 from api.note_interpreter import interpret_note
+from api.chat_bridge import ChatBridge
 from pipeline.build_price_segments import get_brand_price_context, get_oos_signals
 
 # 유가 캐시 (1시간)
@@ -37,6 +38,7 @@ BASE_DIR = os.path.join(os.path.dirname(__file__), '..')
 DEFAULT_DB = os.path.join(BASE_DIR, 'data', 'sellout.db')
 DEFAULT_FCST = os.path.join(BASE_DIR, 'dashboard', 'fcst_output.json')
 DASHBOARD_DIR = os.path.join(BASE_DIR, 'dashboard')
+_chat_bridge = ChatBridge()
 
 
 def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
@@ -202,6 +204,33 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
             return jsonify(result)
         except Exception as e:
             return jsonify({'relevant': False, 'adjustments': [], 'reasoning': f'해석 오류: {e}'}), 200
+
+    @app.route('/simulator-v2')
+    def simulator_v2_page():
+        return send_from_directory(os.path.abspath(DASHBOARD_DIR), 'simulator-v2.html')
+
+    @app.route('/api/chat', methods=['POST', 'OPTIONS'])
+    def post_chat():
+        if request.method == 'OPTIONS':
+            return jsonify({}), 200
+        data = request.get_json() or {}
+        message = data.get('message', '').strip()
+        if not message:
+            return jsonify({'reply': '메시지를 입력해 주세요.', 'method': 'none', 'session_id': None})
+        result = _chat_bridge.chat(message)
+        return jsonify(result)
+
+    @app.route('/api/chat/follow', methods=['POST', 'OPTIONS'])
+    def post_chat_follow():
+        if request.method == 'OPTIONS':
+            return jsonify({}), 200
+        data = request.get_json() or {}
+        message = data.get('message', '').strip()
+        session_id = data.get('session_id')
+        if not message:
+            return jsonify({'reply': '메시지를 입력해 주세요.', 'method': 'none', 'session_id': session_id})
+        result = _chat_bridge.chat(message, session_id)
+        return jsonify(result)
 
     return app
 
