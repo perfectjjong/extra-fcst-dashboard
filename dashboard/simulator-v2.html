@@ -1121,7 +1121,7 @@ async function runSimulate() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       }),
-      fetch(API_BASE + `/api/actuals?week_from=${params.scope.week_from}&week_to=${params.scope.week_to}`),
+      fetch(API_BASE + `/api/actuals?week_from=${params.scope.week_from}&week_to=${params.scope.week_to}${params.scope.categories.length ? '&category=' + encodeURIComponent(params.scope.categories[0]) : ''}`),
     ]);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();

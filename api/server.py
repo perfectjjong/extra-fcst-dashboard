@@ -425,13 +425,24 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
         except Exception as e:
             return jsonify({'relevant': False, 'adjustments': [], 'reasoning': f'해석 오류: {e}'}), 200
 
+    # 시뮬레이터 카테고리명 → B2C 데이터 카테고리명 변환
+    _SIM_TO_B2C_CAT = {
+        'Mini Split':    'Split AC',
+        'Window':        'Window AC',
+        'Free Standing': 'Floor Standing AC',
+        'Cassette':      'Cassette AC',
+        'Packaged':      'Packaged AC',
+    }
+
     @app.route('/api/actuals', methods=['GET'])
     def get_actuals():
         week_from = int(request.args.get('week_from', 1))
         week_to = int(request.args.get('week_to', 52))
+        cat_param = request.args.get('category', '').strip()
+        b2c_cat = _SIM_TO_B2C_CAT.get(cat_param) if cat_param else None
 
-        current = _b2c_loader.get_sellout("2026", week_from, week_to)
-        prev = _b2c_loader.get_sellout("2025", week_from, week_to)
+        current = _b2c_loader.get_sellout("2026", week_from, week_to, category=b2c_cat)
+        prev = _b2c_loader.get_sellout("2025", week_from, week_to, category=b2c_cat)
 
         if not current:
             return jsonify({'error': 'B2C 2026 데이터 없음'}), 404
