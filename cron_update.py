@@ -65,22 +65,95 @@ def get_latest_actual_week() -> str | None:
 
 
 def load_or_data(or_files: list) -> int:
-    """OR 주간 파일을 DB에 적재. Returns: upserted row 수."""
+    """OR 주간 eXtra 파일을 직접 파싱해 DB에 적재. Returns: upserted row 수."""
+    import re
+    import openpyxl
     sys.path.insert(0, OR_PIPELINE_PATH)
-    from or_unified_dashboard_generator import read_extra_sellout
-    df = read_extra_sellout(or_files)
+
+    # 모델 매핑 로드 (있으면 사용, 없으면 raw model 그대로)
+    try:
+        from or_unified_dashboard_generator import UNIFIED_MAP, MODEL_INFO, normalize_sku, is_lg_ac
+        has_map = True
+    except Exception:
+        has_map = False
+
+    LG_BRANDS = {'LG', 'LG ELECTRONICS', 'LG전자'}
+    AC_FAMILIES = {'AC', 'AIR CONDITIONER', 'ROOM AIR CONDITIONER', 'AIR CON', 'SPLIT AC', 'WINDOW AC'}
+
     conn = sqlite3.connect(DB_PATH)
     count = 0
-    for _, row in df.iterrows():
-        conn.execute(
-            "INSERT OR REPLACE INTO weekly_sellout "
-            "(channel, year, week, model, category, qty) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            ('United Electronics Company الشركة ا',
-             int(row['year']), str(row['week']),
-             str(row['model']), str(row.get('category', '')), float(row['qty']))
-        )
-        count += 1
+
+    for fpath in or_files:
+        fname = os.path.basename(fpath)
+        m = re.search(r'week(\d+)', fname, re.IGNORECASE)
+        if not m:
+            continue
+        week_num = int(m.group(1))
+        week_label = f'W{week_num}'
+
+        try:
+            wb = openpyxl.load_workbook(fpath, read_only=True, data_only=True)
+            ws = wb.active
+            rows = list(ws.iter_rows(min_row=2, values_only=True))
+            wb.close()
+        except Exception as e:
+            log.warning(f"  파일 읽기 실패 {fname}: {e}")
+            continue
+
+        for row in rows:
+            if not row or len(row) < 12:
+                continue
+            country = str(row[0]).strip() if row[0] else ''
+            if country != 'SA':
+                continue
+            brand    = str(row[10]).strip().upper() if len(row) > 10 and row[10] else ''
+            family   = str(row[8]).strip().upper()  if row[8] else ''
+            subfam   = str(row[9]).strip().upper()  if row[9] else ''
+            model_raw = str(row[4]).strip()         if row[4] else ''
+            qty_raw  = row[11] if len(row) > 11 else 0
+
+            # LG AC 여부 필터
+            if has_map:
+                if not is_lg_ac(brand, family, subfam, model_raw):
+                    continue
+            else:
+                if brand not in LG_BRANDS:
+                    continue
+                if not any(fam in family or fam in subfam for fam in AC_FAMILIES):
+                    continue
+
+            try:
+                qty = int(float(qty_raw))
+            except (ValueError, TypeError):
+                continue
+            if qty == 0:
+                continue
+
+            # 모델 정규화 + 카테고리
+            category = ''
+            if has_map:
+                model_norm = normalize_sku(model_raw.replace(' ', ''))
+                info = (UNIFIED_MAP.get(('eXtra', model_raw))
+                        or UNIFIED_MAP.get(('eXtra', model_norm))
+                        or MODEL_INFO.get(model_norm)
+                        or MODEL_INFO.get(model_raw))
+                if info and info.get('excluded'):
+                    continue
+                if info:
+                    model_raw = info['unified']
+                    category  = info.get('category', '')
+            else:
+                category = subfam or family
+
+            conn.execute(
+                "INSERT OR REPLACE INTO weekly_sellout "
+                "(channel, year, week, model, category, qty) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                ('United Electronics Company الشركة ا',
+                 2026, week_label, model_raw, category, float(qty))
+            )
+            count += 1
+
     conn.commit()
     conn.close()
     return count

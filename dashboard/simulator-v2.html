@@ -2500,13 +2500,18 @@ function _applyRetrainStatus(d) {
   }
 }
 
-// 페이지 로드 시 진행 중인 재학습 있으면 자동 폴링 시작
+// 페이지 로드 시 진행 중인 재학습 있으면 자동 폴링 시작 (idle/error는 버튼 상태 건드리지 않음)
 (async () => {
   try {
     const res = await fetch('/api/retrain/status');
     const d = await res.json();
-    if (d.status === 'running') _pollRetrainStatus();
-    _applyRetrainStatus(d);
+    if (d.status === 'running') {
+      _pollRetrainStatus();
+      _applyRetrainStatus(d);
+    } else if (d.status === 'done') {
+      _applyRetrainStatus(d); // 완료 상태만 반영
+    }
+    // idle·error는 버튼을 기본 상태로 유지
   } catch (e) {}
 })();
 </script>
