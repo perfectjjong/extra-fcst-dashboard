@@ -32,6 +32,14 @@ header .back-link:hover { color: var(--purple-lt); }
   width: 0%; transition: width .3s; z-index: 999;
 }
 
+/* ── Freshness Badge ── */
+.freshness-badge {
+  display: none; align-items: center; gap: 5px;
+  background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.4);
+  color: var(--red); font-size: .72rem; font-weight: 600;
+  padding: 3px 10px; border-radius: 5px; white-space: nowrap;
+}
+
 /* ── KPI Strip ── */
 .kpi-strip {
   height: 72px; flex-shrink: 0;
@@ -138,6 +146,18 @@ input[type=range]:hover::-webkit-slider-thumb { background: var(--purple); }
 }
 .seg-tab.active { background: var(--purple); color: white; border-color: var(--purple); }
 .seg-tab:hover:not(.active) { border-color: var(--purple-lt); color: var(--text); }
+
+/* Channel Filter Tabs */
+.channel-tabs-wrap { padding: 8px 16px 0; }
+.channel-tabs { display: flex; gap: 4px; }
+.channel-tab {
+  flex: 1; padding: 5px 0; border-radius: 5px; font-size: 0.72rem; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  text-align: center; transition: all .15s;
+}
+.channel-tab.active { background: var(--purple); color: white; border-color: var(--purple); }
+.channel-tab:hover:not(.active) { border-color: var(--purple-lt); color: var(--text); }
+.channel-note { font-size: .6rem; color: var(--dim); text-align: center; margin-top: 4px; padding: 0 16px 6px; }
 
 /* Ext var card */
 .ext-card {
@@ -378,6 +398,155 @@ tbody tr:hover { background: var(--card); }
 .chat-input-area button:disabled { opacity: .5; cursor: not-allowed; }
 
 body.chat-open .main-scroll { margin-right: 380px; }
+
+/* ── Accuracy Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  width: 480px; max-width: 95vw; max-height: 70vh;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.modal-header h4 { font-size: .9rem; color: var(--purple-lt); margin: 0; }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+.modal-body { flex: 1; overflow-y: auto; padding: 12px 0; }
+.modal-body table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+.modal-body thead th {
+  position: sticky; top: 0; background: var(--surface);
+  padding: 6px 14px; text-align: left; color: var(--muted);
+  font-size: .68rem; font-weight: 500; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.modal-body tbody td { padding: 6px 14px; border-bottom: 1px solid var(--border); }
+.modal-body tbody tr:hover { background: var(--card); }
+.mape-high { color: var(--red); font-weight: 700; }
+
+/* ── Accuracy Button ── */
+.accuracy-btn {
+  position: fixed; right: 72px; bottom: 16px; z-index: 100;
+  height: 48px; padding: 0 16px; border-radius: 24px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); font-size: .78rem; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3); transition: all .15s;
+}
+.accuracy-btn:hover { border-color: var(--purple-lt); color: var(--purple-lt); }
+
+/* ── Retrain Button ── */
+.retrain-btn {
+  position: fixed; right: 200px; bottom: 16px; z-index: 100;
+  height: 48px; padding: 0 16px; border-radius: 24px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); font-size: .78rem; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3); transition: all .15s;
+}
+.retrain-btn:hover:not(:disabled) { border-color: var(--amber); color: var(--amber); }
+.retrain-btn:disabled { opacity: .5; cursor: not-allowed; }
+.retrain-btn.running { border-color: var(--amber); color: var(--amber); animation: pulse 1.2s infinite; }
+.retrain-btn.done { border-color: var(--green); color: var(--green); }
+.retrain-btn.error { border-color: var(--red); color: var(--red); }
+
+/* ── Retrain Modal ── */
+.retrain-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300;
+  display: none; align-items: center; justify-content: center;
+}
+.retrain-modal.open { display: flex; }
+.retrain-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  width: 560px; max-width: 95vw; max-height: 80vh;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.retrain-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.retrain-modal-header h4 { font-size: .9rem; color: var(--amber); margin: 0; }
+.retrain-modal-close { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+.retrain-status-bar {
+  padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  font-size: .78rem; display: flex; align-items: center; gap: 10px;
+}
+.retrain-log {
+  flex: 1; overflow-y: auto; padding: 10px 16px;
+  font-family: 'Courier New', monospace; font-size: .72rem;
+  color: var(--muted); background: var(--bg); line-height: 1.6;
+  white-space: pre-wrap; word-break: break-all;
+}
+.retrain-log::-webkit-scrollbar { width: 4px; }
+.retrain-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.retrain-log .log-done { color: var(--green); }
+.retrain-log .log-error { color: var(--red); }
+.retrain-log .log-info { color: var(--muted); }
+.retrain-footer {
+  padding: 10px 16px; border-top: 1px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.retrain-start-btn {
+  padding: 8px 20px; border-radius: 6px; font-size: .8rem; cursor: pointer;
+  background: rgba(245,158,11,.15); border: 1px solid var(--amber);
+  color: var(--amber); transition: all .15s;
+}
+.retrain-start-btn:hover:not(:disabled) { background: rgba(245,158,11,.3); }
+.retrain-start-btn:disabled { opacity: .4; cursor: not-allowed; }
+.cat-adj-row { margin-top: 8px; }
+.cat-adj-row .adj-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.cat-adj-row .adj-label { font-size: 0.75rem; color: var(--text); }
+.cat-adj-row .adj-val { font-size: 0.73rem; font-weight: 700; }
+.adj-val.above { color: var(--green); }
+.adj-val.below { color: var(--red); }
+.adj-val.neutral { color: var(--dim); }
+.adj-bias-hint { font-size: 0.63rem; color: var(--dim); margin-top: 6px; line-height: 1.5; }
+
+/* ── Tablet Toggle Button ── */
+.mobile-controls-toggle {
+  display: none;
+  position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+  z-index: 105; height: 36px; padding: 0 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-size: .78rem; cursor: pointer;
+  border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  white-space: nowrap;
+}
+
+/* ── Tablet Responsive (≤1024px) ── */
+@media (max-width: 1024px) {
+  html, body { overflow: auto; }
+
+  .body-wrap { grid-template-columns: 1fr; }
+
+  .controls-panel {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: auto; max-height: 50vh; overflow-y: auto;
+    transform: translateY(100%); transition: transform .3s ease;
+    z-index: 101; border-right: none; border-top: 1px solid var(--border);
+  }
+  .controls-panel.panel-open { transform: translateY(0); }
+
+  .mobile-controls-toggle { display: flex; align-items: center; gap: 6px; }
+
+  .chat-panel.open { width: 100%; }
+
+  input[type=range]::-webkit-slider-thumb {
+    width: 22px; height: 22px;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--purple-lt); border: none; cursor: pointer;
+  }
+
+  .accuracy-btn { right: 72px; bottom: 80px; }
+  .retrain-btn  { right: 200px; bottom: 80px; }
+  .chat-toggle  { bottom: 80px; }
+}
 </style>
 </head>
 <body>
@@ -389,6 +558,7 @@ body.chat-open .main-scroll { margin-right: 380px; }
   <a class="back-link" href="hub.html">← Hub로 돌아가기</a>
   <span class="status-dot" id="status-dot"></span>
   <span style="font-size:.72rem;color:var(--dim);" id="last-update">준비 중...</span>
+  <span class="freshness-badge" id="freshness-badge"></span>
 </header>
 
 <!-- KPI Strip -->
@@ -401,7 +571,7 @@ body.chat-open .main-scroll { margin-right: 380px; }
   <div class="kpi-card">
     <div class="kpi-label">조정 수요</div>
     <div class="kpi-value" id="kpi-adj">—</div>
-    <div class="kpi-sub">시나리오 적용</div>
+    <div class="kpi-sub" id="kpi-adj-sub">시나리오 적용</div>
   </div>
   <div class="kpi-card">
     <div class="kpi-label">변화율</div>
@@ -417,6 +587,16 @@ body.chat-open .main-scroll { margin-right: 380px; }
     <div class="kpi-label">프로모션 주간수</div>
     <div class="kpi-value" id="kpi-promo-weeks">—</div>
     <div class="kpi-sub">프로모 적용 주</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">실적 (YTD)</div>
+    <div class="kpi-value" id="kpi-actual">—</div>
+    <div class="kpi-sub" id="kpi-actual-sub">W1~현재</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">YoY 성장</div>
+    <div class="kpi-value" id="kpi-yoy">—</div>
+    <div class="kpi-sub" id="kpi-yoy-sub">vs 2025</div>
   </div>
 </div>
 
@@ -454,6 +634,15 @@ body.chat-open .main-scroll { margin-right: 380px; }
             <option value="Cassette">Cassette AC</option>
             <option value="Packaged">Packaged AC</option>
           </select>
+        </div>
+        <div class="form-row">
+          <label>채널 필터</label>
+          <div class="channel-tabs">
+            <button class="channel-tab active" id="ch-all" onclick="setChannel('all')">전체</button>
+            <button class="channel-tab" id="ch-ir" onclick="setChannel('ir')">IR</button>
+            <button class="channel-tab" id="ch-or" onclick="setChannel('or')">OR</button>
+          </div>
+          <div class="channel-note">※ IR/OR 비율은 근사치 (60/40)</div>
         </div>
       </div>
     </div>
@@ -591,6 +780,86 @@ body.chat-open .main-scroll { margin-right: 380px; }
       </div>
     </div>
 
+    <!-- 연간 목표 -->
+    <div class="accordion">
+      <div class="accordion-header open" onclick="toggleAccordion(this)">
+        <span>🎯</span> 목표 수평선
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body open">
+        <div class="form-row">
+          <label>연간 목표 (대)</label>
+          <input type="number" id="annual-target" min="0" step="1000"
+            placeholder="미입력 시 라인 숨김"
+            oninput="onTargetInput()">
+        </div>
+        <div style="font-size:.65rem;color:var(--dim);margin-top:4px;line-height:1.5;">
+          입력 시 주간 목표 (연간÷52) 점선을 차트에 표시합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 영업팀 보정 -->
+    <div class="accordion">
+      <div class="accordion-header open" onclick="toggleAccordion(this)">
+        <span>📊</span> 영업팀 보정 (카테고리별)
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body open">
+        <div class="adj-bias-hint" id="adj-bias-hint">모델 예측에 영업팀 판단을 반영합니다. 100% = 모델 원값.</div>
+
+        <div class="cat-adj-row">
+          <div class="adj-header">
+            <span class="adj-label">Inverter</span>
+            <span class="adj-val neutral" id="adj-inv-val">100%</span>
+          </div>
+          <input type="range" id="adj-inv" min="30" max="200" step="5" value="100"
+            oninput="onCatAdj('inverter', this.value)">
+        </div>
+
+        <div class="cat-adj-row">
+          <div class="adj-header">
+            <span class="adj-label">Window</span>
+            <span class="adj-val neutral" id="adj-win-val">100%</span>
+          </div>
+          <input type="range" id="adj-win" min="30" max="200" step="5" value="100"
+            oninput="onCatAdj('window', this.value)">
+        </div>
+
+        <div class="cat-adj-row">
+          <div class="adj-header">
+            <span class="adj-label">Floor Standing</span>
+            <span class="adj-val neutral" id="adj-flo-val">100%</span>
+          </div>
+          <input type="range" id="adj-flo" min="30" max="200" step="5" value="100"
+            oninput="onCatAdj('floor', this.value)">
+        </div>
+
+        <button class="note-interpret-btn" onclick="resetCatAdj()" style="margin-top:8px;font-size:0.7rem;">↺ 초기화 (모델 원값)</button>
+      </div>
+    </div>
+
+    <!-- 시나리오 저장/불러오기 -->
+    <div class="accordion">
+      <div class="accordion-header open" onclick="toggleAccordion(this)">
+        <span>💾</span> 시나리오 저장/불러오기
+        <span class="acc-icon">▾</span>
+      </div>
+      <div class="accordion-body open">
+        <button class="note-interpret-btn" onclick="saveScenario()" style="margin-top:4px;">💾 현재 설정 저장</button>
+        <div class="form-row" style="margin-top:8px;">
+          <label>저장된 시나리오</label>
+          <select id="scenario-select" onchange="">
+            <option value="">— 선택 —</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button class="note-interpret-btn" onclick="loadScenario()" style="flex:1;">📂 불러오기</button>
+          <button class="note-interpret-btn" onclick="deleteScenario()" style="flex:1;background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red);">🗑 삭제</button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /controls-panel -->
 
   <!-- Visualization Area -->
@@ -606,6 +875,8 @@ body.chat-open .main-scroll { margin-right: 380px; }
           <span class="legend-dot" style="background:var(--red);"></span> 감소
           <span class="legend-dot" style="background:var(--purple);"></span> 프로모
           <span class="legend-dot" style="background:var(--amber);"></span> 행오버
+          <span class="legend-dot" style="background:#38bdf8;width:14px;height:2px;border-radius:1px;"></span> 실적 '26
+          <span class="legend-dot" style="background:#64748b;width:14px;height:2px;border-radius:1px;border:1px dashed #64748b;"></span> 실적 '25
         </div>
       </div>
       <div class="chart-canvas-wrap" style="position:relative;">
@@ -624,7 +895,9 @@ body.chat-open .main-scroll { margin-right: 380px; }
             <th>주차</th>
             <th>Base 수요</th>
             <th>조정 수요</th>
-            <th>변화 (Δ)</th>
+            <th>실적 '26</th>
+            <th>실적 '25</th>
+            <th>YoY</th>
             <th>변화율</th>
             <th>상태</th>
           </tr>
@@ -632,6 +905,24 @@ body.chat-open .main-scroll { margin-right: 380px; }
         <tbody id="week-table-body">
           <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--dim);">시뮬레이션 결과를 불러오는 중...</td></tr>
         </tbody>
+      </table>
+    </div>
+
+    <!-- Category Summary Zone -->
+    <div class="table-zone" id="cat-summary-zone" style="display:none;">
+      <div style="padding:10px 14px 6px;font-size:.8rem;font-weight:700;color:var(--purple-lt);">📊 카테고리 서머리 (실적 기준)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>카테고리</th>
+            <th>실적 '26</th>
+            <th>실적 '25</th>
+            <th>YoY</th>
+            <th>비중</th>
+            <th>추세</th>
+          </tr>
+        </thead>
+        <tbody id="cat-summary-body"></tbody>
       </table>
     </div>
 
@@ -655,6 +946,9 @@ const state = {
   chart: null,
   debounceTimer: null,
   lastResult: null,
+  actuals: null,         // from /api/actuals
+  channel: 'all',        // 'all' | 'ir' | 'or'
+  catAdj: { inverter: 100, window: 100, floor: 100 },  // 영업 보정 배율(%)
 };
 
 // Segment display names -> api keys
@@ -669,6 +963,30 @@ const SEG_DISPLAY = {
   'CASS':    'Cassette AC | Inverter',
 };
 const SEG_DISPLAY_REV = Object.fromEntries(Object.entries(SEG_DISPLAY).map(([k,v]) => [v,k]));
+
+// ── Channel Filter ────────────────────────────────────────────────────────────
+function setChannel(ch) {
+  state.channel = ch;
+  ['all','ir','or'].forEach(c => {
+    document.getElementById('ch-' + c).classList.toggle('active', c === ch);
+  });
+  // Update chart title
+  const titleEl = document.querySelector('.chart-title');
+  const suffix = ch === 'ir' ? ' (IR 채널 기준)' : ch === 'or' ? ' (OR 채널 기준)' : '';
+  titleEl.textContent = '주간 수요 시뮬레이션' + suffix;
+  // Re-render if data available
+  if (state.lastResult?.by_week) {
+    renderChart(state.lastResult.by_week);
+    renderTable(state.lastResult.by_week);
+    renderKPIs(state.lastResult.summary, state.lastResult.by_week);
+  }
+}
+
+function channelScale(val) {
+  if (state.channel === 'ir') return val * 0.6;
+  if (state.channel === 'or') return val * 0.4;
+  return val;
+}
 
 // ── Accordion ─────────────────────────────────────────────────────────────────
 function toggleAccordion(header) {
@@ -797,22 +1115,27 @@ async function runSimulate() {
   setLoadingBar(30);
   try {
     const params = buildParams();
-    const resp = await fetch(API_BASE + '/api/simulate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params),
-    });
+    const [resp, actualsResp] = await Promise.all([
+      fetch(API_BASE + '/api/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      }),
+      fetch(API_BASE + `/api/actuals?week_from=${params.scope.week_from}&week_to=${params.scope.week_to}`),
+    ]);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
+    state.actuals = actualsResp.ok ? await actualsResp.json() : null;
     setLoadingBar(90);
     state.lastResult = data;
     if (data.current_price_gaps && Object.keys(data.current_price_gaps).length > 0) {
       state.priceGaps = data.current_price_gaps;
       buildPricePanel();
     }
-    renderKPIs(data.summary);
+    renderKPIs(data.summary, data.by_week);
     renderChart(data.by_week);
     renderTable(data.by_week);
+    renderCategorySummary();
     updateLastUpdate();
     setLoadingBar(100);
     setTimeout(() => setLoadingBar(0), 500);
@@ -825,29 +1148,117 @@ async function runSimulate() {
 }
 
 // ── KPI Render ────────────────────────────────────────────────────────────────
-function renderKPIs(s) {
+function renderKPIs(s, byWeek) {
   if (!s) return;
+  const bw = byWeek || state.lastResult?.by_week;
+
+  // 카테고리 보정 적용 총합
+  let adjWithCat = s.adjusted_total;
+  if (bw) {
+    adjWithCat = Object.values(bw).reduce((sum, w) => sum + applyByCatAdj(w), 0);
+  }
+  const isAdjActive = Object.values(state.catAdj).some(v => v !== 100);
+
   document.getElementById('kpi-base').textContent = fmt(s.base_total);
-  document.getElementById('kpi-adj').textContent  = fmt(s.adjusted_total);
+  document.getElementById('kpi-adj').textContent  = fmt(adjWithCat);
 
   const deltaEl = document.getElementById('kpi-delta');
-  const d = s.delta_pct;
+  const d = s.base_total > 0 ? (adjWithCat / s.base_total - 1) * 100 : s.delta_pct;
   deltaEl.textContent = (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
   deltaEl.className = 'kpi-value ' + (d > 0 ? 'kpi-up' : d < 0 ? 'kpi-down' : '');
 
+  // 카테고리 보정 활성 표시
+  const adjSubEl = document.getElementById('kpi-adj-sub');
+  if (adjSubEl) adjSubEl.textContent = isAdjActive ? '영업 보정 적용' : '시나리오 적용';
+
   document.getElementById('kpi-promo-weeks').textContent = s.promo_weeks ?? 0;
 
-  // Peak week
-  if (state.lastResult?.by_week) {
-    const bw = state.lastResult.by_week;
+  // Actuals KPIs
+  if (state.actuals) {
+    const a = state.actuals;
+    document.getElementById('kpi-actual').textContent = fmt(a.total_2026);
+    document.getElementById('kpi-actual-sub').textContent = `W1~W${a.current_week - 1}`;
+    const yoyEl = document.getElementById('kpi-yoy');
+    if (a.yoy_total_pct !== null) {
+      yoyEl.textContent = (a.yoy_total_pct >= 0 ? '+' : '') + a.yoy_total_pct.toFixed(1) + '%';
+      yoyEl.className = 'kpi-value ' + (a.yoy_total_pct > 0 ? 'kpi-up' : a.yoy_total_pct < 0 ? 'kpi-down' : '');
+    }
+  }
+
+  // Peak week (보정 적용 후 기준)
+  if (bw) {
     const weeks = Object.keys(bw).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
     let peakW = weeks[0], peakV = 0;
     for (const w of weeks) {
-      if ((bw[w].adjusted || 0) > peakV) { peakV = bw[w].adjusted; peakW = w; }
+      const v = applyByCatAdj(bw[w]);
+      if (v > peakV) { peakV = v; peakW = w; }
     }
     document.getElementById('kpi-peak').textContent = peakW;
     document.getElementById('kpi-peak-val').textContent = fmt(peakV) + '대';
   }
+}
+
+// ── 카테고리 보정 helpers ──────────────────────────────────────────────────────
+function catAdjFactor(cat) {
+  if (!cat) return 1.0;
+  const c = cat.toLowerCase();
+  if (c.includes('inverter') || c.includes('split')) return state.catAdj.inverter / 100;
+  if (c.includes('window'))   return state.catAdj.window  / 100;
+  if (c.includes('floor'))    return state.catAdj.floor   / 100;
+  return 1.0;
+}
+
+function applyByCatAdj(week_entry) {
+  const byCat = week_entry.by_cat;
+  if (!byCat || Object.keys(byCat).length === 0) {
+    // fallback: 단일 blended 배율 (기존 by_week 사용)
+    const blend = (state.catAdj.inverter * 0.70 + state.catAdj.window * 0.24 + state.catAdj.floor * 0.06) / 100;
+    return Math.round((week_entry.adjusted || 0) * blend);
+  }
+  return Object.entries(byCat).reduce((sum, [cat, val]) => sum + Math.round(val * catAdjFactor(cat)), 0);
+}
+
+function onCatAdj(key, val) {
+  state.catAdj[key] = parseFloat(val);
+  const ids = { inverter: 'adj-inv-val', window: 'adj-win-val', floor: 'adj-flo-val' };
+  const el = document.getElementById(ids[key]);
+  if (el) {
+    el.textContent = `${val}%`;
+    el.className = 'adj-val ' + (val == 100 ? 'neutral' : val > 100 ? 'above' : 'below');
+  }
+  if (state.lastResult?.by_week) {
+    renderChart(state.lastResult.by_week);
+    renderKPIs(state.lastResult.summary, state.lastResult.by_week);
+  }
+}
+
+function resetCatAdj() {
+  ['inverter', 'window', 'floor'].forEach(k => {
+    state.catAdj[k] = 100;
+    onCatAdj(k, 100);
+  });
+  ['adj-inv', 'adj-win', 'adj-flo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = 100;
+  });
+}
+
+function initCatAdjFromBias(bias) {
+  // C: YoY 편향값을 슬라이더 초기값으로 설정
+  if (!bias || bias === 1.0) return;
+  const pct = Math.round(bias * 100);
+  ['inverter', 'window', 'floor'].forEach(k => {
+    state.catAdj[k] = pct;
+  });
+  ['adj-inv', 'adj-win', 'adj-flo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = pct;
+  });
+  onCatAdj('inverter', pct);
+  onCatAdj('window',   pct);
+  onCatAdj('floor',    pct);
+  const hint = document.getElementById('adj-bias-hint');
+  if (hint) hint.textContent = `※ 2026 YTD 실적 기준 자동 설정: ${pct}% (2025 동기 대비 YoY)`;
 }
 
 // ── Chart ─────────────────────────────────────────────────────────────────────
@@ -855,8 +1266,8 @@ function renderChart(byWeek) {
   const weeks = Object.keys(byWeek || {}).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
   if (!weeks.length) return;
 
-  const bases     = weeks.map(w => byWeek[w].base     || 0);
-  const adjusted  = weeks.map(w => byWeek[w].adjusted || 0);
+  const bases     = weeks.map(w => channelScale(byWeek[w].base || 0));
+  const adjusted  = weeks.map(w => channelScale(applyByCatAdj(byWeek[w])));
   const isPromo   = weeks.map(w => byWeek[w].promo    || false);
   const isHang    = weeks.map(w => byWeek[w].hangover || false);
 
@@ -914,6 +1325,18 @@ function renderChart(byWeek) {
   const posColors  = weeks.map((w,i) => isPromo[i] ? '#7c3aed' : '#10b981');
   const negColors  = weeks.map((w,i) => isHang[i] ? '#f59e0b' : '#ef4444');
 
+  // Actuals overlay data
+  const act2026 = weeks.map(w => {
+    const wn = parseInt(w.slice(1));
+    if (!state.actuals || wn >= (state.actuals.current_week || 999)) return null;
+    const v = state.actuals.by_week?.[w]?.actual_2026 ?? null;
+    return v !== null ? channelScale(v) : null;
+  });
+  const act2025 = weeks.map(w => {
+    const v = state.actuals?.by_week?.[w]?.actual_2025 ?? null;
+    return v !== null ? channelScale(v) : null;
+  });
+
   state.chart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -922,7 +1345,11 @@ function renderChart(byWeek) {
         {
           label: 'Base',
           data: simpleBase,
-          backgroundColor: '#2a3050',
+          backgroundColor: weeks.map((w,i) => {
+            const wn = parseInt(w.slice(1));
+            if (state.actuals && wn < (state.actuals.current_week || 999)) return '#1a2030';
+            return '#2a3050';
+          }),
           borderRadius: 2,
           stack: 's1',
           order: 3,
@@ -937,15 +1364,56 @@ function renderChart(byWeek) {
         },
         {
           label: '감소',
-          data: weeks.map((w,i) => {
-            // Show as reduction from base
-            return -negativeDelta[i];
-          }),
+          data: weeks.map((w,i) => -negativeDelta[i]),
           backgroundColor: negColors,
           borderRadius: 0,
           stack: 's2',
           order: 1,
         },
+        {
+          label: '실적 2026',
+          data: act2026,
+          type: 'line',
+          borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.1)',
+          borderWidth: 2.5,
+          pointRadius: weeks.map((w,i) => act2026[i] !== null ? 3 : 0),
+          pointBackgroundColor: '#38bdf8',
+          fill: false,
+          tension: 0.3,
+          order: 0,
+          spanGaps: false,
+        },
+        {
+          label: '실적 2025',
+          data: act2025,
+          type: 'line',
+          borderColor: '#64748b',
+          borderWidth: 1.5,
+          borderDash: [4, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+          order: 0,
+          spanGaps: false,
+        },
+        ...((() => {
+          const annualTarget = parseFloat(document.getElementById('annual-target')?.value);
+          if (!annualTarget || annualTarget <= 0) return [];
+          const weeklyTarget = channelScale(annualTarget / 52);
+          return [{
+            label: '주간 목표',
+            data: weeks.map(() => weeklyTarget),
+            type: 'line',
+            borderColor: '#f59e0b',
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false,
+            tension: 0,
+            order: 0,
+          }];
+        })()),
       ],
     },
     options: {
@@ -972,11 +1440,22 @@ function renderChart(byWeek) {
               const w = item.label;
               const d = byWeek[w];
               const delta = (d.adjusted - d.base);
-              return [
+              const lines = [
                 ` Base:   ${fmt(d.base)}`,
                 ` 조정:   ${fmt(d.adjusted)}`,
                 ` Delta:  ${delta >= 0 ? '+' : ''}${fmt(delta)} (${deltaStr(d.base, d.adjusted)})`,
               ];
+              const wn = parseInt(w.slice(1));
+              const a26 = state.actuals?.by_week?.[w]?.actual_2026;
+              const a25 = state.actuals?.by_week?.[w]?.actual_2025;
+              if (a26 != null && wn < (state.actuals?.current_week || 999)) {
+                lines.push(` 실적:   ${fmt(a26)}`);
+                if (a25 != null && a25 > 0) {
+                  const yoy = ((a26/a25)-1)*100;
+                  lines.push(` YoY:    ${yoy>=0?'+':''}${yoy.toFixed(1)}%`);
+                }
+              }
+              return lines;
             },
             afterBody: (items) => {
               const w = items[0].label;
@@ -1001,6 +1480,7 @@ function renderChart(byWeek) {
           ticks: { color: '#4b5679', font: { size: 10 },
             callback: v => v < 0 ? '' : fmt(v),
           },
+          title: { display: true, text: '수량(대)', color: '#4b5679', font: { size: 11 } },
         },
       },
     },
@@ -1012,26 +1492,81 @@ function renderTable(byWeek) {
   const weeks = Object.keys(byWeek || {}).sort((a,b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
   const tbody = document.getElementById('week-table-body');
   if (!weeks.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--dim);">데이터 없음</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--dim);">데이터 없음</td></tr>';
     return;
   }
+  const curWeek = state.actuals?.current_week || 999;
   tbody.innerHTML = weeks.map(w => {
     const d = byWeek[w];
-    const delta = d.adjusted - d.base;
-    const deltaPct = d.base > 0 ? (delta / d.base * 100) : 0;
+    const wn = parseInt(w.slice(1));
+    const isPast = wn < curWeek;
+    const baseScaled = channelScale(d.base || 0);
+    const adjScaled  = channelScale(d.adjusted || 0);
+    const delta = adjScaled - baseScaled;
+    const deltaPct = baseScaled > 0 ? (delta / baseScaled * 100) : 0;
     const cls = d.promo ? 'val-promo' : (delta > 0 ? 'val-up' : delta < 0 ? 'val-down' : '');
     const statusBadge = d.promo
       ? '<span class="badge badge-promo">프로모</span>'
       : d.hangover
       ? '<span class="badge badge-hang">행오버</span>'
+      : isPast ? '<span class="badge" style="background:rgba(56,189,248,0.15);color:#38bdf8;">확정</span>'
       : '<span class="badge-none">—</span>';
-    return `<tr>
+
+    const a26raw = state.actuals?.by_week?.[w]?.actual_2026;
+    const a25raw = state.actuals?.by_week?.[w]?.actual_2025;
+    const a26 = a26raw != null ? channelScale(a26raw) : null;
+    const a25 = a25raw != null ? channelScale(a25raw) : null;
+    const act26Cell = (isPast && a26 != null)
+      ? `<td style="color:#38bdf8;font-weight:600;">${fmt(a26)}</td>`
+      : `<td style="color:var(--dim);">—</td>`;
+    const act25Cell = (a25 != null)
+      ? `<td style="color:var(--dim);">${fmt(a25)}</td>`
+      : `<td style="color:var(--dim);">—</td>`;
+
+    let yoyCell = '<td style="color:var(--dim);">—</td>';
+    if (isPast && a26 != null && a25 != null && a25 > 0) {
+      const yoy = ((a26 / a25) - 1) * 100;
+      const yoyCls = yoy > 0 ? 'kpi-up' : yoy < 0 ? 'kpi-down' : '';
+      yoyCell = `<td class="${yoyCls}" style="font-weight:600;">${yoy >= 0 ? '+' : ''}${yoy.toFixed(1)}%</td>`;
+    }
+
+    const rowBg = isPast ? 'background:rgba(56,189,248,0.03);' : '';
+    return `<tr style="${rowBg}">
       <td style="font-weight:600;color:var(--text);">${w}</td>
-      <td>${fmt(d.base)}</td>
-      <td class="${cls}">${fmt(d.adjusted)}</td>
-      <td class="${cls}">${delta >= 0 ? '+' : ''}${fmt(delta)}</td>
+      <td>${fmt(baseScaled)}</td>
+      <td class="${cls}">${fmt(adjScaled)}</td>
+      ${act26Cell}
+      ${act25Cell}
+      ${yoyCell}
       <td class="${cls}">${deltaPct >= 0 ? '+' : ''}${deltaPct.toFixed(1)}%</td>
       <td>${statusBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Category Summary ─────────────────────────────────────────────────────────
+function renderCategorySummary() {
+  const zone = document.getElementById('cat-summary-zone');
+  const tbody = document.getElementById('cat-summary-body');
+  if (!state.actuals?.category_summary?.length) {
+    zone.style.display = 'none';
+    return;
+  }
+  zone.style.display = '';
+  const cats = state.actuals.category_summary;
+  tbody.innerHTML = cats.map(c => {
+    const yoyVal = c.yoy_pct;
+    const yoyCls = yoyVal > 0 ? 'kpi-up' : yoyVal < 0 ? 'kpi-down' : '';
+    const yoyStr = yoyVal != null ? `${yoyVal >= 0 ? '+' : ''}${yoyVal.toFixed(1)}%` : '—';
+    const trend = yoyVal > 5 ? '📈 성장' : yoyVal < -5 ? '📉 역신장' : yoyVal != null ? '➡️ 보합' : '—';
+    const trendCls = yoyVal > 5 ? 'color:var(--green)' : yoyVal < -5 ? 'color:var(--red)' : 'color:var(--amber)';
+    return `<tr>
+      <td style="font-weight:600;color:var(--text);">${c.category}</td>
+      <td style="color:#38bdf8;font-weight:600;">${fmt(c.qty_2026)}</td>
+      <td style="color:var(--dim);">${c.qty_2025 != null ? fmt(c.qty_2025) : '—'}</td>
+      <td class="${yoyCls}" style="font-weight:600;">${yoyStr}</td>
+      <td>${c.share_pct.toFixed(1)}%</td>
+      <td style="${trendCls};font-weight:600;">${trend}</td>
     </tr>`;
   }).join('');
 }
@@ -1259,7 +1794,7 @@ function renderPromos() {
             <input type="number" min="1" max="52" value="${p.endW}" oninput="updatePromo(${p.idx},'endW',this.value)">
           </div>
           <div class="form-row">
-            <label>Hangover 주</label>
+            <label>프로모 반동 기간(주)</label>
             <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
           </div>
         </div>
@@ -1298,7 +1833,7 @@ function renderPromos() {
             <input type="number" min="0" max="60" step="0.5" value="${p.targetGap}" oninput="updatePromo(${p.idx},'targetGap',this.value)">
           </div>
           <div class="form-row">
-            <label>Hangover 주</label>
+            <label>프로모 반동 기간(주)</label>
             <input type="number" min="0" max="6" value="${p.hangover}" oninput="updatePromo(${p.idx},'hangover',this.value)">
           </div>
         </div>
@@ -1501,6 +2036,12 @@ function updateLastUpdate() {
 // ── Env Data (기온/습도/유가 자동 조회) ──────────────────────────────────────
 let _oilOverridden = false;
 
+function onTargetInput() {
+  if (state.lastResult?.by_week) {
+    renderChart(state.lastResult.by_week);
+  }
+}
+
 function onOilOverride() {
   _oilOverridden = true;
   document.getElementById('env-oil-badge').textContent = '수동 입력';
@@ -1553,20 +2094,240 @@ async function init() {
       count > 0 ? `${count}주 데이터 — 비활성` : '데이터 없음';
   }
 
+  // Check data freshness
+  checkFreshness();
+
+  // Load saved scenarios into select
+  refreshScenarioSelect();
+
   // Initial simulation
   await runSimulate();
 }
 
+// ── Scenario Save/Load ───────────────────────────────────────────────────────
+function getScenarios() {
+  try { return JSON.parse(localStorage.getItem('fcst_scenarios') || '[]'); }
+  catch { return []; }
+}
+
+function saveScenarios(arr) {
+  localStorage.setItem('fcst_scenarios', JSON.stringify(arr));
+}
+
+function buildCurrentParams() {
+  // Capture all controllable UI state
+  return {
+    weekFrom:     document.getElementById('scope-from').value,
+    weekTo:       document.getElementById('scope-to').value,
+    cat:          document.getElementById('scope-cat').value,
+    channel:      state.channel,
+    tempScenario: document.getElementById('ext-temp').value,
+    humidityScenario: document.getElementById('ext-humidity').value,
+    oilPrice:     document.getElementById('ext-oil').value,
+    electricity:  document.getElementById('ext-electricity').checked,
+    priceSliders: JSON.parse(JSON.stringify(state.priceSliders)),
+    promos:       JSON.parse(JSON.stringify(state.promos)),
+    annualTarget: document.getElementById('annual-target')?.value || '',
+    catAdj: { ...state.catAdj },
+  };
+}
+
+function applyParams(p) {
+  if (p.weekFrom)  document.getElementById('scope-from').value = p.weekFrom;
+  if (p.weekTo)    document.getElementById('scope-to').value   = p.weekTo;
+  if (p.cat !== undefined) document.getElementById('scope-cat').value = p.cat;
+  if (p.channel)   setChannel(p.channel);
+  if (p.tempScenario)    document.getElementById('ext-temp').value = p.tempScenario;
+  if (p.humidityScenario) document.getElementById('ext-humidity').value = p.humidityScenario;
+  if (p.oilPrice)  document.getElementById('ext-oil').value = p.oilPrice;
+  if (p.electricity !== undefined) document.getElementById('ext-electricity').checked = p.electricity;
+  if (p.priceSliders) { state.priceSliders = p.priceSliders; buildPricePanel(); }
+  if (p.promos)    { state.promos = p.promos; renderPromos(); }
+  if (p.annualTarget !== undefined) {
+    const el = document.getElementById('annual-target');
+    if (el) el.value = p.annualTarget;
+  }
+  if (p.catAdj) {
+    state.catAdj = { inverter: 100, window: 100, floor: 100, ...p.catAdj };
+    const map = { inverter: 'adj-inv', window: 'adj-win', floor: 'adj-flo' };
+    for (const [k, id] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.value = state.catAdj[k];
+      onCatAdj(k, state.catAdj[k]);
+    }
+  }
+}
+
+function saveScenario() {
+  const name = prompt('시나리오 이름을 입력하세요:');
+  if (!name || !name.trim()) return;
+  let arr = getScenarios();
+  arr.push({ name: name.trim(), savedAt: new Date().toISOString(), params: buildCurrentParams() });
+  // 최대 10개 유지 (초과 시 오래된 것 삭제)
+  if (arr.length > 10) arr = arr.slice(arr.length - 10);
+  saveScenarios(arr);
+  refreshScenarioSelect();
+  showToast(`시나리오 "${name.trim()}" 저장 완료`);
+}
+
+function loadScenario() {
+  const sel = document.getElementById('scenario-select');
+  const idx = parseInt(sel.value);
+  if (isNaN(idx)) { showToast('불러올 시나리오를 선택하세요.'); return; }
+  const arr = getScenarios();
+  const scenario = arr[idx];
+  if (!scenario) { showToast('시나리오를 찾을 수 없습니다.'); return; }
+  applyParams(scenario.params);
+  scheduleSimulate();
+  showToast(`시나리오 "${scenario.name}" 불러오기 완료`);
+}
+
+function deleteScenario() {
+  const sel = document.getElementById('scenario-select');
+  const idx = parseInt(sel.value);
+  if (isNaN(idx)) { showToast('삭제할 시나리오를 선택하세요.'); return; }
+  let arr = getScenarios();
+  const name = arr[idx]?.name;
+  arr.splice(idx, 1);
+  saveScenarios(arr);
+  refreshScenarioSelect();
+  showToast(`시나리오 "${name}" 삭제 완료`);
+}
+
+function refreshScenarioSelect() {
+  const sel = document.getElementById('scenario-select');
+  if (!sel) return;
+  const arr = getScenarios();
+  sel.innerHTML = '<option value="">— 선택 —</option>' +
+    arr.map((s, i) => `<option value="${i}">${s.name} (${s.savedAt.slice(0,10)})</option>`).join('');
+}
+
+// ── Data Freshness Check ───────────────────────────────────────────────────────
+async function checkFreshness() {
+  try {
+    const resp = await fetch(API_BASE + '/api/fcst');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const generatedAt = data.generated_at;
+    if (!generatedAt) return;
+    const genDate = new Date(generatedAt);
+    const now = new Date();
+    const diffDays = Math.floor((now - genDate) / (1000 * 60 * 60 * 24));
+    if (diffDays >= 7) {
+      const badge = document.getElementById('freshness-badge');
+      badge.textContent = `⚠ 예측 데이터 ${diffDays}일 전 생성됨`;
+      badge.style.display = 'flex';
+    }
+    // C: YoY 편향값으로 카테고리 슬라이더 초기화
+    if (data.yoy_bias_2026 && data.yoy_bias_2026 !== 1.0) {
+      initCatAdjFromBias(data.yoy_bias_2026);
+    }
+  } catch (_) {}
+}
+
 document.addEventListener('DOMContentLoaded', init);
+
+// ── Mobile Controls Toggle ────────────────────────────────────────────────────
+function toggleMobileControls() {
+  const panel = document.getElementById('controls-panel');
+  const btn   = document.getElementById('mobile-controls-toggle');
+  const isOpen = panel.classList.toggle('panel-open');
+  btn.textContent = isOpen ? '✕ 닫기' : '⚙ 설정';
+}
+
+// ── Accuracy Modal ───────────────────────────────────────────────────────────
+function openAccuracyModal() {
+  document.getElementById('accuracy-modal').classList.add('open');
+  loadAccuracyData();
+}
+
+function closeAccuracyModal() {
+  document.getElementById('accuracy-modal').classList.remove('open');
+}
+
+async function loadAccuracyData() {
+  const body = document.getElementById('accuracy-modal-body');
+  body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--dim);">데이터 로딩 중...</div>';
+  try {
+    const resp = await fetch(API_BASE + '/api/fcst');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    const forecasts = data.forecasts || [];
+    // Filter rows with mape != null
+    const rows = forecasts.filter(f => f.mape !== null && f.mape !== undefined);
+    if (!rows.length) {
+      body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--dim);">MAPE 데이터 없음</div>';
+      return;
+    }
+    // Sort by mape descending (worst first), take top 10
+    rows.sort((a, b) => b.mape - a.mape);
+    const top10 = rows.slice(0, 10);
+    body.innerHTML = `<table>
+      <thead><tr><th>모델</th><th>MAPE</th></tr></thead>
+      <tbody>${top10.map(f => {
+        const mapeStr = (f.mape * 100).toFixed(1) + '%';
+        const cls = f.mape > 0.2 ? 'mape-high' : '';
+        return `<tr><td>${f.model || f.model_name || '—'}</td><td class="${cls}">${mapeStr}</td></tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  } catch (e) {
+    body.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);">오류: ${e.message}</div>`;
+  }
+}
+
+// Close modal when clicking overlay
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'accuracy-modal') closeAccuracyModal();
+});
+
+// ── Current Week Label ────────────────────────────────────────────────────────
+function currentWeekLabel() {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const wn = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return `W${wn}`;
+}
 
 // ── Chat Panel ───────────────────────────────────────────────────────────────
 let chatSessionId = null;
 let chatBusy = false;
+let chatInitialized = false;
 
 function toggleChat() {
   const panel = document.getElementById('chat-panel');
   panel.classList.toggle('open');
   document.body.classList.toggle('chat-open');
+
+  if (panel.classList.contains('open') && !chatInitialized) {
+    chatInitialized = true;
+    autoBriefing();
+  }
+}
+
+async function autoBriefing() {
+  chatBusy = true;
+  showChatLoading(true);
+  document.getElementById('chat-send-btn').disabled = true;
+  try {
+    const resp = await fetch(API_BASE + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `현재 ${currentWeekLabel()} 기준 NEXT week 예측 현황과 향후 6주 수요 전망을 브리핑해줘. 카테고리별(Inverter/Window/Floor Standing) 수치, 상위 3개 모델, Eid 등 이벤트 영향 주차를 포함해서 한국어로 간결하게.`,
+        annual_target: parseFloat(document.getElementById('annual-target')?.value) || 0,
+        channel: state.channel || 'all',
+      }),
+    });
+    const data = await resp.json();
+    chatSessionId = data.session_id;
+    appendChatMsg('assistant', data.reply, data.method);
+  } catch (e) {
+    appendChatMsg('assistant', '브리핑 로드 실패: ' + e.message, 'error');
+  } finally {
+    chatBusy = false;
+    showChatLoading(false);
+    document.getElementById('chat-send-btn').disabled = false;
+  }
 }
 
 function appendChatMsg(role, text, method) {
@@ -1617,9 +2378,10 @@ async function sendChat() {
 
   try {
     const endpoint = chatSessionId ? '/api/chat/follow' : '/api/chat';
+    const ctxFields = { annual_target: parseFloat(document.getElementById('annual-target')?.value) || 0, channel: state.channel || 'all' };
     const body = chatSessionId
-      ? { session_id: chatSessionId, message: text }
-      : { message: text };
+      ? { session_id: chatSessionId, message: text, ...ctxFields }
+      : { message: text, ...ctxFields };
 
     const resp = await fetch(API_BASE + endpoint, {
       method: 'POST',
@@ -1645,7 +2407,150 @@ async function sendChat() {
     showChatLoading(false);
   }
 }
+
+// ── 재학습 ────────────────────────────────────────────────────────────
+let _retrainPoll = null;
+
+function openRetrainModal() {
+  document.getElementById('retrain-modal').classList.add('open');
+  fetchRetrainStatus();
+}
+
+function closeRetrainModal() {
+  document.getElementById('retrain-modal').classList.remove('open');
+}
+
+async function startRetrain() {
+  const startBtn = document.getElementById('retrain-start-btn');
+  startBtn.disabled = true;
+  try {
+    const res = await fetch('/api/retrain', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || '재학습 요청 실패');
+      startBtn.disabled = false;
+      return;
+    }
+    _pollRetrainStatus();
+  } catch (e) {
+    alert('서버 연결 오류: ' + e.message);
+    startBtn.disabled = false;
+  }
+}
+
+function _pollRetrainStatus() {
+  if (_retrainPoll) clearInterval(_retrainPoll);
+  _retrainPoll = setInterval(fetchRetrainStatus, 2000);
+}
+
+async function fetchRetrainStatus() {
+  try {
+    const res = await fetch('/api/retrain/status');
+    const d = await res.json();
+    _applyRetrainStatus(d);
+    if (d.status === 'done' || d.status === 'error') {
+      if (_retrainPoll) { clearInterval(_retrainPoll); _retrainPoll = null; }
+      // 완료 시 예측 데이터 자동 새로고침
+      if (d.status === 'done') setTimeout(() => location.reload(), 1500);
+    }
+  } catch (e) { /* 일시적 오류 무시 */ }
+}
+
+function _applyRetrainStatus(d) {
+  const statusText = document.getElementById('retrain-status-text');
+  const timeText   = document.getElementById('retrain-time-text');
+  const logEl      = document.getElementById('retrain-log');
+  const startBtn   = document.getElementById('retrain-start-btn');
+  const retrainBtn = document.getElementById('retrain-btn');
+
+  const labelMap = { idle:'대기 중', running:'재학습 진행 중...', done:'완료 ✓', error:'오류 발생 ✗' };
+  const colorMap = { idle:'var(--muted)', running:'var(--amber)', done:'var(--green)', error:'var(--red)' };
+
+  statusText.textContent = labelMap[d.status] || d.status;
+  statusText.style.color = colorMap[d.status] || 'var(--muted)';
+
+  let timeStr = '';
+  if (d.started_at) timeStr = '시작: ' + d.started_at;
+  if (d.finished_at) timeStr += ' | 완료: ' + d.finished_at;
+  timeText.textContent = timeStr;
+
+  if (d.log_tail && d.log_tail.length > 0) {
+    logEl.textContent = d.log_tail.join('\n');
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  if (d.status === 'running') {
+    startBtn.disabled = true;
+    retrainBtn.className = 'retrain-btn running';
+    retrainBtn.textContent = '🔄 재학습 중...';
+  } else if (d.status === 'done') {
+    startBtn.disabled = false;
+    retrainBtn.className = 'retrain-btn done';
+    retrainBtn.textContent = '✓ 재학습 완료';
+    setTimeout(() => { retrainBtn.className = 'retrain-btn'; retrainBtn.textContent = '🔄 재학습'; }, 5000);
+  } else if (d.status === 'error') {
+    startBtn.disabled = false;
+    retrainBtn.className = 'retrain-btn error';
+    retrainBtn.textContent = '✗ 오류';
+    if (d.error) logEl.textContent += '\n[ERROR] ' + d.error;
+  } else {
+    startBtn.disabled = false;
+    retrainBtn.className = 'retrain-btn';
+    retrainBtn.textContent = '🔄 재학습';
+  }
+}
+
+// 페이지 로드 시 진행 중인 재학습 있으면 자동 폴링 시작
+(async () => {
+  try {
+    const res = await fetch('/api/retrain/status');
+    const d = await res.json();
+    if (d.status === 'running') _pollRetrainStatus();
+    _applyRetrainStatus(d);
+  } catch (e) {}
+})();
 </script>
+
+<!-- Mobile Controls Toggle -->
+<button class="mobile-controls-toggle" id="mobile-controls-toggle" onclick="toggleMobileControls()">⚙ 설정</button>
+
+<!-- Retrain Button -->
+<button class="retrain-btn" id="retrain-btn" onclick="openRetrainModal()" title="모델 재학습">🔄 재학습</button>
+
+<!-- Retrain Modal -->
+<div class="retrain-modal" id="retrain-modal">
+  <div class="retrain-box">
+    <div class="retrain-modal-header">
+      <h4>🔄 모델 재학습</h4>
+      <button class="retrain-modal-close" onclick="closeRetrainModal()">&#x2715;</button>
+    </div>
+    <div class="retrain-status-bar" id="retrain-status-bar">
+      <span id="retrain-status-text">대기 중</span>
+      <span id="retrain-time-text" style="color:var(--dim);margin-left:auto;font-size:.7rem;"></span>
+    </div>
+    <div class="retrain-log" id="retrain-log">로그가 여기에 표시됩니다.</div>
+    <div class="retrain-footer">
+      <span style="font-size:.72rem;color:var(--dim);">OR 데이터 적재 → 가격 파싱 → LightGBM 재학습 → W52 전체 예측 생성 (약 3~10분)</span>
+      <button class="retrain-start-btn" id="retrain-start-btn" onclick="startRetrain()">▶ 재학습 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- Accuracy Button -->
+<button class="accuracy-btn" onclick="openAccuracyModal()" title="예측 정확도">📊 정확도</button>
+
+<!-- Accuracy Modal -->
+<div class="modal-overlay" id="accuracy-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h4>📊 예측 정확도 (MAPE)</h4>
+      <button class="modal-close" onclick="closeAccuracyModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="accuracy-modal-body">
+      <div style="text-align:center;padding:20px;color:var(--dim);">로딩 중...</div>
+    </div>
+  </div>
+</div>
 
 <!-- Chat Toggle Button -->
 <button class="chat-toggle" onclick="toggleChat()" title="AI Chat">&#x1F4AC;</button>
