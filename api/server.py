@@ -434,15 +434,25 @@ def create_app(db_path=DEFAULT_DB, fcst_path=DEFAULT_FCST):
         'Packaged':      'Packaged AC',
     }
 
+    # 채널 그룹 → B2C 채널명 집합
+    _CHANNEL_GROUPS = {
+        'ir': {'BH', 'BM', 'Tamkeen', 'Zagzoog', 'Dhamin',
+               'Star Appliance', 'Al Ghanem', 'Al Shathri', 'IR_Others'},
+        'or': {'Al Manea', 'SWS', 'Black Box', 'Al Khunizan',
+               'eXtra', 'OR_Others'},
+    }
+
     @app.route('/api/actuals', methods=['GET'])
     def get_actuals():
         week_from = int(request.args.get('week_from', 1))
         week_to = int(request.args.get('week_to', 52))
         cat_param = request.args.get('category', '').strip()
-        b2c_cat = _SIM_TO_B2C_CAT.get(cat_param) if cat_param else None
+        ch_param  = request.args.get('channel', '').strip().lower()
+        b2c_cat   = _SIM_TO_B2C_CAT.get(cat_param) if cat_param else None
+        b2c_ch    = _CHANNEL_GROUPS.get(ch_param)   # None = 전체
 
-        current = _b2c_loader.get_sellout("2026", week_from, week_to, category=b2c_cat)
-        prev = _b2c_loader.get_sellout("2025", week_from, week_to, category=b2c_cat)
+        current = _b2c_loader.get_sellout("2026", week_from, week_to, channel=b2c_ch, category=b2c_cat)
+        prev = _b2c_loader.get_sellout("2025", week_from, week_to, channel=b2c_ch, category=b2c_cat)
 
         if not current:
             return jsonify({'error': 'B2C 2026 데이터 없음'}), 404

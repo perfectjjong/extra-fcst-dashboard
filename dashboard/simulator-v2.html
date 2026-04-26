@@ -983,9 +983,7 @@ function setChannel(ch) {
 }
 
 function channelScale(val) {
-  if (state.channel === 'ir') return val * 0.6;
-  if (state.channel === 'or') return val * 0.4;
-  return val;
+  return val; // 채널 필터는 서버(API)에서 실제 데이터로 처리
 }
 
 // ── Accordion ─────────────────────────────────────────────────────────────────
@@ -1121,7 +1119,7 @@ async function runSimulate() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       }),
-      fetch(API_BASE + `/api/actuals?week_from=${params.scope.week_from}&week_to=${params.scope.week_to}${params.scope.categories.length ? '&category=' + encodeURIComponent(params.scope.categories[0]) : ''}`),
+      fetch(API_BASE + `/api/actuals?week_from=${params.scope.week_from}&week_to=${params.scope.week_to}${params.scope.categories.length ? '&category=' + encodeURIComponent(params.scope.categories[0]) : ''}${state.channel !== 'all' ? '&channel=' + state.channel : ''}`),
     ]);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
