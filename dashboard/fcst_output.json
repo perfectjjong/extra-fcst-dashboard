@@ -1,18 +1,19 @@
 {
-  "generated_at": "2026-05-11T00:06:43.160214",
+  "generated_at": "2026-05-18T00:09:04.341780",
   "lgbm_total": 1715.7,
   "prophet_total": 1195.2,
   "ensemble_scale": 0.909,
   "yoy_bias_2026": 0.6948,
-  "yoy_bias_prewar": 0.9627,
+  "yoy_bias_prewar": 0.9628,
   "ytd_actual": {
     "by_category": {
-      "Mini Split": 36289,
-      "Floor Standing AC": 2944,
-      "concealed set": 2054,
-      "cassette ac": 276,
-      "Window AC": 75,
-      "others": 143
+      "Mini Split": 38045,
+      "Window AC": 117,
+      "Floor Standing AC": 3164,
+      "concealed set": 2117,
+      "cassette ac": 283,
+      "rac": 1,
+      "others": 148
     },
     "by_week": {
       "W1": {
@@ -36,6 +37,7 @@
         "Mini Split": 1210,
         "Floor Standing AC": 138,
         "cassette ac": 7,
+        "rac": 1,
         "Window AC": 6,
         "concealed set": 98,
         "others": 18
@@ -122,11 +124,19 @@
       },
       "W18": {
         "Mini Split": 5102,
+        "Window AC": 14,
         "Floor Standing AC": 433,
         "concealed set": 37,
         "cassette ac": 9,
-        "others": 2,
-        "Window AC": 2
+        "others": 2
+      },
+      "W19": {
+        "Mini Split": 4193,
+        "Window AC": 31,
+        "Floor Standing AC": 245,
+        "concealed set": 89,
+        "cassette ac": 2,
+        "others": 1
       },
       "W4": {
         "Mini Split": 779,
@@ -142,16 +152,15 @@
         "cassette ac": 26,
         "Window AC": 4
       },
-      "W19": {
-        "Mini Split": 2519,
-        "Floor Standing AC": 55,
-        "Window AC": 1,
-        "concealed set": 48,
-        "cassette ac": 2,
-        "others": 1
+      "W20": {
+        "Mini Split": 82,
+        "others": 5,
+        "Floor Standing AC": 30,
+        "concealed set": 22,
+        "cassette ac": 7
       }
     },
-    "latest_week": "W19",
+    "latest_week": "W20",
     "source": "OR+IR unified dashboards"
   },
   "forecasts": [
@@ -31754,45 +31763,45 @@
   },
   "price_context": {
     "Free Standing AC | Inverter": {
-      "reference_period": "W19",
+      "reference_period": "W20",
       "lg_avg_price_vat_ex": 7796.2,
-      "competitor_avg_price_vat_ex": 6912.2,
-      "lg_vs_competitor_gap_pct": 12.8
+      "competitor_avg_price_vat_ex": 6830.6,
+      "lg_vs_competitor_gap_pct": 14.1
     },
     "Mini Split AC | Inverter": {
-      "reference_period": "W19",
-      "lg_avg_price_vat_ex": 2887.5,
-      "competitor_avg_price_vat_ex": 2885.7,
-      "lg_vs_competitor_gap_pct": 0.1
+      "reference_period": "W20",
+      "lg_avg_price_vat_ex": 2886.0,
+      "competitor_avg_price_vat_ex": 2886.7,
+      "lg_vs_competitor_gap_pct": -0.0
     },
     "Mini Split AC | Rotary": {
-      "reference_period": "W19",
-      "lg_avg_price_vat_ex": 2486.1,
-      "competitor_avg_price_vat_ex": 2247.1,
-      "lg_vs_competitor_gap_pct": 10.6
+      "reference_period": "W20",
+      "lg_avg_price_vat_ex": 2548.9,
+      "competitor_avg_price_vat_ex": 2253.7,
+      "lg_vs_competitor_gap_pct": 13.1
     },
     "Portable Air Conditioner | Rotary": {
-      "reference_period": "W19",
+      "reference_period": "W20",
       "lg_avg_price_vat_ex": null,
       "competitor_avg_price_vat_ex": 1274.5,
       "lg_vs_competitor_gap_pct": null
     },
     "Unknown | Inverter": {
-      "reference_period": "W19",
+      "reference_period": "W20",
       "lg_avg_price_vat_ex": null,
       "competitor_avg_price_vat_ex": 6347.0,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Inverter": {
-      "reference_period": "W19",
+      "reference_period": "W20",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1649.0,
+      "competitor_avg_price_vat_ex": 1645.1,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Rotary": {
-      "reference_period": "W19",
+      "reference_period": "W20",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1267.3,
+      "competitor_avg_price_vat_ex": 1247.7,
       "lg_vs_competitor_gap_pct": null
     }
   },
