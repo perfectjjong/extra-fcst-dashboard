@@ -1,20 +1,18 @@
 {
-  "generated_at": "2026-06-15T00:10:00.257001",
+  "generated_at": "2026-06-22T00:10:20.756937",
   "lgbm_total": 1715.7,
   "prophet_total": 1195.2,
   "ensemble_scale": 0.909,
-  "yoy_bias_2026": 0.6948,
-  "yoy_bias_prewar": 0.9628,
+  "yoy_bias_2026": 0.6822,
+  "yoy_bias_prewar": 0.9404,
   "ytd_actual": {
     "by_category": {
-      "Mini Split": 47824,
-      "Window AC": 478,
-      "Floor Standing AC": 3899,
-      "concealed set": 2389,
-      "cassette ac": 309,
-      "rac": 1,
-      "others": 225,
-      "": 356
+      "Mini Split": 51030,
+      "Window AC": 590,
+      "Floor Standing AC": 4225,
+      "concealed set": 1871,
+      "cassette ac": 310,
+      "others": 245
     },
     "by_week": {
       "W1": {
@@ -25,51 +23,48 @@
       "W2": {
         "Mini Split": 1005,
         "Floor Standing AC": 119,
-        "cassette ac": 34,
-        "concealed set": 149
+        "cassette ac": 33,
+        "concealed set": 88
       },
       "W3": {
         "Mini Split": 663,
-        "Floor Standing AC": 75,
-        "concealed set": 57,
-        "cassette ac": 30
+        "Floor Standing AC": 74,
+        "concealed set": 40,
+        "cassette ac": 31
       },
       "W6": {
         "Mini Split": 1210,
         "Floor Standing AC": 138,
         "cassette ac": 7,
-        "rac": 1,
+        "others": 19,
         "Window AC": 6,
-        "concealed set": 98,
-        "others": 18
+        "concealed set": 84
       },
       "W7": {
         "Mini Split": 1741,
         "Floor Standing AC": 123,
-        "concealed set": 146,
+        "concealed set": 89,
         "cassette ac": 43,
         "Window AC": 23
       },
       "W8": {
         "Mini Split": 2926,
         "Floor Standing AC": 155,
-        "concealed set": 83,
-        "Window AC": 4,
-        "cassette ac": 4,
-        "others": 3
+        "concealed set": 64,
+        "Window AC": 3,
+        "cassette ac": 3
       },
       "W9": {
         "Mini Split": 3945,
-        "Floor Standing AC": 370,
-        "concealed set": 253,
-        "cassette ac": 14,
-        "Window AC": 10,
-        "others": 6
+        "Floor Standing AC": 365,
+        "concealed set": 170,
+        "cassette ac": 19,
+        "Window AC": 10
       },
       "W10": {
         "Mini Split": 1865,
         "Floor Standing AC": 99,
-        "concealed set": 127,
+        "concealed set": 90,
         "cassette ac": 16,
         "Window AC": 20
       },
@@ -77,7 +72,7 @@
         "Mini Split": 1154,
         "Floor Standing AC": 98,
         "Window AC": 2,
-        "concealed set": 50,
+        "concealed set": 36,
         "cassette ac": 9,
         "others": 14
       },
@@ -98,9 +93,9 @@
       "W14": {
         "Mini Split": 3589,
         "Floor Standing AC": 327,
-        "concealed set": 306,
+        "concealed set": 220,
         "Window AC": 1,
-        "cassette ac": 27,
+        "cassette ac": 26,
         "others": 68
       },
       "W15": {
@@ -112,88 +107,95 @@
       "W16": {
         "Mini Split": 1518,
         "Floor Standing AC": 101,
-        "concealed set": 65,
-        "cassette ac": 10,
-        "others": 3
+        "concealed set": 51,
+        "cassette ac": 10
       },
       "W17": {
-        "Mini Split": 1716,
+        "Mini Split": 1674,
         "Floor Standing AC": 138,
-        "concealed set": 84,
+        "concealed set": 76,
         "cassette ac": 9,
         "others": 2
       },
       "W18": {
         "Mini Split": 5102,
-        "Window AC": 14,
+        "Window AC": 12,
         "Floor Standing AC": 433,
-        "concealed set": 37,
+        "concealed set": 30,
         "cassette ac": 9,
-        "others": 2
+        "others": 1
       },
       "W19": {
         "Mini Split": 4208,
         "Window AC": 31,
         "Floor Standing AC": 275,
-        "concealed set": 89,
         "cassette ac": 2,
+        "concealed set": 66,
         "others": 1
       },
       "W20": {
         "Mini Split": 3192,
         "Window AC": 35,
         "Floor Standing AC": 223,
-        "concealed set": 115,
+        "concealed set": 75,
         "cassette ac": 11,
-        "": 356,
-        "others": 6
+        "others": 5
       },
       "W21": {
         "Mini Split": 2081,
         "Window AC": 68,
         "Floor Standing AC": 176,
         "cassette ac": 5,
-        "concealed set": 47,
-        "others": 10
+        "others": 9,
+        "concealed set": 39
       },
       "W22": {
         "Mini Split": 1449,
         "Window AC": 31,
         "Floor Standing AC": 166,
-        "concealed set": 67,
+        "concealed set": 57,
         "cassette ac": 4,
         "others": 10
       },
       "W23": {
-        "Mini Split": 2940,
-        "Window AC": 227,
-        "Floor Standing AC": 170,
-        "concealed set": 39,
-        "cassette ac": 11,
-        "others": 14
+        "Mini Split": 2967,
+        "Window AC": 226,
+        "Floor Standing AC": 180,
+        "concealed set": 28,
+        "cassette ac": 10,
+        "others": 13
+      },
+      "W24": {
+        "Mini Split": 3005,
+        "Window AC": 87,
+        "Floor Standing AC": 279,
+        "concealed set": 109,
+        "cassette ac": 2,
+        "others": 37
       },
       "W4": {
         "Mini Split": 779,
         "Floor Standing AC": 88,
-        "concealed set": 128,
-        "cassette ac": 23,
+        "concealed set": 97,
+        "cassette ac": 22,
         "others": 26
       },
       "W5": {
         "Mini Split": 2027,
         "Floor Standing AC": 263,
-        "concealed set": 338,
-        "cassette ac": 26,
-        "Window AC": 4
+        "concealed set": 232,
+        "cassette ac": 25
       },
-      "W24": {
-        "Mini Split": 184,
-        "concealed set": 26,
-        "cassette ac": 2,
-        "others": 42
+      "W25": {
+        "Mini Split": 400,
+        "concealed set": 45,
+        "Floor Standing AC": 43,
+        "Window AC": 33,
+        "cassette ac": 1,
+        "others": 40
       }
     },
-    "latest_week": "W24",
+    "latest_week": "W25",
     "source": "OR+IR unified dashboards"
   },
   "forecasts": [
@@ -31796,39 +31798,39 @@
   },
   "price_context": {
     "Free Standing AC | Inverter": {
-      "reference_period": "W24",
-      "lg_avg_price_vat_ex": 7102.4,
-      "competitor_avg_price_vat_ex": 6971.2,
-      "lg_vs_competitor_gap_pct": 1.9
+      "reference_period": "W25",
+      "lg_avg_price_vat_ex": 7332.5,
+      "competitor_avg_price_vat_ex": 6738.3,
+      "lg_vs_competitor_gap_pct": 8.8
     },
     "Mini Split AC | Inverter": {
-      "reference_period": "W24",
-      "lg_avg_price_vat_ex": 2949.6,
-      "competitor_avg_price_vat_ex": 2852.7,
-      "lg_vs_competitor_gap_pct": 3.4
+      "reference_period": "W25",
+      "lg_avg_price_vat_ex": 3237.5,
+      "competitor_avg_price_vat_ex": 2857.4,
+      "lg_vs_competitor_gap_pct": 13.3
     },
     "Mini Split AC | Rotary": {
-      "reference_period": "W24",
-      "lg_avg_price_vat_ex": 2499.8,
-      "competitor_avg_price_vat_ex": 2472.8,
-      "lg_vs_competitor_gap_pct": 1.1
+      "reference_period": "W25",
+      "lg_avg_price_vat_ex": 2804.4,
+      "competitor_avg_price_vat_ex": 2396.0,
+      "lg_vs_competitor_gap_pct": 17.0
     },
     "Portable Air Conditioner | Rotary": {
-      "reference_period": "W24",
+      "reference_period": "W25",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1312.2,
+      "competitor_avg_price_vat_ex": 1360.0,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Inverter": {
-      "reference_period": "W24",
+      "reference_period": "W25",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1837.6,
+      "competitor_avg_price_vat_ex": 1847.6,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Rotary": {
-      "reference_period": "W24",
+      "reference_period": "W25",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1376.0,
+      "competitor_avg_price_vat_ex": 1315.5,
       "lg_vs_competitor_gap_pct": null
     }
   },
