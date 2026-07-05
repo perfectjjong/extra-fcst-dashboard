@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29T00:10:54.104166",
+  "generated_at": "2026-07-06T00:11:20.416419",
   "lgbm_total": 1715.7,
   "prophet_total": 1195.2,
   "ensemble_scale": 0.909,
@@ -7,11 +7,11 @@
   "yoy_bias_prewar": 0.941,
   "ytd_actual": {
     "by_category": {
-      "Mini Split": 53985,
-      "Window AC": 642,
-      "Floor Standing AC": 4495,
-      "concealed set": 1876,
-      "cassette ac": 365,
+      "Mini Split": 58198,
+      "Window AC": 935,
+      "Floor Standing AC": 4848,
+      "concealed set": 1958,
+      "cassette ac": 370,
       "others": 200,
       "unitary package": 21,
       "multi-v": 45
@@ -196,6 +196,19 @@
         "multi-v": 10,
         "unitary package": 2
       },
+      "W26": {
+        "Mini Split": 2635,
+        "Window AC": 257,
+        "Floor Standing AC": 253,
+        "concealed set": 80,
+        "cassette ac": 18
+      },
+      "W27": {
+        "Mini Split": 1802,
+        "Window AC": 36,
+        "Floor Standing AC": 120,
+        "concealed set": 8
+      },
       "W4": {
         "Mini Split": 779,
         "Floor Standing AC": 89,
@@ -211,15 +224,9 @@
         "concealed set": 232,
         "cassette ac": 26,
         "unitary package": 5
-      },
-      "W26": {
-        "Mini Split": 224,
-        "concealed set": 6,
-        "cassette ac": 13,
-        "Floor Standing AC": 20
       }
     },
-    "latest_week": "W26",
+    "latest_week": "W27",
     "source": "OR+IR unified dashboards"
   },
   "forecasts": [
@@ -31822,39 +31829,39 @@
   },
   "price_context": {
     "Free Standing AC | Inverter": {
-      "reference_period": "W26",
-      "lg_avg_price_vat_ex": 7332.5,
+      "reference_period": "W27",
+      "lg_avg_price_vat_ex": 9002.4,
       "competitor_avg_price_vat_ex": 6738.3,
-      "lg_vs_competitor_gap_pct": 8.8
+      "lg_vs_competitor_gap_pct": 33.6
     },
     "Mini Split AC | Inverter": {
-      "reference_period": "W26",
-      "lg_avg_price_vat_ex": 3050.9,
-      "competitor_avg_price_vat_ex": 2839.3,
-      "lg_vs_competitor_gap_pct": 7.5
+      "reference_period": "W27",
+      "lg_avg_price_vat_ex": 3046.4,
+      "competitor_avg_price_vat_ex": 3022.9,
+      "lg_vs_competitor_gap_pct": 0.8
     },
     "Mini Split AC | Rotary": {
-      "reference_period": "W26",
-      "lg_avg_price_vat_ex": 2577.9,
-      "competitor_avg_price_vat_ex": 2383.9,
-      "lg_vs_competitor_gap_pct": 8.1
+      "reference_period": "W27",
+      "lg_avg_price_vat_ex": 2683.9,
+      "competitor_avg_price_vat_ex": 2591.9,
+      "lg_vs_competitor_gap_pct": 3.6
     },
     "Portable Air Conditioner | Rotary": {
-      "reference_period": "W26",
+      "reference_period": "W27",
       "lg_avg_price_vat_ex": null,
       "competitor_avg_price_vat_ex": 1360.0,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Inverter": {
-      "reference_period": "W26",
+      "reference_period": "W27",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1844.5,
+      "competitor_avg_price_vat_ex": 1949.4,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Rotary": {
-      "reference_period": "W26",
+      "reference_period": "W27",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1315.5,
+      "competitor_avg_price_vat_ex": 1354.3,
       "lg_vs_competitor_gap_pct": null
     }
   },
