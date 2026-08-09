@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T00:12:11.897197",
+  "generated_at": "2026-08-10T00:12:34.010431",
   "next_week": "W20",
   "metadata": {
     "(excluded)": {
@@ -42879,32 +42879,185 @@
       "level": "L2_category",
       "mape": 0.1,
       "logged_at": "2026-08-02 21:10:13"
+    },
+    {
+      "week": "W19",
+      "model": "AM182C",
+      "level": "L1_sku",
+      "mape": 3.8,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "AM242C",
+      "level": "L1_sku",
+      "mape": 3.05,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "APNQ55GT3MA",
+      "level": "L1_sku",
+      "mape": 9.4,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "APNW55GT3MA",
+      "level": "L1_sku",
+      "mape": 2.7,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "C182EC1 SN2",
+      "level": "L2_category",
+      "mape": 0.3,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "LA182C",
+      "level": "L1_sku",
+      "mape": 0.35,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "LA182H",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "LA242H",
+      "level": "L1_sku",
+      "mape": 7.5,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "LA302C",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "LA302H",
+      "level": "L1_sku",
+      "mape": 1.5,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "ND182C",
+      "level": "L1_sku",
+      "mape": 7.4667,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "ND182H",
+      "level": "L1_sku",
+      "mape": 17.325,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "ND242C",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "ND242H",
+      "level": "L1_sku",
+      "mape": 17.1,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NF122C",
+      "level": "L1_sku",
+      "mape": 12.2333,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NF122H",
+      "level": "L1_sku",
+      "mape": 15.4,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NS182C3",
+      "level": "L2_category",
+      "mape": 0.3,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NS182H",
+      "level": "L1_sku",
+      "mape": 2.2167,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NS242C3 NK1",
+      "level": "L2_category",
+      "mape": 0.45,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NT382C2 NR2",
+      "level": "L2_category",
+      "mape": 0.2,
+      "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "NT382H2 NR2",
+      "level": "L2_category",
+      "mape": 0.1,
+      "logged_at": "2026-08-09 21:10:36"
     }
   ],
   "price_context": {
+    "Free Standing AC | Inverter": {
+      "reference_period": "W32",
+      "lg_avg_price_vat_ex": 7086.1,
+      "competitor_avg_price_vat_ex": 7004.9,
+      "lg_vs_competitor_gap_pct": 1.2
+    },
     "Mini Split AC | Inverter": {
-      "reference_period": "W31",
-      "lg_avg_price_vat_ex": 3176.3,
-      "competitor_avg_price_vat_ex": 2887.6,
-      "lg_vs_competitor_gap_pct": 10.0
+      "reference_period": "W32",
+      "lg_avg_price_vat_ex": 3187.6,
+      "competitor_avg_price_vat_ex": 2955.6,
+      "lg_vs_competitor_gap_pct": 7.8
     },
     "Mini Split AC | Rotary": {
-      "reference_period": "W31",
-      "lg_avg_price_vat_ex": 2915.9,
-      "competitor_avg_price_vat_ex": 2522.3,
-      "lg_vs_competitor_gap_pct": 15.6
+      "reference_period": "W32",
+      "lg_avg_price_vat_ex": 3098.0,
+      "competitor_avg_price_vat_ex": 2451.0,
+      "lg_vs_competitor_gap_pct": 26.4
     },
     "Window AC | Inverter": {
-      "reference_period": "W31",
+      "reference_period": "W32",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1749.1,
+      "competitor_avg_price_vat_ex": 1755.8,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Rotary": {
-      "reference_period": "W31",
-      "lg_avg_price_vat_ex": 1507.2,
-      "competitor_avg_price_vat_ex": 1401.4,
-      "lg_vs_competitor_gap_pct": 7.5
+      "reference_period": "W32",
+      "lg_avg_price_vat_ex": 1508.5,
+      "competitor_avg_price_vat_ex": 1400.9,
+      "lg_vs_competitor_gap_pct": 7.7
     }
   },
   "segment_elasticity": {
