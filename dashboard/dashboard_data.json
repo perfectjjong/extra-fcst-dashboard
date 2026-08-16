@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T00:12:34.010431",
+  "generated_at": "2026-08-17T00:13:43.016484",
   "next_week": "W20",
   "metadata": {
     "(excluded)": {
@@ -123,10 +123,10 @@
       "btu": "24K"
     },
     "ABUQ34GM3TA": {
-      "category": "-",
-      "compressor": "-",
-      "sub_category": "-",
-      "btu": "-"
+      "category": "Concealed Set",
+      "compressor": "Inverter",
+      "sub_category": "Concealed",
+      "btu": "30K"
     },
     "ABUQ40GM3TA": {
       "category": "Concealed Set",
@@ -399,10 +399,10 @@
       "btu": "-"
     },
     "AUUQ34GT6": {
-      "category": "Cassette",
+      "category": "Concealed",
       "compressor": "Inverter",
-      "sub_category": "Cassette",
-      "btu": "30K"
+      "sub_category": "Concealed",
+      "btu": "26.4K"
     },
     "AUUQ34GT6-C": {
       "category": "-",
@@ -414,7 +414,7 @@
       "category": "Concealed Set",
       "compressor": "Inverter",
       "sub_category": "Concealed",
-      "btu": "38K"
+      "btu": "32K"
     },
     "AUUQ55GT6-C": {
       "category": "-",
@@ -423,16 +423,16 @@
       "btu": "-"
     },
     "AUUQ60GT6": {
-      "category": "Cassette",
+      "category": "Concealed",
       "compressor": "Inverter",
-      "sub_category": "Cassette",
-      "btu": "48K"
+      "sub_category": "Concealed",
+      "btu": "51K"
     },
     "AUUW21GT6": {
-      "category": "-",
-      "compressor": "-",
-      "sub_category": "-",
-      "btu": "-"
+      "category": "Concealed",
+      "compressor": "nan",
+      "sub_category": "Concealed",
+      "btu": "17K"
     },
     "AUUW28GT6-C": {
       "category": "-",
@@ -453,10 +453,10 @@
       "btu": "47K"
     },
     "AUUW60GT6": {
-      "category": "-",
-      "compressor": "-",
-      "sub_category": "-",
-      "btu": "-"
+      "category": "Concealed",
+      "compressor": "nan",
+      "sub_category": "Concealed",
+      "btu": "51K"
     },
     "C182EC": {
       "category": "Window",
@@ -9945,7 +9945,7 @@
       "ci_low": 0,
       "ci_high": 2,
       "mape": null,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -9956,7 +9956,7 @@
       "ci_low": 0,
       "ci_high": 10,
       "mape": null,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "GTNQ28GPLTA",
@@ -10264,7 +10264,7 @@
       "ci_low": 0,
       "ci_high": 1,
       "mape": null,
-      "category": "-"
+      "category": "Concealed Set"
     },
     {
       "model": "ABUQ40GM3TA",
@@ -10418,7 +10418,7 @@
       "ci_low": 0,
       "ci_high": 1,
       "mape": null,
-      "category": "-"
+      "category": "Concealed"
     },
     {
       "model": "AUUW28GT6-C",
@@ -10462,7 +10462,7 @@
       "ci_low": 0,
       "ci_high": 2,
       "mape": null,
-      "category": "-"
+      "category": "Concealed"
     },
     {
       "model": "PREMTB200",
@@ -30134,7 +30134,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30144,7 +30144,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30154,7 +30154,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30164,7 +30164,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30174,7 +30174,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30184,7 +30184,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30194,7 +30194,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30204,7 +30204,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30214,7 +30214,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30224,7 +30224,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30234,7 +30234,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30244,7 +30244,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30254,7 +30254,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30264,7 +30264,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30274,7 +30274,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30284,7 +30284,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30294,7 +30294,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30304,7 +30304,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30314,7 +30314,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30324,7 +30324,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30334,7 +30334,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30344,7 +30344,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30354,7 +30354,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30364,7 +30364,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30374,7 +30374,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30384,7 +30384,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30394,7 +30394,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30404,7 +30404,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30414,7 +30414,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30424,7 +30424,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30434,7 +30434,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30444,7 +30444,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ34GT6",
@@ -30454,7 +30454,7 @@
       "predicted": 1,
       "ci_low": 0,
       "ci_high": 2,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30464,7 +30464,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30474,7 +30474,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30484,7 +30484,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30494,7 +30494,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30504,7 +30504,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30514,7 +30514,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30524,7 +30524,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30534,7 +30534,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30544,7 +30544,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30554,7 +30554,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30564,7 +30564,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30574,7 +30574,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30584,7 +30584,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30594,7 +30594,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30604,7 +30604,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30614,7 +30614,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30624,7 +30624,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30634,7 +30634,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30644,7 +30644,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30654,7 +30654,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30664,7 +30664,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30674,7 +30674,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30684,7 +30684,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30694,7 +30694,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30704,7 +30704,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30714,7 +30714,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30724,7 +30724,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30734,7 +30734,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30744,7 +30744,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30754,7 +30754,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30764,7 +30764,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30774,7 +30774,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "AUUQ60GT6",
@@ -30784,7 +30784,7 @@
       "predicted": 5,
       "ci_low": 2,
       "ci_high": 8,
-      "category": "Cassette"
+      "category": "Concealed"
     },
     {
       "model": "GTNQ28GPLTA",
@@ -43026,38 +43026,179 @@
       "level": "L2_category",
       "mape": 0.1,
       "logged_at": "2026-08-09 21:10:36"
+    },
+    {
+      "week": "W19",
+      "model": "AM182C",
+      "level": "L1_sku",
+      "mape": 3.8,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "AM242C",
+      "level": "L1_sku",
+      "mape": 3.05,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "APNQ55GT3MA",
+      "level": "L1_sku",
+      "mape": 9.4,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "APNW55GT3MA",
+      "level": "L1_sku",
+      "mape": 2.7,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "C182EC1 SN2",
+      "level": "L2_category",
+      "mape": 0.3,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "LA182C",
+      "level": "L1_sku",
+      "mape": 0.35,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "LA182H",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "LA242H",
+      "level": "L1_sku",
+      "mape": 7.5,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "LA302C",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "LA302H",
+      "level": "L1_sku",
+      "mape": 1.5,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "ND182C",
+      "level": "L1_sku",
+      "mape": 7.4667,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "ND182H",
+      "level": "L1_sku",
+      "mape": 17.325,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "ND242C",
+      "level": "L1_sku",
+      "mape": 1.0,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "ND242H",
+      "level": "L1_sku",
+      "mape": 17.1,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NF122C",
+      "level": "L1_sku",
+      "mape": 12.2333,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NF122H",
+      "level": "L1_sku",
+      "mape": 15.4,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NS182C3",
+      "level": "L2_category",
+      "mape": 0.3,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NS182H",
+      "level": "L1_sku",
+      "mape": 2.2167,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NS242C3 NK1",
+      "level": "L2_category",
+      "mape": 0.45,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NT382C2 NR2",
+      "level": "L2_category",
+      "mape": 0.2,
+      "logged_at": "2026-08-16 21:11:22"
+    },
+    {
+      "week": "W19",
+      "model": "NT382H2 NR2",
+      "level": "L2_category",
+      "mape": 0.1,
+      "logged_at": "2026-08-16 21:11:22"
     }
   ],
   "price_context": {
-    "Free Standing AC | Inverter": {
-      "reference_period": "W32",
-      "lg_avg_price_vat_ex": 7086.1,
-      "competitor_avg_price_vat_ex": 7004.9,
-      "lg_vs_competitor_gap_pct": 1.2
-    },
     "Mini Split AC | Inverter": {
-      "reference_period": "W32",
-      "lg_avg_price_vat_ex": 3187.6,
-      "competitor_avg_price_vat_ex": 2955.6,
-      "lg_vs_competitor_gap_pct": 7.8
+      "reference_period": "W33",
+      "lg_avg_price_vat_ex": 3188.3,
+      "competitor_avg_price_vat_ex": 2996.9,
+      "lg_vs_competitor_gap_pct": 6.4
     },
     "Mini Split AC | Rotary": {
-      "reference_period": "W32",
-      "lg_avg_price_vat_ex": 3098.0,
-      "competitor_avg_price_vat_ex": 2451.0,
-      "lg_vs_competitor_gap_pct": 26.4
+      "reference_period": "W33",
+      "lg_avg_price_vat_ex": 3141.1,
+      "competitor_avg_price_vat_ex": 2608.8,
+      "lg_vs_competitor_gap_pct": 20.4
     },
     "Window AC | Inverter": {
-      "reference_period": "W32",
+      "reference_period": "W33",
       "lg_avg_price_vat_ex": null,
-      "competitor_avg_price_vat_ex": 1755.8,
+      "competitor_avg_price_vat_ex": 1748.9,
       "lg_vs_competitor_gap_pct": null
     },
     "Window AC | Rotary": {
-      "reference_period": "W32",
-      "lg_avg_price_vat_ex": 1508.5,
-      "competitor_avg_price_vat_ex": 1400.9,
-      "lg_vs_competitor_gap_pct": 7.7
+      "reference_period": "W33",
+      "lg_avg_price_vat_ex": 1518.4,
+      "competitor_avg_price_vat_ex": 1407.3,
+      "lg_vs_competitor_gap_pct": 7.9
     }
   },
   "segment_elasticity": {
